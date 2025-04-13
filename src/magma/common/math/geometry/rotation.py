@@ -24,11 +24,11 @@ class Rotation2D:
 
         if self._angle >= 0:
             self._angle = self._angle + np.pi
-            self._angle = self._angle % (2*np.pi)
+            self._angle = self._angle % (2 * np.pi)
             self._angle = self._angle - np.pi
         else:
             self._angle = -self._angle + np.pi
-            self._angle = self._angle % (2*np.pi)
+            self._angle = self._angle % (2 * np.pi)
             self._angle = -(self._angle - np.pi)
             if self._angle >= np.pi:
                 self._angle = -self._angle
@@ -66,11 +66,11 @@ class Rotation2D:
         An angle is "left" of another if it is bigger, but by less than 180 degrees.
         """
 
-        if self._angle > np.pi/2 and other.radians() < -np.pi/2:
+        if self._angle > np.pi / 2 and other.radians() < -np.pi / 2:
             # value on -180 degree border
             return False
 
-        if self._angle < -np.pi/2 and other.radians() > np.pi/2:
+        if self._angle < -np.pi / 2 and other.radians() > np.pi / 2:
             # value on +180 degree border
             return True
 

@@ -40,7 +40,6 @@ class ByteTextMessageParser:
 
         self._parser: PTextMessageParser = parser
 
-
     def parse(self, msg: bytes | bytearray) -> Perception:
         """
         Parse the given message into a list of perceptors.

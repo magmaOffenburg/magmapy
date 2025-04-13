@@ -9,9 +9,7 @@ class Pose2D:
     2-dimensional pose.
     """
 
-    def __init__(self,
-                 pos: Vector2D | None = None,
-                 theta: Rotation2D | None = None) -> None:
+    def __init__(self, pos: Vector2D | None = None, theta: Rotation2D | None = None) -> None:
         """
         Construct a new 2D pose.
         """
@@ -61,9 +59,7 @@ class Pose3D:
     3-dimensional pose.
     """
 
-    def __init__(self,
-                 pos: Vector3D | None = None,
-                 rot: Rotation3D | None = None) -> None:
+    def __init__(self, pos: Vector3D | None = None, rot: Rotation3D | None = None) -> None:
         """
         Construct a new 3D pose.
         """

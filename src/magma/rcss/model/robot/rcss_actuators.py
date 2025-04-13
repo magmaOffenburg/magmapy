@@ -121,11 +121,13 @@ class CreateActuator(Actuator):
     Default create actuator implementation.
     """
 
-    def __init__(self,
-                 name: str,
-                 effector_name: str,
-                 scene: str,
-                 model_type: int) -> None:
+    def __init__(
+        self,
+        name: str,
+        effector_name: str,
+        scene: str,
+        model_type: int,
+    ) -> None:
         """
         Create a new create actuator.
         """
@@ -177,9 +179,7 @@ class InitActuator(Actuator):
     Default init actuator implementation.
     """
 
-    def __init__(self,
-                 name: str,
-                 effector_name: str) -> None:
+    def __init__(self, name: str, effector_name: str) -> None:
         """
         Create a new init actuator.
         """
@@ -233,11 +233,13 @@ class SyncActuator(Actuator):
     Default synchronize actuator implementation.
     """
 
-    def __init__(self,
-                 name: str,
-                 effector_name: str,
-                 *,
-                 auto_active: bool = True) -> None:
+    def __init__(
+        self,
+        name: str,
+        effector_name: str,
+        *,
+        auto_active: bool = True,
+    ) -> None:
         """
         Create a new synchronize actuator.
         """
@@ -274,9 +276,7 @@ class Scotty(Actuator):
     Default beam actuator implementation.
     """
 
-    def __init__(self,
-                 name: str,
-                 effector_name: str) -> None:
+    def __init__(self, name: str, effector_name: str) -> None:
         """
         Create a new beam actuator.
         """
@@ -312,9 +312,7 @@ class PassModeActuator(Actuator):
     Default pass mode actuator implementation.
     """
 
-    def __init__(self,
-                 name: str,
-                 effector_name: str) -> None:
+    def __init__(self, name: str, effector_name: str) -> None:
         """
         Create a new pass mode actuator.
         """

@@ -1,4 +1,3 @@
-
 from magma.agent.communication.channel_manager import DefaultChannelManager, PChannelManager
 from magma.agent.decision.behavior import PBehavior
 from magma.agent.decision.decision_maker import PDecisionMaker
@@ -27,14 +26,16 @@ class RCSSAgentFactory(SoccerAgentFactory):
     Factory for RoboCup Soccer Simulation agent components.
     """
 
-    def __init__(self,
-                 team_name: str,
-                 player_no: int,
-                 robot_model_id: str,
-                 server_ip: str,
-                 server_port: int,
-                 field_version: str,
-                 decision_maker_id: str) -> None:
+    def __init__(
+        self,
+        team_name: str,
+        player_no: int,
+        robot_model_id: str,
+        server_ip: str,
+        server_port: int,
+        field_version: str,
+        decision_maker_id: str,
+    ) -> None:
         """
         Construct a new RoboCup Soccer Simulation agent component factory.
         """

@@ -45,9 +45,11 @@ class FeatureMap:
     Default implementation of a feature map.
     """
 
-    def __init__(self,
-                 point_features: Sequence[PPointFeature] | None = None,
-                 line_features: Sequence[PLineFeature] | None = None) -> None:
+    def __init__(
+        self,
+        point_features: Sequence[PPointFeature] | None = None,
+        line_features: Sequence[PLineFeature] | None = None,
+    ) -> None:
         """
         Construct a new feature map.
         """

@@ -8,9 +8,7 @@ class LineSegment2D:
     2-dimensional line segment.
     """
 
-    def __init__(self,
-                 start: Vector2D | None = None,
-                 end: Vector2D | None = None) -> None:
+    def __init__(self, start: Vector2D | None = None, end: Vector2D | None = None) -> None:
         """
         Construct a new 2D pose.
         """

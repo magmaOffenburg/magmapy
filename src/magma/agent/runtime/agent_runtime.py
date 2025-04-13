@@ -64,8 +64,8 @@ class AgentRuntime:
                 # print(f'No perception for 0.1 seconds!')
                 pass
 
-            except Exception as e:   # noqa: BLE001 - prevent blind exception catch warning
-                print(e)    # noqa: T201
+            except Exception as e:  # noqa: BLE001 - prevent blind exception catch warning
+                print(e)  # noqa: T201
 
     def shutdown(self) -> None:
         """

@@ -61,13 +61,15 @@ class SoccerFieldDescription:
     Class describing a soccer field and its visible features.
     """
 
-    def __init__(self,
-                 field_dim: Vector2D,
-                 goal_dim: Vector3D,
-                 goalie_area_dim: Vector2D,
-                 penalty_area_dim: Vector2D,
-                 middle_circle_radius: float,
-                 penalty_spot_distance: float) -> None:
+    def __init__(
+        self,
+        field_dim: Vector2D,
+        goal_dim: Vector3D,
+        goalie_area_dim: Vector2D,
+        penalty_area_dim: Vector2D,
+        middle_circle_radius: float,
+        penalty_spot_distance: float,
+    ) -> None:
         """
         Construct a new soccer field description.
         """
@@ -132,7 +134,7 @@ class SoccerFieldDescription:
         """
 
         if name in self._point_features:
-            print(f"WARNING: A point feature with the name {name} has already been specified!") # noqa: T201
+            print(f'WARNING: A point feature with the name {name} has already been specified!')  # noqa: T201
 
         self._point_features[name] = PointFeature(name, f_type, known_pos)
 
@@ -156,6 +158,6 @@ class SoccerFieldDescription:
         """
 
         if name in self._line_features:
-            print(f"WARNING: A line feature with the name {name} has already been specified!")  # noqa: T201
+            print(f'WARNING: A line feature with the name {name} has already been specified!')  # noqa: T201
 
         self._line_features[name] = LineFeature(name, f_type, known_pos1, known_pos2)

@@ -10,7 +10,7 @@ class BehaviorID(Enum):
     Enum specifying behavior names.
     """
 
-    NONE = "none"
+    NONE = 'none'
     """
     The none behavior used to do nothing.
     """
@@ -53,7 +53,6 @@ class Behavior(ABC):
         """
 
         self._name = name
-
 
     def get_name(self) -> str:
         """

@@ -15,9 +15,7 @@ class RCSSDecisionMaker(SoccerDecisionMaker):
     Decision maker for playing soccer.
     """
 
-    def __init__(self,
-                 model: PSoccerAgentModel,
-                 behaviors: dict[str, PBehavior]) -> None:
+    def __init__(self, model: PSoccerAgentModel, behaviors: dict[str, PBehavior]) -> None:
         """
         Construct a new soccer decision maker.
         """

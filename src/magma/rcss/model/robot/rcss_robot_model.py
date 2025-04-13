@@ -29,16 +29,12 @@ class RCSSRobotModel(RobotModel):
     Robot model implementation for RoboCup Soccer Simulation.
     """
 
-    def __init__(self,
-                 sensors: list[Sensor],
-                 actuators: list[Actuator],
-                 root_body: BodyPart) -> None:
+    def __init__(self, sensors: list[Sensor], actuators: list[Actuator], root_body: BodyPart) -> None:
         """
         Construct a new RoboCup Soccer Simulation robot model.
         """
 
         super().__init__(sensors, actuators, root_body)
-
 
     @classmethod
     def _create_sensor(cls, desc: SensorDescription) -> Sensor | None:
@@ -47,7 +43,6 @@ class RCSSRobotModel(RobotModel):
 
         # forward call to parent class
         return super()._create_sensor(desc)
-
 
     @classmethod
     def _create_actuator(cls, desc: ActuatorDescription) -> Actuator | None:

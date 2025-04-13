@@ -417,11 +417,11 @@ class RCSSMessageParser:
             elif child[0] == 'id':
                 player_no = self._as_int(child[1])
             elif child[0] == 'pol':
-                body_parts.append( ('torso', self._parse_pol(child)) )
+                body_parts.append(('torso', self._parse_pol(child)))
             else:
                 pol_node = child[1]
                 if isinstance(pol_node, SExpression):
-                    body_parts.append( (self._as_str(child[0]), self._parse_pol(pol_node)) )
+                    body_parts.append((self._as_str(child[0]), self._parse_pol(pol_node)))
 
         return RCSSPlayerDetection(team_name, player_no, body_parts)
 
@@ -502,17 +502,9 @@ class RCSSServerChannel(TCPLPMChannel):
     Channel for client communication with the RoboCup Soccer Simulation server.
     """
 
-    def __init__(self,
-                 name: str,
-                 host: str,
-                 port: int = 3100) -> None:
+    def __init__(self, name: str, host: str, port: int = 3100) -> None:
         """
         Construct a new RoboCup soccer simulation server channel.
         """
 
-        super().__init__(name,
-                         host,
-                         port,
-                         RCSSMessageParser(),
-                         RCSSMessageEncoder(),
-                         4)
+        super().__init__(name, host, port, RCSSMessageParser(), RCSSMessageEncoder(), 4)

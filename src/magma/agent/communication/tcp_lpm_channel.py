@@ -20,13 +20,15 @@ class TCPLPMChannel(CommunicationChannelBase):
     TCP/IP channel implementation for receiving and sending (4-byte) length prefixed messages.
     """
 
-    def __init__(self,
-                 name: str,
-                 host: str,
-                 port: int,
-                 parser: PByteMessageParser,
-                 encoder: PByteMessageEncoder,
-                 length_prefix_size: int = 4) -> None:
+    def __init__(
+        self,
+        name: str,
+        host: str,
+        port: int,
+        parser: PByteMessageParser,
+        encoder: PByteMessageEncoder,
+        length_prefix_size: int = 4,
+    ) -> None:
         """
         Construct a new TCP/IP channel.
         """
@@ -98,7 +100,7 @@ class TCPLPMChannel(CommunicationChannelBase):
         if self._socket is None:
             return
 
-        self._socket.send((len(msg)).to_bytes(self._length_prefix_size, byteorder="big") + msg)
+        self._socket.send((len(msg)).to_bytes(self._length_prefix_size, byteorder='big') + msg)
 
     def receive_loop(self) -> None:
         """
@@ -121,7 +123,6 @@ class TCPLPMChannel(CommunicationChannelBase):
 
             self._perceptions_queue.put(perception)
 
-
         # print(f'{self._name}: End receive loop')
 
         # close and clear socket on shutdown
@@ -142,7 +143,7 @@ class TCPLPMChannel(CommunicationChannelBase):
         if self._socket.recv_into(self._rcv_buffer, nbytes=self._length_prefix_size, flags=socket.MSG_WAITALL) != self._length_prefix_size:
             raise ConnectionResetError
 
-        msg_size = int.from_bytes(self._rcv_buffer[:self._length_prefix_size], byteorder="big", signed=False)
+        msg_size = int.from_bytes(self._rcv_buffer[: self._length_prefix_size], byteorder='big', signed=False)
 
         # ensure receive buffer is large enough to hold the message
         if msg_size > self._rcv_buffer_size:

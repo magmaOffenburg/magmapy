@@ -154,15 +154,17 @@ class SoccerMap(FeatureMap):
     Class representing a soccer field.
     """
 
-    def __init__(self,
-                 field_dim: Vector2D,
-                 goal_dim: Vector3D,
-                 goalie_area_dim: Vector2D,
-                 penalty_area_dim: Vector2D,
-                 middle_circle_radius: float,
-                 penalty_spot_distance: float,
-                 point_features: Sequence[PPointFeature] | None = None,
-                 line_features: Sequence[PLineFeature] | None = None) -> None:
+    def __init__(
+        self,
+        field_dim: Vector2D,
+        goal_dim: Vector3D,
+        goalie_area_dim: Vector2D,
+        penalty_area_dim: Vector2D,
+        middle_circle_radius: float,
+        penalty_spot_distance: float,
+        point_features: Sequence[PPointFeature] | None = None,
+        line_features: Sequence[PLineFeature] | None = None,
+    ) -> None:
         """
         Construct a new soccer feature map.
         """
@@ -197,7 +199,14 @@ class SoccerMap(FeatureMap):
         Construct a new soccer feature map from the given field description.
         """
 
-        s_map: SoccerMap = SoccerMap(desc.get_field_dimensions(), desc.get_goal_dimensions(), desc.get_goalie_area_dimensions(), desc.get_penalty_area_dimensions(), desc.get_middle_circle_radius(), desc.get_penalty_spot_distance())
+        s_map: SoccerMap = SoccerMap(
+            desc.get_field_dimensions(),
+            desc.get_goal_dimensions(),
+            desc.get_goalie_area_dimensions(),
+            desc.get_penalty_area_dimensions(),
+            desc.get_middle_circle_radius(),
+            desc.get_penalty_spot_distance(),
+        )
         s_map.set_point_features(tuple(PointFeature(f.get_name(), f.get_type(), f.get_known_position()) for f in desc.get_point_features()))
         s_map.set_line_features(tuple(LineFeature(f.get_name(), f.get_type(), f.get_known_position1(), f.get_known_position2()) for f in desc.get_line_features()))
 

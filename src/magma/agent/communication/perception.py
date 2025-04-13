@@ -175,11 +175,13 @@ class Perception(Mapping[str, PPerceptor]):
 
     T = TypeVar('T')
 
-    def __init__(self,
-                 time: float = 0.0,
-                 perceptions: Sequence[PPerceptor] | None = None,
-                 *,
-                 shutdown: bool = False) -> None:
+    def __init__(
+        self,
+        time: float = 0.0,
+        perceptions: Sequence[PPerceptor] | None = None,
+        *,
+        shutdown: bool = False,
+    ) -> None:
         """
         Construct a new perception map.
         """
@@ -243,11 +245,9 @@ class Perception(Mapping[str, PPerceptor]):
         return self._perceptions.values()
 
     @overload
-    def get(self, key: str, default: PPerceptor | None = None, /) -> PPerceptor | None:
-        ...
+    def get(self, key: str, default: PPerceptor | None = None, /) -> PPerceptor | None: ...
     @overload
-    def get(self, key: str, default: PPerceptor | T, /) -> PPerceptor | T:
-        ...
+    def get(self, key: str, default: PPerceptor | T, /) -> PPerceptor | T: ...
     def get(self, key: str, default: PPerceptor | T | None = None, /) -> PPerceptor | T | None:
         return self._perceptions.get(key, default)
 
@@ -264,9 +264,7 @@ class Perception(Mapping[str, PPerceptor]):
         if not isinstance(other, Perception):
             return False
 
-        return (self._time == other._time and
-                self._shutdown == other._shutdown and
-                self._perceptions == other._perceptions)
+        return self._time == other._time and self._shutdown == other._shutdown and self._perceptions == other._perceptions
 
     def __ne__(self, other: object) -> bool:
         return not self.__eq__(other)

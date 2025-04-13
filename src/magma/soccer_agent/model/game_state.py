@@ -15,17 +15,17 @@ class PlaySide(Enum):
     Enum specifying the different play side options in a soccer game,
     """
 
-    UNKNOWN = "unknown"
+    UNKNOWN = 'unknown'
     """
     We play from left to right.
     """
 
-    LEFT = "left"
+    LEFT = 'left'
     """
     We play from left to right.
     """
 
-    RIGHT = "right"
+    RIGHT = 'right'
     """
     We play from right to left.
     """
@@ -52,185 +52,185 @@ class SoccerGameMode(Enum):
     Enum specifying the different game modes of a soccer game (tailored towards RoboCup leagues).
     """
 
-    NONE = "none"
+    NONE = 'none'
     """
     No game mode or an unknown one (should not be used!).
     """
 
-    FREEZE = "freeze"
+    FREEZE = 'freeze'
     """
     Don't move!
 
     The game is freezed / on hold and nobody should actively move around.
     """
 
-    BEFORE_KICK_OFF = "before-kick-off"
+    BEFORE_KICK_OFF = 'before-kick-off'
     """
     The game has not started yet.
 
     Players may position themselves on their half of the soccer field.
     """
 
-    GAME_OVER = "game-over"
+    GAME_OVER = 'game-over'
     """
     The game is over.
     """
 
-    OWN_KICK_OFF = "own-kick-off"
+    OWN_KICK_OFF = 'own-kick-off'
     """
     Kick-off for our team.
 
     The ball is in the center, and our team is allowed to kick it first.
     """
 
-    OPPONENT_KICK_OFF = "opponent-kick-off"
+    OPPONENT_KICK_OFF = 'opponent-kick-off'
     """
     Kick-off for the opponent team.
 
     The ball is in the center, and the opponent team is allowed to kick it.
     """
 
-    PLAY_ON = "play-on"
+    PLAY_ON = 'play-on'
     """
     Normal gameplay.
 
     The game is processing normally, no special rules are in place.
     """
 
-    OWN_GOAL_KICK = "own-goal-kick"
+    OWN_GOAL_KICK = 'own-goal-kick'
     """
     Goal-kick for our team.
 
     The opponent team kicked the ball outside the play field across our side line and our team is allowed to perform a goal kick (kick-off from goal).
     """
 
-    OPPONENT_GOAL_KICK = "opponent-goal-kick"
+    OPPONENT_GOAL_KICK = 'opponent-goal-kick'
     """
     Goal-kick for the opponent team.
 
     Our team kicked the ball outside the play field across the opponent side line and the opponent team is allowed to perform a goal kick (kick-off from goal).
     """
 
-    OWN_THROW_IN = "own-throw-in"
+    OWN_THROW_IN = 'own-throw-in'
     """
     Throw-in for our team.
 
     The opponent team has kicked the ball outside the play field across the upper / lower ground line and our team is allowed to throw / kick it back into the field.
     """
 
-    OPPONENT_THROW_IN = "opponent-throw-in"
+    OPPONENT_THROW_IN = 'opponent-throw-in'
     """
     Throw-in for the opponent team.
 
     Our team has kicked the ball outside the play field across the upper / lower ground line and the opponent team is allowed to throw / kick it back into the field.
     """
 
-    OWN_CORNER_KICK = "own-corner-kick"
+    OWN_CORNER_KICK = 'own-corner-kick'
     """
     Corner-kick for our team.
 
     The opponent team kicked the ball outside the play field across their side line and our team is allowed to perform a corner kick.
     """
 
-    OPPONENT_CORNER_KICK = "opponent-corner-kick"
+    OPPONENT_CORNER_KICK = 'opponent-corner-kick'
     """
     Corner-kick for the opponent team.
 
     Our team kicked the ball outside the play field across our side line and the opponent team is allowed to perform a corner kick.
     """
 
-    OWN_FREE_KICK = "own-free-kick"
+    OWN_FREE_KICK = 'own-free-kick'
     """
     Indirect free-kick for our team.
 
     Our team got an indirect free kick and may kick the ball first.
     """
 
-    OPPONENT_FREE_KICK = "opponent-free-kick"
+    OPPONENT_FREE_KICK = 'opponent-free-kick'
     """
     Indirect free-kick for the opponent team.
 
     The opponent team got an indirect free kick and may kick the ball first.
     """
 
-    OWN_DIRECT_FREE_KICK = "own-direct-free-kick"
+    OWN_DIRECT_FREE_KICK = 'own-direct-free-kick'
     """
     Direct free-kick for our team.
 
     Our team got a direct free kick and may kick the ball first.
     """
 
-    OPPONENT_DIRECT_FREE_KICK = "opponent-direct-free-kick"
+    OPPONENT_DIRECT_FREE_KICK = 'opponent-direct-free-kick'
     """
     Direct free-kick for the opponent team.
 
     The opponent team got a direct free kick and may kick the ball first.
     """
 
-    OWN_PENALTY_KICK = "own-penalty-kick"
+    OWN_PENALTY_KICK = 'own-penalty-kick'
     """
     Penalty-kick for our team.
 
     Our team should perform a penalty kick. The ball is at the penalty spot in front of the opponent goal.
     """
 
-    OPPONENT_PENALTY_KICK = "opponent-penalty-kick"
+    OPPONENT_PENALTY_KICK = 'opponent-penalty-kick'
     """
     Penalty-kick for the opponent team.
 
     The opponent team should perform a penalty kick. The ball is at the penalty spot in front of our goal.
     """
 
-    OWN_PENALTY_SHOOT = "own-penalty-shoot"
+    OWN_PENALTY_SHOOT = 'own-penalty-shoot'
     """
     Penalty-shoot for our team.
 
     Our team should perform a penalty shootout by somehow dribbling / kicking the ball into the opponent goal. The ball is initially at the center of the field.
     """
 
-    OPPONENT_PENALTY_SHOOT = "opponent-penalty-shoot"
+    OPPONENT_PENALTY_SHOOT = 'opponent-penalty-shoot'
     """
     Penalty-shoot for the opponent team.
 
     The opponent team should perform a penalty shootout by somehow dribbling / kicking the ball into our goal. The ball is initially at the center of the field.
     """
 
-    OWN_PASS = "own-pass" # noqa: S105 - Prevent ruff hardcoded-passwort-assignment warning
+    OWN_PASS = 'own-pass'  # noqa: S105 - Prevent ruff hardcoded-passwort-assignment warning
     """
     Pass-mode for our team.
 
     Our team has exclusive access to the ball for passing, while the opponent team players are not allowed to get too close to the ball.
     """
 
-    OPPONENT_PASS = "opponent-pass" # noqa: S105 - Prevent ruff hardcoded-passwort-assignment warning
+    OPPONENT_PASS = 'opponent-pass'  # noqa: S105 - Prevent ruff hardcoded-passwort-assignment warning
     """
     Pass-mode for the opponent team.
 
     The opponent team has exclusive access to the ball for passing, while our team players are not allowed to get too close to the ball.
     """
 
-    OWN_OFFSIDE = "own-offside"
+    OWN_OFFSIDE = 'own-offside'
     """
     Offside in favour of our team.
 
     The opponent team violated the offside rule and our team is allowed to kick the ball first.
     """
 
-    OPPONENT_OFFSIDE = "opponent-offside"
+    OPPONENT_OFFSIDE = 'opponent-offside'
     """
     Offside in favour of the opponent team.
 
     Our team violated the offside rule and the opponent team is allowed to kick the ball first.
     """
 
-    OWN_GOAL = "own-goal"
+    OWN_GOAL = 'own-goal'
     """
     Our team scored a goal.
 
     A goal was counted for our team and everybody can celebrate.
     """
 
-    OPPONENT_GOAL = "opponent-goal"
+    OPPONENT_GOAL = 'opponent-goal'
     """
     The opponent team scored a goal.
 
@@ -245,59 +245,59 @@ def decode_rcss_game_mode(play_mode: str, play_side: PlaySide) -> SoccerGameMode
 
     left_side: bool = play_side == PlaySide.LEFT
 
-    if play_mode == "BeforeKickOff":
+    if play_mode == 'BeforeKickOff':
         return SoccerGameMode.BEFORE_KICK_OFF
-    if play_mode == "KickOff_Left":
+    if play_mode == 'KickOff_Left':
         return SoccerGameMode.OWN_KICK_OFF if left_side else SoccerGameMode.OPPONENT_KICK_OFF
-    if play_mode == "KickOff_Right":
+    if play_mode == 'KickOff_Right':
         return SoccerGameMode.OPPONENT_KICK_OFF if left_side else SoccerGameMode.OWN_KICK_OFF
-    if play_mode == "PlayOn":
+    if play_mode == 'PlayOn':
         return SoccerGameMode.PLAY_ON
-    if play_mode == "KickIn_Left":
+    if play_mode == 'KickIn_Left':
         return SoccerGameMode.OWN_THROW_IN if left_side else SoccerGameMode.OPPONENT_THROW_IN
-    if play_mode == "KickIn_Right":
+    if play_mode == 'KickIn_Right':
         return SoccerGameMode.OPPONENT_THROW_IN if left_side else SoccerGameMode.OWN_THROW_IN
-    if play_mode == "corner_kick_left":
+    if play_mode == 'corner_kick_left':
         return SoccerGameMode.OWN_CORNER_KICK if left_side else SoccerGameMode.OPPONENT_CORNER_KICK
-    if play_mode == "corner_kick_right":
+    if play_mode == 'corner_kick_right':
         return SoccerGameMode.OPPONENT_CORNER_KICK if left_side else SoccerGameMode.OWN_CORNER_KICK
-    if play_mode == "goal_kick_left":
+    if play_mode == 'goal_kick_left':
         return SoccerGameMode.OWN_GOAL_KICK if left_side else SoccerGameMode.OPPONENT_GOAL_KICK
-    if play_mode == "goal_kick_right":
+    if play_mode == 'goal_kick_right':
         return SoccerGameMode.OPPONENT_GOAL_KICK if left_side else SoccerGameMode.OWN_GOAL_KICK
-    if play_mode == "offside_left":
+    if play_mode == 'offside_left':
         return SoccerGameMode.OWN_OFFSIDE if left_side else SoccerGameMode.OPPONENT_OFFSIDE
-    if play_mode == "offside_right":
+    if play_mode == 'offside_right':
         return SoccerGameMode.OPPONENT_OFFSIDE if left_side else SoccerGameMode.OWN_OFFSIDE
-    if play_mode == "GameOver":
+    if play_mode == 'GameOver':
         return SoccerGameMode.GAME_OVER
-    if play_mode == "Goal_Left":
+    if play_mode == 'Goal_Left':
         return SoccerGameMode.OWN_GOAL if left_side else SoccerGameMode.OPPONENT_GOAL
-    if play_mode == "Goal_Right":
+    if play_mode == 'Goal_Right':
         return SoccerGameMode.OPPONENT_GOAL if left_side else SoccerGameMode.OWN_GOAL
-    if play_mode == "free_kick_left":
+    if play_mode == 'free_kick_left':
         return SoccerGameMode.OWN_FREE_KICK if left_side else SoccerGameMode.OPPONENT_FREE_KICK
-    if play_mode == "free_kick_right":
+    if play_mode == 'free_kick_right':
         return SoccerGameMode.OPPONENT_FREE_KICK if left_side else SoccerGameMode.OWN_FREE_KICK
-    if play_mode == "direct_free_kick_left":
+    if play_mode == 'direct_free_kick_left':
         return SoccerGameMode.OWN_DIRECT_FREE_KICK if left_side else SoccerGameMode.OPPONENT_DIRECT_FREE_KICK
-    if play_mode == "direct_free_kick_right":
+    if play_mode == 'direct_free_kick_right':
         return SoccerGameMode.OPPONENT_DIRECT_FREE_KICK if left_side else SoccerGameMode.OWN_DIRECT_FREE_KICK
-    if play_mode == "NONE":
+    if play_mode == 'NONE':
         return SoccerGameMode.NONE
-    if play_mode == "pass_left":
+    if play_mode == 'pass_left':
         return SoccerGameMode.OWN_PASS if left_side else SoccerGameMode.OPPONENT_PASS
-    if play_mode == "pass_right":
+    if play_mode == 'pass_right':
         return SoccerGameMode.OPPONENT_PASS if left_side else SoccerGameMode.OWN_PASS
-    if play_mode == "Freeze":
+    if play_mode == 'Freeze':
         return SoccerGameMode.FREEZE
-    if play_mode == "penalty_kick_left":
+    if play_mode == 'penalty_kick_left':
         return SoccerGameMode.OWN_PENALTY_KICK if left_side else SoccerGameMode.OPPONENT_PENALTY_KICK
-    if play_mode == "penalty_kick_right":
+    if play_mode == 'penalty_kick_right':
         return SoccerGameMode.OPPONENT_PENALTY_KICK if left_side else SoccerGameMode.OWN_PENALTY_KICK
-    if play_mode == "penalty_shoot_left":
+    if play_mode == 'penalty_shoot_left':
         return SoccerGameMode.OWN_PENALTY_SHOOT if left_side else SoccerGameMode.OPPONENT_PENALTY_SHOOT
-    if play_mode == "penalty_shoot_right":
+    if play_mode == 'penalty_shoot_right':
         return SoccerGameMode.OPPONENT_PENALTY_SHOOT if left_side else SoccerGameMode.OWN_PENALTY_SHOOT
 
     # print("WARNING: Unknown play mode: \"" + play_mode + "\"!")
@@ -386,57 +386,59 @@ class SoccerGameState:
     Representation of a soccer game state.
     """
 
-    _RUNNING_MODES = frozenset([
-        SoccerGameMode.PLAY_ON,
-        SoccerGameMode.OWN_KICK_OFF,
-        SoccerGameMode.OPPONENT_KICK_OFF,
-        SoccerGameMode.OWN_GOAL_KICK,
-        SoccerGameMode.OPPONENT_GOAL_KICK,
-        SoccerGameMode.OWN_FREE_KICK,
-        SoccerGameMode.OPPONENT_FREE_KICK,
-        SoccerGameMode.OWN_DIRECT_FREE_KICK,
-        SoccerGameMode.OPPONENT_DIRECT_FREE_KICK,
-        SoccerGameMode.OWN_THROW_IN,
-        SoccerGameMode.OPPONENT_THROW_IN,
-        SoccerGameMode.OWN_CORNER_KICK,
-        SoccerGameMode.OPPONENT_CORNER_KICK,
-        SoccerGameMode.OWN_PASS,
-        SoccerGameMode.OPPONENT_PASS,
-        SoccerGameMode.OWN_PENALTY_KICK,
-        SoccerGameMode.OPPONENT_PENALTY_KICK,
-        SoccerGameMode.OWN_PENALTY_SHOOT,
-        SoccerGameMode.OPPONENT_PENALTY_SHOOT
-    ])
+    _RUNNING_MODES = frozenset(
+        [
+            SoccerGameMode.PLAY_ON,
+            SoccerGameMode.OWN_KICK_OFF,
+            SoccerGameMode.OPPONENT_KICK_OFF,
+            SoccerGameMode.OWN_GOAL_KICK,
+            SoccerGameMode.OPPONENT_GOAL_KICK,
+            SoccerGameMode.OWN_FREE_KICK,
+            SoccerGameMode.OPPONENT_FREE_KICK,
+            SoccerGameMode.OWN_DIRECT_FREE_KICK,
+            SoccerGameMode.OPPONENT_DIRECT_FREE_KICK,
+            SoccerGameMode.OWN_THROW_IN,
+            SoccerGameMode.OPPONENT_THROW_IN,
+            SoccerGameMode.OWN_CORNER_KICK,
+            SoccerGameMode.OPPONENT_CORNER_KICK,
+            SoccerGameMode.OWN_PASS,
+            SoccerGameMode.OPPONENT_PASS,
+            SoccerGameMode.OWN_PENALTY_KICK,
+            SoccerGameMode.OPPONENT_PENALTY_KICK,
+            SoccerGameMode.OWN_PENALTY_SHOOT,
+            SoccerGameMode.OPPONENT_PENALTY_SHOOT,
+        ]
+    )
 
-    _BEAM_MODES = frozenset([
-        SoccerGameMode.OWN_GOAL,
-        SoccerGameMode.OPPONENT_GOAL,
-        SoccerGameMode.BEFORE_KICK_OFF
-    ])
+    _BEAM_MODES = frozenset([SoccerGameMode.OWN_GOAL, SoccerGameMode.OPPONENT_GOAL, SoccerGameMode.BEFORE_KICK_OFF])
 
-    _OWN_KICK_MODES = frozenset([
-        SoccerGameMode.OWN_CORNER_KICK,
-        SoccerGameMode.OWN_FREE_KICK,
-        SoccerGameMode.OWN_DIRECT_FREE_KICK,
-        SoccerGameMode.OWN_GOAL_KICK,
-        SoccerGameMode.OWN_THROW_IN,
-        SoccerGameMode.OWN_KICK_OFF,
-        SoccerGameMode.OWN_PASS,
-        SoccerGameMode.OWN_PENALTY_KICK,
-        SoccerGameMode.OWN_PENALTY_SHOOT
-    ])
+    _OWN_KICK_MODES = frozenset(
+        [
+            SoccerGameMode.OWN_CORNER_KICK,
+            SoccerGameMode.OWN_FREE_KICK,
+            SoccerGameMode.OWN_DIRECT_FREE_KICK,
+            SoccerGameMode.OWN_GOAL_KICK,
+            SoccerGameMode.OWN_THROW_IN,
+            SoccerGameMode.OWN_KICK_OFF,
+            SoccerGameMode.OWN_PASS,
+            SoccerGameMode.OWN_PENALTY_KICK,
+            SoccerGameMode.OWN_PENALTY_SHOOT,
+        ]
+    )
 
-    _OPPONENT_KICK_MODES = frozenset([
-        SoccerGameMode.OPPONENT_CORNER_KICK,
-        SoccerGameMode.OPPONENT_FREE_KICK,
-        SoccerGameMode.OPPONENT_DIRECT_FREE_KICK,
-        SoccerGameMode.OPPONENT_GOAL_KICK,
-        SoccerGameMode.OPPONENT_THROW_IN,
-        SoccerGameMode.OPPONENT_KICK_OFF,
-        SoccerGameMode.OPPONENT_PASS,
-        SoccerGameMode.OPPONENT_PENALTY_KICK,
-        SoccerGameMode.OPPONENT_PENALTY_SHOOT
-    ])
+    _OPPONENT_KICK_MODES = frozenset(
+        [
+            SoccerGameMode.OPPONENT_CORNER_KICK,
+            SoccerGameMode.OPPONENT_FREE_KICK,
+            SoccerGameMode.OPPONENT_DIRECT_FREE_KICK,
+            SoccerGameMode.OPPONENT_GOAL_KICK,
+            SoccerGameMode.OPPONENT_THROW_IN,
+            SoccerGameMode.OPPONENT_KICK_OFF,
+            SoccerGameMode.OPPONENT_PASS,
+            SoccerGameMode.OPPONENT_PENALTY_KICK,
+            SoccerGameMode.OPPONENT_PENALTY_SHOOT,
+        ]
+    )
 
     def __init__(self, team_name: str) -> None:
         """
@@ -445,7 +447,7 @@ class SoccerGameState:
 
         self._time: float = 0.0
         self._own_team_name: str = team_name
-        self._opponent_team_name: str = ""
+        self._opponent_team_name: str = ''
         self._play_time: float = 0.0
         self._game_mode: SoccerGameMode = SoccerGameMode.BEFORE_KICK_OFF
         self._play_side: PlaySide = PlaySide.LEFT
@@ -563,7 +565,7 @@ class SoccerGameState:
         """
 
         # fetch game state perceptor
-        perceptor = perception.get_perceptor("game_state", SoccerGameStatePerceptor)
+        perceptor = perception.get_perceptor('game_state', SoccerGameStatePerceptor)
         if perceptor is None:
             return
 

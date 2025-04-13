@@ -46,10 +46,9 @@ class RCHLFieldVersion(Enum):
             if v.value == version:
                 return v
 
-        print(f'WARNING: Unknown HL field version: "{version}"!')    # noqa: T201
+        print(f'WARNING: Unknown HL field version: "{version}"!')  # noqa: T201
 
         return RCHLFieldVersion.UNKNOWN
-
 
     @staticmethod
     def create_description_for(version: str) -> SoccerFieldDescription:
@@ -75,13 +74,15 @@ class RCHLAdultField2014(SoccerFieldDescription):
     Class representing the soccer field used by the RoboCup Humanoid Adult Size in 2014, 2015 and 2016.
     """
 
-    def __init__(self,
-                 field_dim: Vector2D | None = None,
-                 goal_dim: Vector3D | None = None,
-                 goalie_area_dim: Vector2D | None = None,
-                 penalty_area_dim: Vector2D | None = None,
-                 middle_circle_radius: float | None = None,
-                 penalty_spot_distance: float | None = None) -> None:
+    def __init__(
+        self,
+        field_dim: Vector2D | None = None,
+        goal_dim: Vector3D | None = None,
+        goalie_area_dim: Vector2D | None = None,
+        penalty_area_dim: Vector2D | None = None,
+        middle_circle_radius: float | None = None,
+        penalty_spot_distance: float | None = None,
+    ) -> None:
         """
         Construct a new soccer field description.
         """
@@ -92,7 +93,7 @@ class RCHLAdultField2014(SoccerFieldDescription):
             Vector2D(1.0, 5.0) if goalie_area_dim is None else goalie_area_dim,
             Vector2D() if penalty_area_dim is None else penalty_area_dim,
             0.75 if middle_circle_radius is None else middle_circle_radius,
-            2.1 if penalty_spot_distance is None else penalty_spot_distance
+            2.1 if penalty_spot_distance is None else penalty_spot_distance,
         )
 
         field_half_x = self._field_dimensions.x() / 2
@@ -104,6 +105,7 @@ class RCHLAdultField2014(SoccerFieldDescription):
         has_goalie_area = self._goalie_area_dimensions.x() > 0 and self._goalie_area_dimensions.y() > 0
         has_penalty_area = self._penalty_area_dimensions.x() > 0 and self._penalty_area_dimensions.y() > 0
 
+        # fmt: off
         # init landmarks
         l_type = 't_junction'
         self._add_point('t_clf', l_type, Vector3D(0.0,  field_half_y, 0.0))   # T-junction center left field
@@ -148,6 +150,7 @@ class RCHLAdultField2014(SoccerFieldDescription):
         self._add_point('g_slg', l_type, Vector3D(-field_half_x,  goal_half_y, 0.0))  # Goal self left goalpost
         self._add_point('g_org', l_type, Vector3D( field_half_x, -goal_half_y, 0.0))  # Goal other right goalpost
         self._add_point('g_olg', l_type, Vector3D( field_half_x,  goal_half_y, 0.0))  # Goal other left goalpost
+        # fmt: on
 
 
 class RCHLAdultField2017(RCHLAdultField2014):
@@ -155,13 +158,15 @@ class RCHLAdultField2017(RCHLAdultField2014):
     Class representing the soccer field used by the RoboCup Humanoid Adult Size in 2017 and 2018.
     """
 
-    def __init__(self,
-                 field_dim: Vector2D | None = None,
-                 goal_dim: Vector3D | None = None,
-                 goalie_area_dim: Vector2D | None = None,
-                 penalty_area_dim: Vector2D | None = None,
-                 middle_circle_radius: float | None = None,
-                 penalty_spot_distance: float | None = None) -> None:
+    def __init__(
+        self,
+        field_dim: Vector2D | None = None,
+        goal_dim: Vector3D | None = None,
+        goalie_area_dim: Vector2D | None = None,
+        penalty_area_dim: Vector2D | None = None,
+        middle_circle_radius: float | None = None,
+        penalty_spot_distance: float | None = None,
+    ) -> None:
         """
         Construct a new soccer field description.
         """
@@ -172,7 +177,7 @@ class RCHLAdultField2017(RCHLAdultField2014):
             goalie_area_dim,
             penalty_area_dim,
             middle_circle_radius,
-            penalty_spot_distance
+            penalty_spot_distance,
         )
 
 
@@ -181,13 +186,15 @@ class RCHLAdultField2019(RCHLAdultField2017):
     Class representing the soccer field used by the RoboCup Humanoid Adult Size in 2019 and 2020.
     """
 
-    def __init__(self,
-                 field_dim: Vector2D | None = None,
-                 goal_dim: Vector3D | None = None,
-                 goalie_area_dim: Vector2D | None = None,
-                 penalty_area_dim: Vector2D | None = None,
-                 middle_circle_radius: float | None = None,
-                 penalty_spot_distance: float | None = None) -> None:
+    def __init__(
+        self,
+        field_dim: Vector2D | None = None,
+        goal_dim: Vector3D | None = None,
+        goalie_area_dim: Vector2D | None = None,
+        penalty_area_dim: Vector2D | None = None,
+        middle_circle_radius: float | None = None,
+        penalty_spot_distance: float | None = None,
+    ) -> None:
         """
         Construct a new soccer field description.
         """
@@ -198,7 +205,7 @@ class RCHLAdultField2019(RCHLAdultField2017):
             goalie_area_dim,
             penalty_area_dim,
             1.5 if middle_circle_radius is None else middle_circle_radius,
-            2.0 if penalty_spot_distance is None else penalty_spot_distance
+            2.0 if penalty_spot_distance is None else penalty_spot_distance,
         )
 
 
@@ -207,13 +214,15 @@ class RCHLAdultField2021(RCHLAdultField2019):
     Class representing the soccer field used by the RoboCup Humanoid Adult Size since 2021 until now.
     """
 
-    def __init__(self,
-                 field_dim: Vector2D | None = None,
-                 goal_dim: Vector3D | None = None,
-                 goalie_area_dim: Vector2D | None = None,
-                 penalty_area_dim: Vector2D | None = None,
-                 middle_circle_radius: float | None = None,
-                 penalty_spot_distance: float | None = None) -> None:
+    def __init__(
+        self,
+        field_dim: Vector2D | None = None,
+        goal_dim: Vector3D | None = None,
+        goalie_area_dim: Vector2D | None = None,
+        penalty_area_dim: Vector2D | None = None,
+        middle_circle_radius: float | None = None,
+        penalty_spot_distance: float | None = None,
+    ) -> None:
         """
         Construct a new soccer field description.
         """
@@ -224,5 +233,5 @@ class RCHLAdultField2021(RCHLAdultField2019):
             Vector2D(1.0, 4.0) if goalie_area_dim is None else goalie_area_dim,
             Vector2D(3.0, 6.0) if penalty_area_dim is None else penalty_area_dim,
             1.5 if middle_circle_radius is None else middle_circle_radius,
-            penalty_spot_distance
+            penalty_spot_distance,
         )

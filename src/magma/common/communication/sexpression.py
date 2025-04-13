@@ -49,11 +49,9 @@ class SExpression(Sequence[Union[str, 'SExpression']]):
         return self._list.__iter__()
 
     @overload
-    def __getitem__(self, i: int) -> str | SExpression:
-        ...
+    def __getitem__(self, i: int) -> str | SExpression: ...
     @overload
-    def __getitem__(self, s: slice[Any, Any, Any]) -> Sequence[str | SExpression]:
-        ...
+    def __getitem__(self, s: slice[Any, Any, Any]) -> Sequence[str | SExpression]: ...
     def __getitem__(self, i: int | slice[Any, Any, Any]) -> str | SExpression | Sequence[str | SExpression]:
         return self._list[i]
 

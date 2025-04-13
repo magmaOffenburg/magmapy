@@ -32,8 +32,9 @@ if TYPE_CHECKING:
     from magma.agent.communication.perception import Perception
 
 
-ST = TypeVar("ST")
-AT = TypeVar("AT")
+ST = TypeVar('ST')
+AT = TypeVar('AT')
+
 
 class PRobotModel(Protocol):
     """
@@ -87,10 +88,7 @@ class RobotModel:
     Default robot model implementation.
     """
 
-    def __init__(self,
-                 sensors: Iterable[Sensor],
-                 actuators: Iterable[Actuator],
-                 root_body: BodyPart) -> None:
+    def __init__(self, sensors: Iterable[Sensor], actuators: Iterable[Actuator], root_body: BodyPart) -> None:
         """
         Construct a new robot model.
         """

@@ -9,10 +9,7 @@ class ForceResistance(Sensor):
     Force resistance sensor representation.
     """
 
-    def __init__(self,
-                 name: str,
-                 frame_id: str,
-                 perceptor_name: str) -> None:
+    def __init__(self, name: str, frame_id: str, perceptor_name: str) -> None:
         """
         Construct a new force resistance sensor.
         """
@@ -21,7 +18,6 @@ class ForceResistance(Sensor):
 
         self._force: Vector3D = Vector3D()
         self._origin: Vector3D = Vector3D()
-
 
     def update(self, perception: Perception) -> None:
         perceptor = perception.get_perceptor(self._perceptor_name, ForceResistancePerceptor)

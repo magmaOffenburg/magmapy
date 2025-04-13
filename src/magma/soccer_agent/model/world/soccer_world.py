@@ -73,11 +73,13 @@ class SoccerWorld:
     Model representing a soccer world.
     """
 
-    def __init__(self,
-                 team_name: str,
-                 player_no: int,
-                 field_desc: PSoccerFieldDescription,
-                 ball_radius: float) -> None:
+    def __init__(
+        self,
+        team_name: str,
+        player_no: int,
+        field_desc: PSoccerFieldDescription,
+        ball_radius: float,
+    ) -> None:
         """
         Construct a new soccer world.
         """
@@ -93,14 +95,16 @@ class SoccerWorld:
 
         # map
         self._map_version: str = field_desc.__class__.__name__
-        self._map: SoccerMap = SoccerMap(field_desc.get_field_dimensions(),
-                                         field_desc.get_goal_dimensions(),
-                                         field_desc.get_goalie_area_dimensions(),
-                                         field_desc.get_penalty_area_dimensions(),
-                                         field_desc.get_middle_circle_radius(),
-                                         field_desc.get_penalty_spot_distance(),
-                                         self._point_landmarks,
-                                         self._line_landmarks)
+        self._map: SoccerMap = SoccerMap(
+            field_desc.get_field_dimensions(),
+            field_desc.get_goal_dimensions(),
+            field_desc.get_goalie_area_dimensions(),
+            field_desc.get_penalty_area_dimensions(),
+            field_desc.get_middle_circle_radius(),
+            field_desc.get_penalty_spot_distance(),
+            self._point_landmarks,
+            self._line_landmarks,
+        )
 
     def get_time(self) -> float:
         """

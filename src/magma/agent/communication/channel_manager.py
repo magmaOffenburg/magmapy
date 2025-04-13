@@ -41,7 +41,7 @@ class DefaultChannelManager:
     Default channel manager implementation.
     """
 
-    def __init__(self) ->None:
+    def __init__(self) -> None:
         """
         Construct a new channel manager.
         """
@@ -72,7 +72,7 @@ class DefaultChannelManager:
             try:
                 channel.start(self._perception_queue)
             except ConnectionError:
-                print(f'ERROR: "{channel.get_name()}" connection could not be established!') # noqa: T201
+                print(f'ERROR: "{channel.get_name()}" connection could not be established!')  # noqa: T201
                 self.stop()
                 return False
 

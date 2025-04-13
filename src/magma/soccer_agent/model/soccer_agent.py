@@ -41,17 +41,18 @@ class PMutableSoccerAgentModel(PSoccerAgentModel, PMutableAgentModel, Protocol):
     """
 
 
-
 class SoccerAgentModel(AgentModel):
     """
     The soccer agent model.
     """
 
-    def __init__(self,
-                 robot: PMutableRobotModel,
-                 world: PMutableSoccerWorld,
-                 game_state: PMutableSoccerGameState,
-                 rules: SoccerRules) -> None:
+    def __init__(
+        self,
+        robot: PMutableRobotModel,
+        world: PMutableSoccerWorld,
+        game_state: PMutableSoccerGameState,
+        rules: SoccerRules,
+    ) -> None:
         """
         Construct a new soccer agent model.
         """

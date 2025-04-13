@@ -111,9 +111,7 @@ class Joint:
     Base class for all joints of a robot model.
     """
 
-    def __init__(self,
-                 name: str,
-                 anchor: Vector3D):
+    def __init__(self, name: str, anchor: Vector3D) -> None:
         """
         Construct a new joint.
         """
@@ -157,10 +155,7 @@ class FixedJoint(Joint):
     Default fixed joint implementation.
     """
 
-    def __init__(self,
-                 name: str,
-                 anchor: Vector3D,
-                 orientation: Rotation3D):
+    def __init__(self, name: str, anchor: Vector3D, orientation: Rotation3D) -> None:
         """
         Construct a new joint.
         """
@@ -175,11 +170,7 @@ class HingeJoint(Joint):
     Default hinge joint implementation.
     """
 
-    def __init__(self,
-                 name: str,
-                 anchor: Vector3D,
-                 axis: Vector3D,
-                 limits: Vector2D):
+    def __init__(self, name: str, anchor: Vector3D, axis: Vector3D, limits: Vector2D) -> None:
         """
         Construct a new hinge joint.
         """
@@ -253,9 +244,7 @@ class FreeJoint(Joint):
     Default free joint implementation.
     """
 
-    def __init__(self,
-                 name: str,
-                 anchor: Vector3D):
+    def __init__(self, name: str, anchor: Vector3D) -> None:
         """
         Construct a new free joint.
         """
@@ -288,11 +277,13 @@ class BodyPart:
     Default representation of a body part.
     """
 
-    def __init__(self,
-                 name: str,
-                 children: Sequence[BodyPart],
-                 position: Vector3D,
-                 joint: Joint | None):
+    def __init__(
+        self,
+        name: str,
+        children: Sequence[BodyPart],
+        position: Vector3D,
+        joint: Joint | None,
+    ) -> None:
         """
         Construct a new body part.
         """
@@ -305,8 +296,7 @@ class BodyPart:
 
         # set parent references of child body parts
         for child in children:
-            child._parent = self    # noqa: SLF001 - prevent private member access warning for instances of the same class
-
+            child._parent = self  # noqa: SLF001 - prevent private member access warning for instances of the same class
 
     def get_name(self) -> str:
         """

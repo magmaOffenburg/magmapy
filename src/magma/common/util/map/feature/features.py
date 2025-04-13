@@ -51,9 +51,7 @@ class GeometricFeature:
     Base class for geometric features.
     """
 
-    def __init__(self,
-                 name: str,
-                 f_type: str) -> None:
+    def __init__(self, name: str, f_type: str) -> None:
         """
         Construct a new geometric feature.
         """
@@ -81,10 +79,7 @@ class PointFeature(GeometricFeature):
     Default implementation for a point feature with a known position.
     """
 
-    def __init__(self,
-                 name: str,
-                 f_type: str,
-                 known_pos: Vector3D) -> None:
+    def __init__(self, name: str, f_type: str, known_pos: Vector3D) -> None:
         """
         Construct a new point feature.
         """
@@ -106,11 +101,13 @@ class LineFeature(GeometricFeature):
     Default implementation for a line segment feature with a known position.
     """
 
-    def __init__(self,
-                 name: str,
-                 f_type: str,
-                 known_pos1: Vector3D,
-                 known_pos2: Vector3D) -> None:
+    def __init__(
+        self,
+        name: str,
+        f_type: str,
+        known_pos1: Vector3D,
+        known_pos2: Vector3D,
+    ) -> None:
         """
         Construct a new line segment feature.
         """

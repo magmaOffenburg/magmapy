@@ -61,7 +61,7 @@ class Action(Mapping[str, PEffector]):
     Map of actions.
     """
 
-    T = TypeVar("T")
+    T = TypeVar('T')
 
     def __init__(self, actions: Sequence[PEffector] | None = None) -> None:
         """
@@ -104,11 +104,9 @@ class Action(Mapping[str, PEffector]):
         return self._actions.values()
 
     @overload
-    def get(self, key: str, default: PEffector | None = None, /) -> PEffector | None:
-        ...
+    def get(self, key: str, default: PEffector | None = None, /) -> PEffector | None: ...
     @overload
-    def get(self, key: str, default: PEffector | T, /) -> PEffector | T:
-        ...
+    def get(self, key: str, default: PEffector | T, /) -> PEffector | T: ...
     def get(self, key: str, default: PEffector | T | None = None, /) -> PEffector | T | None:
         return self._actions.get(key, default)
 

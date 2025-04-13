@@ -17,12 +17,14 @@ class SoccerAgentFactory(ABC):
     Factory for soccer agent components.
     """
 
-    def __init__(self,
-                 team_name: str,
-                 player_no: int,
-                 robot_model_id: str,
-                 field_version: str,
-                 decision_maker_id: str) -> None:
+    def __init__(
+        self,
+        team_name: str,
+        player_no: int,
+        robot_model_id: str,
+        field_version: str,
+        decision_maker_id: str,
+    ) -> None:
         """
         Construct a new soccer agent component factory.
         """
@@ -109,7 +111,7 @@ class SoccerAgentFactory(ABC):
         Create the agent specific behaviors.
         """
 
-        del model   # not used in this method
+        del model  # not used in this method
 
         behaviors: dict[str, PBehavior] = {}
 

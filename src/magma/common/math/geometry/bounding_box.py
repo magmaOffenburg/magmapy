@@ -16,11 +16,7 @@ class AABB2D:
     min_y: float
     max_y: float
 
-    def __init__(self,
-                 min_x: float = -1,
-                 max_x: float = 1,
-                 min_y: float = -1,
-                 max_y: float = 1) -> None:
+    def __init__(self, min_x: float = -1, max_x: float = 1, min_y: float = -1, max_y: float = 1) -> None:
         """
         Construct a new 2D axis-aligned bounding-box.
         """
@@ -152,11 +148,7 @@ class AABB2D:
 
         return self.contains_xy(point.x(), point.y())
 
-    def apply_border(self,
-                     *,
-                     border_x: float | None = None,
-                     border_y: float | None = None,
-                     border: float | None = None) -> AABB2D:
+    def apply_border(self, *, border_x: float | None = None, border_y: float | None = None, border: float | None = None) -> AABB2D:
         """
         Apply a border around the bounding-box.
         """
@@ -170,9 +162,4 @@ class AABB2D:
         if border_y is None:
             border_y = border
 
-        return AABB2D(
-            self.min_x - border_x,
-            self.max_x + border_x,
-            self.min_y - border_y,
-            self.max_y + border_y
-        )
+        return AABB2D(self.min_x - border_x, self.max_x + border_x, self.min_y - border_y, self.max_y + border_y)

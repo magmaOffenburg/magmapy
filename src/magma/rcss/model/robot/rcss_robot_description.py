@@ -72,10 +72,9 @@ class RCSSRobots(Enum):
             if v.value == name:
                 return v
 
-        print(f'WARNING: Unknown RCSS robot model: "{name}"!')    # noqa: T201
+        print(f'WARNING: Unknown RCSS robot model: "{name}"!')  # noqa: T201
 
         return RCSSRobots.UNKNOWN
-
 
     @staticmethod
     def create_description_for(name: str) -> RobotDescription:
@@ -134,7 +133,7 @@ class RCSSActuatorType(Enum):
     A beam actuator.
     """
 
-    PASS_MODE = 'pass_mode' # noqa: S105 - prevent ruff hardcoded-passwort-assignment warning
+    PASS_MODE = 'pass_mode'  # noqa: S105 - prevent ruff hardcoded-passwort-assignment warning
     """
     A pass mode actuator.
     """
@@ -146,10 +145,7 @@ class ForceResistanceDescription(SensorDescription):
     Default force resistance sensor description.
     """
 
-    def __init__(self,
-                 name: str,
-                 frame_id: str,
-                 perceptor_name: str):
+    def __init__(self, name: str, frame_id: str, perceptor_name: str):
         super().__init__(name, frame_id, perceptor_name, RCSSSensorType.FORCE_RESISTANCE.value)
 
 
@@ -169,11 +165,7 @@ class SceneDescription(ActuatorDescription):
     The model type id.
     """
 
-    def __init__(self,
-                 name: str,
-                 effector_name: str,
-                 scene: str,
-                 model_type: int):
+    def __init__(self, name: str, effector_name: str, scene: str, model_type: int):
         super().__init__(name, effector_name, RCSSActuatorType.SCENE.value)
 
         object.__setattr__(self, 'scene', scene)
@@ -186,9 +178,7 @@ class InitDescription(ActuatorDescription):
     Default init actuator description.
     """
 
-    def __init__(self,
-                 name: str,
-                 effector_name: str):
+    def __init__(self, name: str, effector_name: str):
         super().__init__(name, effector_name, RCSSActuatorType.INIT.value)
 
 
@@ -203,11 +193,7 @@ class SyncDescription(ActuatorDescription):
     Flag for enabling auto sync.
     """
 
-    def __init__(self,
-                 name: str,
-                 effector_name: str,
-                 *,
-                 auto_sync: bool = True):
+    def __init__(self, name: str, effector_name: str, *, auto_sync: bool = True):
         super().__init__(name, effector_name, RCSSActuatorType.SYNC.value)
 
         object.__setattr__(self, 'auto_sync', auto_sync)
@@ -219,9 +205,7 @@ class BeamDescription(ActuatorDescription):
     Default beam actuator description.
     """
 
-    def __init__(self,
-                 name: str,
-                 effector_name: str):
+    def __init__(self, name: str, effector_name: str):
         super().__init__(name, effector_name, RCSSActuatorType.BEAM.value)
 
 
@@ -231,9 +215,7 @@ class PassModeDescription(ActuatorDescription):
     Default pass mode actuator description.
     """
 
-    def __init__(self,
-                 name: str,
-                 effector_name: str):
+    def __init__(self, name: str, effector_name: str):
         super().__init__(name, effector_name, RCSSActuatorType.PASS_MODE.value)
 
 
@@ -247,8 +229,9 @@ class RCSSNaoHeteroDescription(RobotDescription):
         Construct a new Nao-Hetero model.
         """
 
-        super().__init__(f"{RCSSRobots.NAO.value}{model_subtype}")
+        super().__init__(f'{RCSSRobots.NAO.value}{model_subtype}')
 
+        # fmt: off
         # bodies                              name, position(     x,      y,      z)
         self._add_body(BodyDescription(    'torso', Vector3D()))
         # head
@@ -307,6 +290,7 @@ class RCSSNaoHeteroDescription(RobotDescription):
         self._add_joint(HingeJointDescription(    'LKneePitch',   'lthight',     'lshank',    'llj4', Vector3D(     0, -0.010,  0.045), Vector3D(1, 0, 0), Vector2D(-130,   1), MotorDescription( 'lle4',      7.03,        0.0)))
         self._add_joint(HingeJointDescription(    'LFootPitch',    'lshank',     'lankle',    'llj5', Vector3D(     0,      0,      0), Vector3D(1, 0, 0), Vector2D( -45,  75), MotorDescription( 'lle5',      7.03,        0.0)))
         self._add_joint(HingeJointDescription(     'LFootRoll',    'lankle',      'lfoot',    'llj6', Vector3D(     0, -0.030,  0.035), Vector3D(0, 1, 0), Vector2D( -45,  25), MotorDescription( 'lle6',      7.03,        0.0)))
+        # fmt: off
 
         # virtual actuators
         self._add_actuator(SceneDescription('create', 'scene', 'rsg/agent/nao/nao_hetero.rsg', model_subtype))
@@ -342,6 +326,7 @@ class RCSSNao1Description(RCSSNaoHeteroDescription):
 
         super().__init__(1)
 
+        # fmt: off
         # bodies                            name, position(     x,        y,        z)
         self._add_body(BodyDescription( 'relbow', Vector3D(-0.010,  0.10664,  0.00900)), override=True)
         self._add_body(BodyDescription('rthight', Vector3D(     0,  0.01000, -0.05832)), override=True)
@@ -354,6 +339,7 @@ class RCSSNao1Description(RCSSNaoHeteroDescription):
         # joints                                     name, parent body, child body, perceptor,   anchor(     x,      y,       z),     axis(x, y, z),   limits( min, max),            motor(effetor, max_speed, max_torque)
         self._add_joint(HingeJointDescription('RHipPitch',     'rhip2',  'rthight',    'rlj3', Vector3D(     0, -0.010, 0.05832), Vector3D(1, 0, 0), Vector2D( -25, 100), MotorDescription( 'rle3',      7.03,        0.0)), override=True)
         self._add_joint(HingeJointDescription('LHipPitch',     'lhip2',  'lthight',    'llj3', Vector3D(     0, -0.010, 0.05832), Vector3D(1, 0, 0), Vector2D( -25, 100), MotorDescription( 'lle3',      7.03,        0.0)), override=True)
+        # fmt: on
 
 
 class RCSSNao2Description(RCSSNaoHeteroDescription):
@@ -368,12 +354,14 @@ class RCSSNao2Description(RCSSNaoHeteroDescription):
 
         super().__init__(2)
 
+        # fmt: off
         # joints                                      name, parent body, child body, perceptor,   anchor(     x,      y,      z),     axis(x, y, z),   limits( min, max),            motor(effetor, max_speed, max_torque)
         self._add_joint(HingeJointDescription('RFootPitch',    'rshank',   'rankle',    'rlj5', Vector3D(     0,      0,      0), Vector3D(1, 0, 0), Vector2D( -45,  75), MotorDescription( 'rle5',   8.80667,        0.0)), override=True)
         self._add_joint(HingeJointDescription( 'RFootRoll',    'rankle',    'rfoot',    'rlj6', Vector3D(     0, -0.030,  0.035), Vector3D(0, 1, 0), Vector2D( -25,  45), MotorDescription( 'rle6',   3.47234,        0.0)), override=True)
 
         self._add_joint(HingeJointDescription('LFootPitch',    'lshank',   'lankle',    'llj5', Vector3D(     0,      0,      0), Vector3D(1, 0, 0), Vector2D( -45,  75), MotorDescription( 'lle5',   8.80667,        0.0)), override=True)
         self._add_joint(HingeJointDescription( 'LFootRoll',    'lankle',    'lfoot',    'llj6', Vector3D(     0, -0.030,  0.035), Vector3D(0, 1, 0), Vector2D( -45,  25), MotorDescription( 'lle6',   3.47234,        0.0)), override=True)
+        # fmt: on
 
 
 class RCSSNao3Description(RCSSNaoHeteroDescription):
@@ -388,6 +376,7 @@ class RCSSNao3Description(RCSSNaoHeteroDescription):
 
         super().__init__(3)
 
+        # fmt: off
         # bodies                            name, position(     x,      y,      z)
         self._add_body(BodyDescription( 'relbow', Vector3D(-0.010,  0.110,  0.009)), override=True)
         self._add_body(BodyDescription(  'rhip1', Vector3D( 0.066, -0.010, -0.115)), override=True)
@@ -402,6 +391,7 @@ class RCSSNao3Description(RCSSNaoHeteroDescription):
         # joints                                     name, parent body, child body, perceptor,   anchor(     x,      y,       z),     axis(x, y, z),   limits( min, max),            motor(effetor, max_speed, max_torque)
         self._add_joint(HingeJointDescription('RHipPitch',     'rhip2',  'rthight',    'rlj3', Vector3D(     0, -0.010, 0.05832), Vector3D(1, 0, 0), Vector2D( -25, 100), MotorDescription( 'rle3',      7.03,        0.0)), override=True)
         self._add_joint(HingeJointDescription('LHipPitch',     'lhip2',  'lthight',    'llj3', Vector3D(     0, -0.010, 0.05832), Vector3D(1, 0, 0), Vector2D( -25, 100), MotorDescription( 'lle3',      7.03,        0.0)), override=True)
+        # fmt: on
 
 
 class RCSSNao4Description(RCSSNaoHeteroDescription):
@@ -416,6 +406,7 @@ class RCSSNao4Description(RCSSNaoHeteroDescription):
 
         super().__init__(4)
 
+        # fmt: off
         # bodies                          name, position(     x,      y,      z)
         self._add_body(BodyDescription('rfoot', Vector3D(     0,  0.010, -0.035)), override=True)
         self._add_body(BodyDescription( 'rtoe', Vector3D(     0,  0.080, -0.005)))
@@ -433,3 +424,4 @@ class RCSSNao4Description(RCSSNaoHeteroDescription):
         # force sensors
         self._add_sensor(ForceResistanceDescription('RToeForce', 'rtoe', 'rf1'))
         self._add_sensor(ForceResistanceDescription('LToeForce', 'ltoe', 'lf1'))
+        # fmt: on

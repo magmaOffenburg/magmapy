@@ -40,7 +40,6 @@ class ByteTextMessageEncoder:
 
         self._encoder: PTextMessageEncoder = encoder
 
-
     def encode(self, action: Action) -> bytes | bytearray:
         """
         Encode the given action commands into a message.

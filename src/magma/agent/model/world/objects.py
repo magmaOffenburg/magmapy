@@ -8,9 +8,7 @@ class VisibleObject:
     Representation of a visible object in the world.
     """
 
-    def __init__(self,
-                 name: str,
-                 position: Vector3D | None = None) -> None:
+    def __init__(self, name: str, position: Vector3D | None = None) -> None:
         """
         Construct a new visible object.
         """
@@ -38,10 +36,7 @@ class MovableObject(VisibleObject):
     Representation of a movable object in the world.
     """
 
-    def __init__(self,
-                 name: str,
-                 position: Vector3D | None = None,
-                 velocity: Vector3D | None = None) -> None:
+    def __init__(self, name: str, position: Vector3D | None = None, velocity: Vector3D | None = None) -> None:
         """
         Construct a new movable object.
         """
@@ -63,10 +58,7 @@ class Landmark(VisibleObject):
     Representation of a static landmark object in the world.
     """
 
-    def __init__(self,
-                 name: str,
-                 l_type: str,
-                 position: Vector3D | None = None) -> None:
+    def __init__(self, name: str, l_type: str, position: Vector3D | None = None) -> None:
         """
         Construct a new landmark object.
         """
@@ -88,11 +80,7 @@ class PointLandmark(Landmark):
     Representation of a static, punctual landmark object in the world.
     """
 
-    def __init__(self,
-                 name: str,
-                 l_type: str,
-                 known_position: Vector3D,
-                 position: Vector3D | None = None) -> None:
+    def __init__(self, name: str, l_type: str, known_position: Vector3D, position: Vector3D | None = None) -> None:
         """
         Construct a new point landmark object.
         """
@@ -114,12 +102,14 @@ class LineLandmark(Landmark):
     Representation of a static, line segment landmark object in the world.
     """
 
-    def __init__(self,
-                 name: str,
-                 l_type: str,
-                 known_position1: Vector3D,
-                 known_position2: Vector3D,
-                 position: Vector3D | None = None) -> None:
+    def __init__(
+        self,
+        name: str,
+        l_type: str,
+        known_position1: Vector3D,
+        known_position2: Vector3D,
+        position: Vector3D | None = None,
+    ) -> None:
         """
         Construct a new line segment landmark object.
         """

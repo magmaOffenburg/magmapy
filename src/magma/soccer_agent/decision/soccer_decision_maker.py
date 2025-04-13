@@ -27,7 +27,7 @@ class SoccerDecisionMaker(DecisionMakerBase[PSoccerAgentModel]):
             self._get_ready,
             self._react_to_game_end,
             self._wait_for_game_start,
-            self._move
+            self._move,
         ]
 
     def _decide_next_behavior(self) -> str:

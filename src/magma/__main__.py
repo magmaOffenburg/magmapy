@@ -35,6 +35,7 @@ def rcss_agent() -> None:
     # parse arguments
     parser = argparse.ArgumentParser(description='The magma agent framework.')
 
+    # fmt: off
     parser.add_argument('-t', '--teamname',      type=str, help='The team name.',             default='magma',            required=False)
     parser.add_argument('-n', '--playerno',      type=int, help='The player number.',         default=1,                  required=False)
     parser.add_argument('-r', '--robot',         type=str, help='The robot model.',           default='default',          required=False, choices=robot_models)
@@ -42,6 +43,7 @@ def rcss_agent() -> None:
     parser.add_argument('-p', '--port',          type=int, help='The server port.',           default=3100,               required=False)
     parser.add_argument('-f', '--field',         type=str, help='The field version.',         default=field_versions[-1], required=False, choices=field_versions)
     parser.add_argument('-d', '--decisionmaker', type=str, help='The decision maker to use.', default='default',          required=False, choices=decision_maker_ids)
+    # fmt: on
 
     args = parser.parse_args()
 
@@ -60,5 +62,5 @@ def rcss_agent() -> None:
     agent.run()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     magma_agent()

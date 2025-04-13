@@ -6,11 +6,13 @@ class SoccerRules:
     Class for representing soccer specific rules.
     """
 
-    def __init__(self,
-                 match_duration: float,
-                 match_overtime: float,
-                 kick_off_time: float,
-                 throw_in_time: float) -> None:
+    def __init__(
+        self,
+        match_duration: float,
+        match_overtime: float,
+        kick_off_time: float,
+        throw_in_time: float,
+    ) -> None:
         """
         Create a new rule book.
         """

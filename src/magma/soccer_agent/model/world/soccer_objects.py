@@ -51,10 +51,12 @@ class SoccerBall(MovableObject):
     Default representation of a soccer ball in a soccer game.
     """
 
-    def __init__(self,
-                 radius: float,
-                 position: Vector3D | None = None,
-                 velocity: Vector3D | None = None) -> None:
+    def __init__(
+        self,
+        radius: float,
+        position: Vector3D | None = None,
+        velocity: Vector3D | None = None,
+    ) -> None:
         """
         Construct a new soccer ball object.
         """
@@ -76,18 +78,20 @@ class SoccerPlayer(MovableObject):
     Default representation of a soccer player in a soccer match.
     """
 
-    def __init__(self,
-                 team_name: str,
-                 player_no: int,
-                 *,
-                 own_team: bool,
-                 position: Vector3D | None = None,
-                 velocity: Vector3D | None = None) -> None:
+    def __init__(
+        self,
+        team_name: str,
+        player_no: int,
+        *,
+        own_team: bool,
+        position: Vector3D | None = None,
+        velocity: Vector3D | None = None,
+    ) -> None:
         """
         Construct a new soccer player object.
         """
 
-        super().__init__(f"{team_name}{player_no}", position, velocity)
+        super().__init__(f'{team_name}{player_no}', position, velocity)
 
         self._team_name: str = team_name
         self._player_no: int = player_no
@@ -120,11 +124,13 @@ class ThisSoccerPlayer(SoccerPlayer):
     Default this-soccer-player implementation.
     """
 
-    def __init__(self,
-                 team_name: str,
-                 player_no: int,
-                 position: Vector3D | None = None,
-                 velocity: Vector3D | None = None) -> None:
+    def __init__(
+        self,
+        team_name: str,
+        player_no: int,
+        position: Vector3D | None = None,
+        velocity: Vector3D | None = None,
+    ) -> None:
         """
         Construct a new this-soccer-player.
         """

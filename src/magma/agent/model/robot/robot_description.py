@@ -13,51 +13,50 @@ if TYPE_CHECKING:
 
 
 class SensorType(Enum):
-    GYRO = "gyro"
+    GYRO = 'gyro'
     """
     A gyro rate sensor, receiving rotational velocity information.
     """
 
-    ACCELEROMETER = "accelerometer"
+    ACCELEROMETER = 'accelerometer'
     """
     An accelerometer sensor, receiving linear accelerations.
     """
 
-    IMU = "imu"
+    IMU = 'imu'
     """
     An IMU sensor, receiving rotational velocity as well as linear acceleration information together with an orientation prediction.
     """
-
-    CAMERA = "camera"
+    CAMERA = 'camera'
     """
     A camera sensor, receiving various state information about visible objects in the environment.
     """
 
 
 class ActuatorType(Enum):
-    LIGHT = "light"
+    LIGHT = 'light'
     """
     A light that can be regulated in brightness.
     """
 
-    RGB_LIGHT = "rgb_light"
+    RGB_LIGHT = 'rgb_light'
     """
     A light that can be regulated in brightness as well as in color.
     """
 
 
 class JointType(Enum):
-    FIXED = "fixed"
+    FIXED = 'fixed'
     """
     A fixed joint, allowing no movement freedom (0DOF).
     """
 
-    HINGE = "hinge"
+    HINGE = 'hinge'
     """
     A hinge joint, allowing 1DOF along one axis.
     """
 
-    FREE = "free"
+    FREE = 'free'
     """
     A free joint, allowing full 6DOF translational as well as rotational freedom.
     """
@@ -152,10 +151,7 @@ class GyroDescription(SensorDescription):
     Default gyro sensor description.
     """
 
-    def __init__(self,
-                 name: str,
-                 frame_id: str,
-                 perceptor_name: str):
+    def __init__(self, name: str, frame_id: str, perceptor_name: str):
         super().__init__(name, frame_id, perceptor_name, SensorType.GYRO.value)
 
 
@@ -165,10 +161,7 @@ class AccelerometerDescription(SensorDescription):
     Default accelerometer sensor description.
     """
 
-    def __init__(self,
-                 name: str,
-                 frame_id: str,
-                 perceptor_name: str):
+    def __init__(self, name: str, frame_id: str, perceptor_name: str):
         super().__init__(name, frame_id, perceptor_name, SensorType.ACCELEROMETER.value)
 
 
@@ -178,10 +171,7 @@ class IMUDescription(SensorDescription):
     Default IMU sensor description.
     """
 
-    def __init__(self,
-                 name: str,
-                 frame_id: str,
-                 perceptor_name: str):
+    def __init__(self, name: str, frame_id: str, perceptor_name: str):
         super().__init__(name, frame_id, perceptor_name, SensorType.IMU.value)
 
 
@@ -194,12 +184,14 @@ class CameraDescription(SensorDescription):
     horizontal_fov: float
     vertical_fov: float
 
-    def __init__(self,
-                 name: str,
-                 frame_id: str,
-                 perceptor_name: str,
-                 horizontal_fov: float,
-                 vertical_fov: float):
+    def __init__(
+        self,
+        name: str,
+        frame_id: str,
+        perceptor_name: str,
+        horizontal_fov: float,
+        vertical_fov: float,
+    ):
         super().__init__(name, frame_id, perceptor_name, SensorType.CAMERA.value)
 
         object.__setattr__(self, 'horizontal_fov', horizontal_fov)
@@ -293,12 +285,14 @@ class FixedJointDescription(JointDescription):
     The fixed orientation of the joint.
     """
 
-    def __init__(self,
-                 name: str,
-                 parent: str,
-                 child: str,
-                 anchor: Vector3D,
-                 orientation: Rotation3D | None = None) -> None:
+    def __init__(
+        self,
+        name: str,
+        parent: str,
+        child: str,
+        anchor: Vector3D,
+        orientation: Rotation3D | None = None,
+    ) -> None:
         super().__init__(name, parent, child, JointType.FIXED.value, anchor)
 
         object.__setattr__(self, 'orientation', Rotation3D() if orientation is None else orientation)
@@ -330,15 +324,17 @@ class HingeJointDescription(JointDescription):
     Description of the motor driving this joint.
     """
 
-    def __init__(self,
-                 name: str,
-                 parent: str,
-                 child: str,
-                 perceptor_name: str,
-                 anchor: Vector3D,
-                 axis: Vector3D,
-                 limits: Vector2D,
-                 motor: MotorDescription | None = None) -> None:
+    def __init__(
+        self,
+        name: str,
+        parent: str,
+        child: str,
+        perceptor_name: str,
+        anchor: Vector3D,
+        axis: Vector3D,
+        limits: Vector2D,
+        motor: MotorDescription | None = None,
+    ) -> None:
         super().__init__(name, parent, child, JointType.HINGE.value, anchor)
 
         object.__setattr__(self, 'perceptor_name', perceptor_name)
@@ -358,12 +354,14 @@ class FreeJointDescription(JointDescription):
     The perceptor name of the corresponding joint sensor (if existing).
     """
 
-    def __init__(self,
-                 name: str,
-                 parent: str,
-                 child: str,
-                 perceptor_name: str,
-                 anchor: Vector3D):
+    def __init__(
+        self,
+        name: str,
+        parent: str,
+        child: str,
+        perceptor_name: str,
+        anchor: Vector3D,
+    ):
         super().__init__(name, parent, child, JointType.FREE.value, anchor)
 
         object.__setattr__(self, 'perceptor_name', perceptor_name)
@@ -392,7 +390,6 @@ class RobotDescription:
     """
 
     def __init__(self, name: str) -> None:
-
         self._name: str = name
         self._bodies: dict[str, BodyDescription] = {}
         self._joints: dict[str, JointDescription] = {}

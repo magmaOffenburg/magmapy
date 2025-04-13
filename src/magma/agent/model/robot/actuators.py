@@ -115,12 +115,14 @@ class Motor(Actuator):
     Default implementation of a motor controlling a joint.
     """
 
-    def __init__(self,
-                 name: str,
-                 effector_name: str,
-                 max_speed: float,
-                 max_effort: float,
-                 joint: HingeJoint):
+    def __init__(
+        self,
+        name: str,
+        effector_name: str,
+        max_speed: float,
+        max_effort: float,
+        joint: HingeJoint,
+    ):
         """
         Construct a new motor.
         """
@@ -141,11 +143,7 @@ class Motor(Actuator):
         self._previous_target_kp: float = 0.0
         self._previous_target_kd: float = 0.0
 
-    def set(self,
-            pos: float,
-            vel: float,
-            kp: float,
-            kd: float) -> None:
+    def set(self, pos: float, vel: float, kp: float, kd: float) -> None:
         """
         Set the motor target action.
         """

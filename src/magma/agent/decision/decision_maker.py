@@ -43,16 +43,15 @@ class PDecisionMaker(Protocol):
         """
 
 
-MT = TypeVar("MT")
+MT = TypeVar('MT')
+
 
 class DecisionMakerBase(Generic[MT], ABC):
     """
     Base class for decision makers.
     """
 
-    def __init__(self,
-                 model: MT,
-                 behaviors: dict[str, PBehavior]) -> None:
+    def __init__(self, model: MT, behaviors: dict[str, PBehavior]) -> None:
         """
         Construct a new decision maker.
         """
@@ -101,10 +100,10 @@ class DecisionMakerBase(Generic[MT], ABC):
         if desired_behavior_id in self._behaviors:
             self._desired_behavior = self._behaviors[desired_behavior_id]
         else:
-            print(f'WARNING: Desired behavior with name "{desired_behavior_id}" not found in behavior map!')    # noqa: T201
+            print(f'WARNING: Desired behavior with name "{desired_behavior_id}" not found in behavior map!')  # noqa: T201
 
         # try switching to the requested behavior
-        if (self._desired_behavior != self._current_behavior):
+        if self._desired_behavior != self._current_behavior:
             self._current_behavior = self._current_behavior.switch_to(self._desired_behavior)
 
         # perform current behavior
@@ -126,9 +125,7 @@ class NoneDecisionMaker(DecisionMakerBase[PAgentModel]):
     A decision maker that does nothing.
     """
 
-    def __init__(self,
-                 model: PAgentModel,
-                 behaviors: dict[str, PBehavior] | None = None) -> None:
+    def __init__(self, model: PAgentModel, behaviors: dict[str, PBehavior] | None = None) -> None:
         """
         Construct a new none decision maker.
         """

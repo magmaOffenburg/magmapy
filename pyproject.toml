@@ -43,6 +43,13 @@ Issues = "https://git.hs-offenburg.de/sglaser/magmapy/-/issues"
 [project.scripts]
 magma = "magma.__main__:magma_agent"
 
+[tool.ruff]
+line-length = 240
+
+[tool.ruff.format]
+quote-style = "single"
+indent-style = "space"
+
 [tool.mypy]
 python_version = "3.9"
 warn_return_any = true

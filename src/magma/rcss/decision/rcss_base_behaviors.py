@@ -15,12 +15,12 @@ class RCSSBehaviorID(Enum):
     Enum specifying soccer behavior names.
     """
 
-    CREATE = "create"
+    CREATE = 'create'
     """
     The create behavior used to spawn a robot in simulation.
     """
 
-    INIT = "init"
+    INIT = 'init'
     """
     The init behavior used to initialize a robot in simulation.
     """
@@ -45,7 +45,7 @@ class CreateBehavior(Behavior):
 
         if self._create_actuator is None:
             self._creation_completed = True
-            print('WARNING: Robot model has no create actuator with the name "create"!')    # noqa: T201
+            print('WARNING: Robot model has no create actuator with the name "create"!')  # noqa: T201
 
     def perform(self) -> None:
         if not self._creation_completed:
@@ -71,7 +71,7 @@ class InitBehavior(Behavior):
 
         self._model = model
 
-        self._init_actuator: InitActuator | None = self._model.get_robot().get_actuator("init", InitActuator)
+        self._init_actuator: InitActuator | None = self._model.get_robot().get_actuator('init', InitActuator)
         self._initialization_completed: bool = False
 
         if self._init_actuator is None:

@@ -136,10 +136,7 @@ class Sensor(ABC):
     Base class for all sensors of a robot model.
     """
 
-    def __init__(self,
-                 name: str,
-                 parent: str,
-                 perceptor_name: str):
+    def __init__(self, name: str, parent: str, perceptor_name: str):
         """
         Construct a new sensor.
         """
@@ -184,10 +181,7 @@ class Accelerometer(Sensor):
     Accelerometer sensor representation.
     """
 
-    def __init__(self,
-                 name: str,
-                 frame_id: str,
-                 perceptor_name: str) -> None:
+    def __init__(self, name: str, frame_id: str, perceptor_name: str) -> None:
         """
         Construct a new accelerometer sensor.
         """
@@ -216,10 +210,7 @@ class Gyroskope(Sensor):
     Gyro rate sensor representation.
     """
 
-    def __init__(self,
-                 name: str,
-                 frame_id: str,
-                 perceptor_name: str) -> None:
+    def __init__(self, name: str, frame_id: str, perceptor_name: str) -> None:
         """
         Construct a new gyro rate sensor.
         """
@@ -248,10 +239,7 @@ class IMU(Sensor):
     Inertial Measurement Unit (IMU) sensor representation.
     """
 
-    def __init__(self,
-                 name: str,
-                 frame_id: str,
-                 perceptor_name: str) -> None:
+    def __init__(self, name: str, frame_id: str, perceptor_name: str) -> None:
         """
         Construct a new IMU sensor.
         """
@@ -298,11 +286,13 @@ class HingeJointSensor(Sensor):
     Hinge joint state sensor representation.
     """
 
-    def __init__(self,
-                 name: str,
-                 frame_id: str,
-                 perceptor_name: str,
-                 joint: HingeJoint) -> None:
+    def __init__(
+        self,
+        name: str,
+        frame_id: str,
+        perceptor_name: str,
+        joint: HingeJoint,
+    ) -> None:
         """
         Construct a new hinge joint state sensor.
         """
@@ -353,11 +343,13 @@ class FreeJointSensor(Sensor):
     Free joint state sensor representation.
     """
 
-    def __init__(self,
-                 name: str,
-                 frame_id: str,
-                 perceptor_name: str,
-                 joint: FreeJoint) -> None:
+    def __init__(
+        self,
+        name: str,
+        frame_id: str,
+        perceptor_name: str,
+        joint: FreeJoint,
+    ) -> None:
         """
         Construct a new hinge joint state sensor.
         """
