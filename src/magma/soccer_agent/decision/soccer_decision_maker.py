@@ -4,7 +4,6 @@ from typing import TYPE_CHECKING, Callable
 
 from magma.agent.decision.behavior import BehaviorID
 from magma.agent.decision.decision_maker import DecisionMakerBase
-from magma.soccer_agent.decision.soccer_behaviors import SoccerBehaviorID
 from magma.soccer_agent.model.soccer_agent import PSoccerAgentModel
 
 if TYPE_CHECKING:
