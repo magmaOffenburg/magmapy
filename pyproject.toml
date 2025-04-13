@@ -40,6 +40,9 @@ Repository = "https://git.hs-offenburg.de/sglaser/magmapy/-/blob/main/doc"
 Changelog = "https://git.hs-offenburg.de/sglaser/magmapy/-/blob/main/CHANGELOG.md"
 Issues = "https://git.hs-offenburg.de/sglaser/magmapy/-/issues"
 
+[project.scripts]
+magma = "magma.__main__:magma_agent"
+
 [tool.mypy]
 python_version = "3.9"
 warn_return_any = true
