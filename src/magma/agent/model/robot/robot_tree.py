@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Protocol, runtime_checkable
 
-from magma.common.math.geometry.pose import Pose3D
-from magma.common.math.geometry.rotation import Rotation3D
-from magma.common.math.geometry.vector import Vector3D
+from magma.common.math.geometry.pose import P3D_ZERO, Pose3D
+from magma.common.math.geometry.rotation import R3D_IDENTITY, Rotation3D
+from magma.common.math.geometry.vector import V3D_ZERO, Vector3D
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
@@ -118,8 +118,8 @@ class Joint:
 
         self._name = name
         self._anchor: Vector3D = anchor
-        self._translation: Vector3D = Vector3D()
-        self._rotation: Rotation3D = Rotation3D()
+        self._translation: Vector3D = V3D_ZERO
+        self._rotation: Rotation3D = R3D_IDENTITY
 
     def get_name(self) -> str:
         """
@@ -208,14 +208,14 @@ class HingeJoint(Joint):
         Retrieve the minimum possible joint position.
         """
 
-        return self._limits.x()
+        return self._limits.x
 
     def get_max(self) -> float:
         """
         Retrieve the maximum possible joint position.
         """
 
-        return self._limits.y()
+        return self._limits.y
 
     def ax_pos(self) -> float:
         """
@@ -251,7 +251,7 @@ class FreeJoint(Joint):
 
         super().__init__(name, anchor)
 
-        self._pose: Pose3D = Pose3D()
+        self._pose: Pose3D = P3D_ZERO
 
     def set(self, pose: Pose3D) -> None:
         """
@@ -261,8 +261,8 @@ class FreeJoint(Joint):
         self._pose = pose
 
         # update joint rotation and translation information
-        self._rotation = pose.orientation()
-        self._translation = pose.position()
+        self._rotation = pose.rot
+        self._translation = pose.pos
 
     def joint_pose(self) -> Pose3D:
         """

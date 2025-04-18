@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import TYPE_CHECKING, Protocol
 
-from magma.common.math.geometry.rotation import Rotation3D
+from magma.common.math.geometry.rotation import R3D_IDENTITY, Rotation3D
 
 if TYPE_CHECKING:
     from collections.abc import Generator, ValuesView
@@ -295,7 +295,7 @@ class FixedJointDescription(JointDescription):
     ) -> None:
         super().__init__(name, parent, child, JointType.FIXED.value, anchor)
 
-        object.__setattr__(self, 'orientation', Rotation3D() if orientation is None else orientation)
+        object.__setattr__(self, 'orientation', R3D_IDENTITY if orientation is None else orientation)
 
 
 @dataclass(frozen=True)

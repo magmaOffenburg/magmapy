@@ -178,15 +178,15 @@ class SoccerMap(FeatureMap):
         self._middle_circle_radius: float = middle_circle_radius
         self._penalty_spot_distance: float = penalty_spot_distance
 
-        field_half_x = field_dim.x() / 2
+        field_half_x = field_dim.x / 2
 
-        self._field_area: AABB2D = AABB2D(-field_half_x, field_half_x, -field_dim.y() / 2, field_dim.y() / 2)
-        self._own_goal_area: AABB2D = AABB2D(-field_half_x - goal_dim.x(), -field_half_x, -goal_dim.y() / 2, goal_dim.y() / 2)
-        self._opponent_goal_area: AABB2D = AABB2D(field_half_x, field_half_x + goal_dim.x(), -goal_dim.y() / 2, goal_dim.y() / 2)
-        self._own_goalie_area: AABB2D = AABB2D(-field_half_x, -field_half_x + goalie_area_dim.x(), -goalie_area_dim.y() / 2, goalie_area_dim.y() / 2)
-        self._opponent_goalie_area: AABB2D = AABB2D(field_half_x - goalie_area_dim.x(), field_half_x, -goalie_area_dim.y() / 2, goalie_area_dim.y() / 2)
-        self._own_penalty_area: AABB2D = AABB2D(-field_half_x, -field_half_x + penalty_area_dim.x(), -penalty_area_dim.y() / 2, penalty_area_dim.y() / 2)
-        self._opponent_penalty_area: AABB2D = AABB2D(field_half_x - penalty_area_dim.x(), field_half_x, -penalty_area_dim.y() / 2, penalty_area_dim.y() / 2)
+        self._field_area: AABB2D = AABB2D(-field_half_x, field_half_x, -field_dim.y / 2, field_dim.y / 2)
+        self._own_goal_area: AABB2D = AABB2D(-field_half_x - goal_dim.x, -field_half_x, -goal_dim.y / 2, goal_dim.y / 2)
+        self._opponent_goal_area: AABB2D = AABB2D(field_half_x, field_half_x + goal_dim.x, -goal_dim.y / 2, goal_dim.y / 2)
+        self._own_goalie_area: AABB2D = AABB2D(-field_half_x, -field_half_x + goalie_area_dim.x, -goalie_area_dim.y / 2, goalie_area_dim.y / 2)
+        self._opponent_goalie_area: AABB2D = AABB2D(field_half_x - goalie_area_dim.x, field_half_x, -goalie_area_dim.y / 2, goalie_area_dim.y / 2)
+        self._own_penalty_area: AABB2D = AABB2D(-field_half_x, -field_half_x + penalty_area_dim.x, -penalty_area_dim.y / 2, penalty_area_dim.y / 2)
+        self._opponent_penalty_area: AABB2D = AABB2D(field_half_x - penalty_area_dim.x, field_half_x, -penalty_area_dim.y / 2, penalty_area_dim.y / 2)
 
         self._own_goal_position: Vector3D = Vector3D(-field_half_x, 0, 0)
         self._opponent_goal_position: Vector3D = Vector3D(field_half_x, 0, 0)
@@ -224,14 +224,14 @@ class SoccerMap(FeatureMap):
         Half of the soccer field length (x-coordinate).
         """
 
-        return self._field_dimensions.x() / 2
+        return self._field_dimensions.x / 2
 
     def get_field_half_width(self) -> float:
         """
         Half of the soccer field width (y-coordinate).
         """
 
-        return self._field_dimensions.y() / 2
+        return self._field_dimensions.y / 2
 
     def get_goal_dimensions(self) -> Vector3D:
         """
@@ -245,21 +245,21 @@ class SoccerMap(FeatureMap):
         Half of the goal width (y-coordinate).
         """
 
-        return self._goal_dimensions.y() / 2
+        return self._goal_dimensions.y / 2
 
     def get_goal_depth(self) -> float:
         """
         Depth of the goal (x-coordinate).
         """
 
-        return self._goal_dimensions.x()
+        return self._goal_dimensions.x
 
     def get_goal_height(self) -> float:
         """
         Height of the goal (z-coordinate).
         """
 
-        return self._goal_dimensions.z()
+        return self._goal_dimensions.z
 
     def get_goalie_area_dimensions(self) -> Vector2D:
         """
@@ -273,14 +273,14 @@ class SoccerMap(FeatureMap):
         Half of the goalie area width (y-coordinate).
         """
 
-        return self._goalie_area_dimensions.y()
+        return self._goalie_area_dimensions.y
 
     def get_goalie_area_depth(self) -> float:
         """
         Depth of the goalie area area (x-coordinate).
         """
 
-        return self._goalie_area_dimensions.x()
+        return self._goalie_area_dimensions.x
 
     def get_penalty_area_dimensions(self) -> Vector2D:
         """
@@ -294,14 +294,14 @@ class SoccerMap(FeatureMap):
         Half of the penalty area width (y-coordinate).
         """
 
-        return self._penalty_area_dimensions.y()
+        return self._penalty_area_dimensions.y
 
     def get_penalty_area_depth(self) -> float:
         """
         Depth of the penalty area (x-coordinate).
         """
 
-        return self._penalty_area_dimensions.x()
+        return self._penalty_area_dimensions.x
 
     def get_middle_circle_radius(self) -> float:
         """

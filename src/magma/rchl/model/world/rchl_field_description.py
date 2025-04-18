@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from enum import Enum
 
-from magma.common.math.geometry.vector import Vector2D, Vector3D
+from magma.common.math.geometry.vector import V2D_ZERO, Vector2D, Vector3D
 from magma.soccer_agent.model.world.soccer_field_description import SoccerFieldDescription
 
 
@@ -91,19 +91,19 @@ class RCHLAdultField2014(SoccerFieldDescription):
             Vector2D(9.0, 6.0) if field_dim is None else field_dim,
             Vector3D(0.6, 2.6, 1.8) if goal_dim is None else goal_dim,
             Vector2D(1.0, 5.0) if goalie_area_dim is None else goalie_area_dim,
-            Vector2D() if penalty_area_dim is None else penalty_area_dim,
+            V2D_ZERO if penalty_area_dim is None else penalty_area_dim,
             0.75 if middle_circle_radius is None else middle_circle_radius,
             2.1 if penalty_spot_distance is None else penalty_spot_distance,
         )
 
-        field_half_x = self._field_dimensions.x() / 2
-        field_half_y = self._field_dimensions.y() / 2
-        goal_half_y = self._goal_dimensions.y() / 2
-        ga_half_y = self._goalie_area_dimensions.y() / 2
-        pa_half_y = self._penalty_area_dimensions.y() / 2
+        field_half_x = self._field_dimensions.x / 2
+        field_half_y = self._field_dimensions.y / 2
+        goal_half_y = self._goal_dimensions.y / 2
+        ga_half_y = self._goalie_area_dimensions.y / 2
+        pa_half_y = self._penalty_area_dimensions.y / 2
 
-        has_goalie_area = self._goalie_area_dimensions.x() > 0 and self._goalie_area_dimensions.y() > 0
-        has_penalty_area = self._penalty_area_dimensions.x() > 0 and self._penalty_area_dimensions.y() > 0
+        has_goalie_area = self._goalie_area_dimensions.x > 0 and self._goalie_area_dimensions.y > 0
+        has_penalty_area = self._penalty_area_dimensions.x > 0 and self._penalty_area_dimensions.y > 0
 
         # fmt: off
         # init landmarks
@@ -127,15 +127,15 @@ class RCHLAdultField2014(SoccerFieldDescription):
         self._add_point('l_olf', l_type, Vector3D( field_half_x,  field_half_y, 0.0))     # L-junction other left field
         self._add_point('l_orf', l_type, Vector3D( field_half_x, -field_half_y, 0.0))     # L-junction other right field
         if has_penalty_area:
-            self._add_point('l_slpa', l_type, Vector3D(-field_half_x + self._penalty_area_dimensions.x(),  pa_half_y, 0.0))    # L-junction self left penalty area
-            self._add_point('l_srpa', l_type, Vector3D(-field_half_x + self._penalty_area_dimensions.x(), -pa_half_y, 0.0))    # L-junction self right penalty area
-            self._add_point('l_olpa', l_type, Vector3D( field_half_x - self._penalty_area_dimensions.x(),  pa_half_y, 0.0))    # L-junction other left penalty area
-            self._add_point('l_orpa', l_type, Vector3D( field_half_x - self._penalty_area_dimensions.x(), -pa_half_y, 0.0))    # L-junction other right penalty area
+            self._add_point('l_slpa', l_type, Vector3D(-field_half_x + self._penalty_area_dimensions.x,  pa_half_y, 0.0))    # L-junction self left penalty area
+            self._add_point('l_srpa', l_type, Vector3D(-field_half_x + self._penalty_area_dimensions.x, -pa_half_y, 0.0))    # L-junction self right penalty area
+            self._add_point('l_olpa', l_type, Vector3D( field_half_x - self._penalty_area_dimensions.x,  pa_half_y, 0.0))    # L-junction other left penalty area
+            self._add_point('l_orpa', l_type, Vector3D( field_half_x - self._penalty_area_dimensions.x, -pa_half_y, 0.0))    # L-junction other right penalty area
         if has_goalie_area:
-            self._add_point('l_slga', l_type, Vector3D(-field_half_x + self._goalie_area_dimensions.x(),  ga_half_y, 0.0))     # L-junction self left goalie area
-            self._add_point('l_srga', l_type, Vector3D(-field_half_x + self._goalie_area_dimensions.x(), -ga_half_y, 0.0))     # L-junction self right goalie area
-            self._add_point('l_olga', l_type, Vector3D( field_half_x - self._goalie_area_dimensions.x(),  ga_half_y, 0.0))     # L-junction other left goalie area
-            self._add_point('l_orga', l_type, Vector3D( field_half_x - self._goalie_area_dimensions.x(), -ga_half_y, 0.0))     # L-junction other right goalie area
+            self._add_point('l_slga', l_type, Vector3D(-field_half_x + self._goalie_area_dimensions.x,  ga_half_y, 0.0))     # L-junction self left goalie area
+            self._add_point('l_srga', l_type, Vector3D(-field_half_x + self._goalie_area_dimensions.x, -ga_half_y, 0.0))     # L-junction self right goalie area
+            self._add_point('l_olga', l_type, Vector3D( field_half_x - self._goalie_area_dimensions.x,  ga_half_y, 0.0))     # L-junction other left goalie area
+            self._add_point('l_orga', l_type, Vector3D( field_half_x - self._goalie_area_dimensions.x, -ga_half_y, 0.0))     # L-junction other right goalie area
 
         l_type = 'x_junction'
         self._add_point('x_clc', l_type, Vector3D(0.0,  self._middle_circle_radius, 0.0))   # X-junction center left circle

@@ -1,6 +1,8 @@
 from __future__ import annotations
 
-from magma.common.math.geometry.vector import Vector2D
+from typing import Final
+
+from magma.common.math.geometry.vector import V2D_ZERO, Vector2D
 
 
 class LineSegment2D:
@@ -13,8 +15,8 @@ class LineSegment2D:
         Construct a new 2D pose.
         """
 
-        self._start: Vector2D = Vector2D() if start is None else start
-        self._end: Vector2D = Vector2D() if end is None else end
+        self.start: Final[Vector2D] = V2D_ZERO if start is None else start
+        self.end: Final[Vector2D] = V2D_ZERO if end is None else end
 
     @staticmethod
     def from_coordinates(x_start: float = 0, y_start: float = 0, x_end: float = 0, y_end: float = 0) -> LineSegment2D:
@@ -23,17 +25,3 @@ class LineSegment2D:
         """
 
         return LineSegment2D(Vector2D(x_start, y_start), Vector2D(x_end, y_end))
-
-    def start_pos(self) -> Vector2D:
-        """
-        Retrieve the start position of the line.
-        """
-
-        return self._start
-
-    def end_pos(self) -> Vector2D:
-        """
-        Retrieve the line extension from the start point.
-        """
-
-        return self._end

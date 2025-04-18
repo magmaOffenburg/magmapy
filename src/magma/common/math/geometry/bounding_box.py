@@ -1,20 +1,14 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from typing import Final
 
 from magma.common.math.geometry.vector import Vector2D, Vector3D
 
 
-@dataclass(frozen=True)
 class AABB2D:
     """
     2-dimensional axis-aligned bounding-box.
     """
-
-    min_x: float
-    max_x: float
-    min_y: float
-    max_y: float
 
     def __init__(self, min_x: float = -1, max_x: float = 1, min_y: float = -1, max_y: float = 1) -> None:
         """
@@ -22,19 +16,15 @@ class AABB2D:
         """
 
         if min_x > max_x:
-            tmp = min_x
-            min_x = max_x
-            max_x = tmp
+            min_x, max_x = max_x, min_x
 
         if min_y > max_y:
-            tmp = min_y
-            min_y = max_y
-            max_y = tmp
+            min_y, max_y = max_y, min_y
 
-        object.__setattr__(self, 'min_x', min_x)
-        object.__setattr__(self, 'max_x', max_x)
-        object.__setattr__(self, 'min_y', min_y)
-        object.__setattr__(self, 'max_y', max_y)
+        self.min_x: Final[float] = min_x
+        self.max_x: Final[float] = max_x
+        self.min_y: Final[float] = min_y
+        self.max_y: Final[float] = max_y
 
     def get_width(self) -> float:
         """
@@ -146,7 +136,7 @@ class AABB2D:
         Check if the given point is within the bounding box.
         """
 
-        return self.contains_xy(point.x(), point.y())
+        return self.contains_xy(point.x, point.y)
 
     def apply_border(self, *, border_x: float | None = None, border_y: float | None = None, border: float | None = None) -> AABB2D:
         """

@@ -4,7 +4,7 @@ from enum import Enum
 
 import numpy as np
 
-from magma.common.math.geometry.vector import Vector2D, Vector3D
+from magma.common.math.geometry.vector import V2D_ZERO, Vector2D, Vector3D
 from magma.soccer_agent.model.world.soccer_field_description import SoccerFieldDescription
 
 
@@ -95,22 +95,22 @@ class RCSSFieldV62(SoccerFieldDescription):
             Vector2D(12.0, 8.9) if field_dim is None else field_dim,
             Vector3D(0.4, 1.4, 0.8) if goal_dim is None else goal_dim,
             Vector2D(1.2, 2.6) if goalie_area_dim is None else goalie_area_dim,
-            Vector2D() if penalty_area_dim is None else penalty_area_dim,
+            V2D_ZERO if penalty_area_dim is None else penalty_area_dim,
             1.0 if middle_circle_radius is None else middle_circle_radius,
             0.0 if penalty_spot_distance is None else penalty_spot_distance,
         )
 
-        field_half_length = self._field_dimensions.x() / 2
-        field_half_width = self._field_dimensions.y() / 2
-        goal_half_width = self._goal_dimensions.y() / 2
+        field_half_length = self._field_dimensions.x / 2
+        field_half_width = self._field_dimensions.y / 2
+        goal_half_width = self._goal_dimensions.y / 2
 
         # fmt: off
         # init landmarks
         l_type: str = 'Goalpost'
-        self._add_point('G1L', l_type, Vector3D(-field_half_length,  goal_half_width, self._goal_dimensions.z()))  # upper left goal post
-        self._add_point('G2L', l_type, Vector3D(-field_half_length, -goal_half_width, self._goal_dimensions.z()))  # lower left goal post
-        self._add_point('G1R', l_type, Vector3D( field_half_length,  goal_half_width, self._goal_dimensions.z()))  # upper right goal post
-        self._add_point('G2R', l_type, Vector3D( field_half_length, -goal_half_width, self._goal_dimensions.z()))  # lower right goal post
+        self._add_point('G1L', l_type, Vector3D(-field_half_length,  goal_half_width, self._goal_dimensions.z))  # upper left goal post
+        self._add_point('G2L', l_type, Vector3D(-field_half_length, -goal_half_width, self._goal_dimensions.z))  # lower left goal post
+        self._add_point('G1R', l_type, Vector3D( field_half_length,  goal_half_width, self._goal_dimensions.z))  # upper right goal post
+        self._add_point('G2R', l_type, Vector3D( field_half_length, -goal_half_width, self._goal_dimensions.z))  # lower right goal post
 
         l_type = 'Flag'
         self._add_point('F1L', l_type, Vector3D(-field_half_length,  field_half_width, 0))  # upper left corner flag
@@ -175,8 +175,8 @@ class RCSSFieldV64(RCSSFieldV63):
             penalty_spot_distance,
         )
 
-        field_half_length = self._field_dimensions.x() / 2
-        field_half_width = self._field_dimensions.y() / 2
+        field_half_length = self._field_dimensions.x / 2
+        field_half_width = self._field_dimensions.y / 2
 
         top_left = Vector3D(-field_half_length, field_half_width, 0)
         top_right = Vector3D(field_half_length, field_half_width, 0)
@@ -194,9 +194,9 @@ class RCSSFieldV64(RCSSFieldV63):
 
         self._add_line('ML', l_type, Vector3D(0, field_half_width, 0), Vector3D(0, -field_half_width, 0))  # middle line
 
-        if self._goalie_area_dimensions.x() > 0 and self._goalie_area_dimensions.y() > 0:
-            ga_half_width = self._goalie_area_dimensions.y() / 2
-            ga_field_line_x = field_half_length - self._goalie_area_dimensions.x()
+        if self._goalie_area_dimensions.x > 0 and self._goalie_area_dimensions.y > 0:
+            ga_half_width = self._goalie_area_dimensions.y / 2
+            ga_field_line_x = field_half_length - self._goalie_area_dimensions.x
 
 
             self._add_line('LGAUL', l_type, Vector3D(-field_half_length,  ga_half_width, 0), Vector3D(-ga_field_line_x,  ga_half_width, 0)) # left goalie area upper line
@@ -207,9 +207,9 @@ class RCSSFieldV64(RCSSFieldV63):
             self._add_line('RGALL', l_type, Vector3D(field_half_length, -ga_half_width, 0), Vector3D(ga_field_line_x, -ga_half_width, 0))   # right goalie area lower line
             self._add_line('RGAFL', l_type, Vector3D(  ga_field_line_x,  ga_half_width, 0), Vector3D(ga_field_line_x, -ga_half_width, 0))   # right goalie area field line
 
-        if self._penalty_area_dimensions.x() > 0 and self._penalty_area_dimensions.y() > 0:
-            pa_half_width = self._penalty_area_dimensions.y() / 2
-            pa_field_line_x = field_half_length - self._penalty_area_dimensions.x()
+        if self._penalty_area_dimensions.x > 0 and self._penalty_area_dimensions.y > 0:
+            pa_half_width = self._penalty_area_dimensions.y / 2
+            pa_field_line_x = field_half_length - self._penalty_area_dimensions.x
 
             self._add_line('LPAUL', l_type, Vector3D(-field_half_length,  pa_half_width, 0), Vector3D(-pa_field_line_x,  pa_half_width, 0)) # left penalty area upper line
             self._add_line('LPALL', l_type, Vector3D(-field_half_length, -pa_half_width, 0), Vector3D(-pa_field_line_x, -pa_half_width, 0)) # left penalty area lower line

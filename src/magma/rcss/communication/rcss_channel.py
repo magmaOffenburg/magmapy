@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import numpy as np
+from math import cos, radians, sin
 
 from magma.agent.communication.action import Action, MotorEffector
 from magma.agent.communication.perception import (
@@ -14,7 +14,7 @@ from magma.agent.communication.perception import (
 )
 from magma.agent.communication.tcp_lpm_channel import TCPLPMChannel
 from magma.common.communication.sexpression import SExpParser, SExpression
-from magma.common.math.geometry.vector import Vector3D
+from magma.common.math.geometry.vector import V3D_ZERO, Vector3D
 from magma.rcss.communication.rcss_action import (
     BeamEffector,
     CreateEffector,
@@ -266,7 +266,7 @@ class RCSSMessageParser:
         """
 
         name: str = ''
-        rot: Vector3D = Vector3D()
+        rot: Vector3D = V3D_ZERO
 
         for child in node:
             if not isinstance(child, SExpression):
@@ -289,7 +289,7 @@ class RCSSMessageParser:
         """
 
         name: str = ''
-        acc: Vector3D = Vector3D()
+        acc: Vector3D = V3D_ZERO
 
         for child in node:
             if not isinstance(child, SExpression):
@@ -321,8 +321,8 @@ class RCSSMessageParser:
         """
 
         name: str = ''
-        origin: Vector3D = Vector3D()
-        force: Vector3D = Vector3D()
+        origin: Vector3D = V3D_ZERO
+        force: Vector3D = V3D_ZERO
 
         for child in node:
             if not isinstance(child, SExpression):
@@ -433,13 +433,13 @@ class RCSSMessageParser:
         """
 
         distance: float = self._as_float(node[1])
-        alpha: float = self._as_float(node[2]) * np.pi / 180.0
-        delta: float = self._as_float(node[3]) * np.pi / 180.0
+        alpha: float = radians(self._as_float(node[2]))
+        delta: float = radians(self._as_float(node[3]))
 
-        cos_delta = np.cos(delta)
-        x = distance * np.cos(alpha) * cos_delta
-        y = distance * np.sin(alpha) * cos_delta
-        z = distance * np.sin(delta)
+        cos_delta = cos(delta)
+        x = distance * cos(alpha) * cos_delta
+        y = distance * sin(alpha) * cos_delta
+        z = distance * sin(delta)
 
         return Vector3D(x, y, z)
 
@@ -483,7 +483,7 @@ class RCSSMessageEncoder:
 
             if isinstance(effector, BeamEffector):
                 pose = effector.beam_pose
-                msg += f'({effector.name} {pose.x()} {pose.y()} {pose.theta().degrees()})'
+                msg += f'({effector.name} {pose.x()} {pose.y()} {pose.theta.deg()})'
 
             elif isinstance(effector, MotorEffector):
                 msg += f'({effector.name} {effector.velocity})'

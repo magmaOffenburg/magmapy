@@ -1,6 +1,6 @@
 from magma.agent.communication.perception import Perception
 from magma.agent.model.robot.sensors import Sensor
-from magma.common.math.geometry.vector import Vector3D
+from magma.common.math.geometry.vector import V3D_ZERO, Vector3D
 from magma.rcss.communication.rcss_perception import ForceResistancePerceptor
 
 
@@ -16,8 +16,8 @@ class ForceResistance(Sensor):
 
         super().__init__(name, frame_id, perceptor_name)
 
-        self._force: Vector3D = Vector3D()
-        self._origin: Vector3D = Vector3D()
+        self._force: Vector3D = V3D_ZERO
+        self._origin: Vector3D = V3D_ZERO
 
     def update(self, perception: Perception) -> None:
         perceptor = perception.get_perceptor(self._perceptor_name, ForceResistancePerceptor)

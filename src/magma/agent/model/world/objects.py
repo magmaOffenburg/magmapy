@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from magma.common.math.geometry.vector import Vector3D
+from magma.common.math.geometry.vector import V3D_ZERO, Vector3D
 
 
 class VisibleObject:
@@ -14,7 +14,7 @@ class VisibleObject:
         """
 
         self._name: str = name
-        self._position: Vector3D = Vector3D() if position is None else position
+        self._position: Vector3D = V3D_ZERO if position is None else position
 
     def get_name(self) -> str:
         """
@@ -43,7 +43,7 @@ class MovableObject(VisibleObject):
 
         super().__init__(name, position)
 
-        self._velocity: Vector3D = Vector3D() if velocity is None else velocity
+        self._velocity: Vector3D = V3D_ZERO if velocity is None else velocity
 
     def get_velocity(self) -> Vector3D:
         """

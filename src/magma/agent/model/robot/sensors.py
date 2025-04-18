@@ -11,9 +11,9 @@ from magma.agent.communication.perception import (
     JointStatePerceptor,
     Perception,
 )
-from magma.common.math.geometry.pose import Pose3D
-from magma.common.math.geometry.rotation import Rotation3D
-from magma.common.math.geometry.vector import Vector3D
+from magma.common.math.geometry.pose import P3D_ZERO, Pose3D
+from magma.common.math.geometry.rotation import R3D_IDENTITY, Rotation3D
+from magma.common.math.geometry.vector import V3D_ZERO, Vector3D
 
 if TYPE_CHECKING:
     from magma.agent.model.robot.robot_tree import FreeJoint, HingeJoint
@@ -188,7 +188,7 @@ class Accelerometer(Sensor):
 
         super().__init__(name, frame_id, perceptor_name)
 
-        self._acc: Vector3D = Vector3D()
+        self._acc: Vector3D = V3D_ZERO
 
     def get_acc(self) -> Vector3D:
         """
@@ -217,7 +217,7 @@ class Gyroskope(Sensor):
 
         super().__init__(name, frame_id, perceptor_name)
 
-        self._rpy: Vector3D = Vector3D()
+        self._rpy: Vector3D = V3D_ZERO
 
     def get_rpy(self) -> Vector3D:
         """
@@ -246,9 +246,9 @@ class IMU(Sensor):
 
         super().__init__(name, frame_id, perceptor_name)
 
-        self._orientation: Rotation3D = Rotation3D()
-        self._acc: Vector3D = Vector3D()
-        self._rpy: Vector3D = Vector3D()
+        self._orientation: Rotation3D = R3D_IDENTITY
+        self._acc: Vector3D = V3D_ZERO
+        self._rpy: Vector3D = V3D_ZERO
 
     def get_orientation(self) -> Rotation3D:
         """
@@ -358,7 +358,7 @@ class FreeJointSensor(Sensor):
 
         self._joint: FreeJoint = joint
 
-        self._pose: Pose3D = Pose3D()
+        self._pose: Pose3D = P3D_ZERO
 
     def get_pose(self) -> Pose3D:
         """
