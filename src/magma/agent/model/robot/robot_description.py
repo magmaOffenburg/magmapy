@@ -5,11 +5,10 @@ from enum import Enum
 from typing import TYPE_CHECKING, Protocol
 
 from magma.common.math.geometry.rotation import R3D_IDENTITY, Rotation3D
+from magma.common.math.geometry.vector import Vector2D, Vector3D
 
 if TYPE_CHECKING:
     from collections.abc import Generator, ValuesView
-
-    from magma.common.math.geometry.vector import Vector2D, Vector3D
 
 
 class SensorType(Enum):
@@ -273,6 +272,20 @@ class JointDescription:
     The joint anchor.
     """
 
+    def __init__(
+        self,
+        name: str,
+        parent: str,
+        child: str,
+        joint_type: str,
+        anchor: Vector3D | tuple[float, float, float],
+    ) -> None:
+        object.__setattr__(self, 'name', name)
+        object.__setattr__(self, 'parent', parent)
+        object.__setattr__(self, 'child', child)
+        object.__setattr__(self, 'joint_type', joint_type)
+        object.__setattr__(self, 'anchor', anchor if isinstance(anchor, Vector3D) else Vector3D(anchor[0], anchor[1], anchor[2]))
+
 
 @dataclass(frozen=True)
 class FixedJointDescription(JointDescription):
@@ -290,7 +303,7 @@ class FixedJointDescription(JointDescription):
         name: str,
         parent: str,
         child: str,
-        anchor: Vector3D,
+        anchor: Vector3D | tuple[float, float, float],
         orientation: Rotation3D | None = None,
     ) -> None:
         super().__init__(name, parent, child, JointType.FIXED.value, anchor)
@@ -330,16 +343,16 @@ class HingeJointDescription(JointDescription):
         parent: str,
         child: str,
         perceptor_name: str,
-        anchor: Vector3D,
-        axis: Vector3D,
-        limits: Vector2D,
+        anchor: Vector3D | tuple[float, float, float],
+        axis: Vector3D | tuple[float, float, float],
+        limits: Vector2D | tuple[float, float],
         motor: MotorDescription | None = None,
     ) -> None:
         super().__init__(name, parent, child, JointType.HINGE.value, anchor)
 
         object.__setattr__(self, 'perceptor_name', perceptor_name)
-        object.__setattr__(self, 'axis', axis)
-        object.__setattr__(self, 'limits', limits)
+        object.__setattr__(self, 'axis', axis if isinstance(axis, Vector3D) else Vector3D(axis[0], axis[1], axis[2]))
+        object.__setattr__(self, 'limits', limits if isinstance(limits, Vector2D) else Vector2D(limits[0], limits[1]))
         object.__setattr__(self, 'motor', motor)
 
 
@@ -360,7 +373,7 @@ class FreeJointDescription(JointDescription):
         parent: str,
         child: str,
         perceptor_name: str,
-        anchor: Vector3D,
+        anchor: Vector3D | tuple[float, float, float],
     ):
         super().__init__(name, parent, child, JointType.FREE.value, anchor)
 

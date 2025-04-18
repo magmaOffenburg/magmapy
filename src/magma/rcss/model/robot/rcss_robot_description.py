@@ -14,7 +14,7 @@ from magma.agent.model.robot.robot_description import (
     RobotDescription,
     SensorDescription,
 )
-from magma.common.math.geometry.vector import Vector2D, Vector3D
+from magma.common.math.geometry.vector import V3D_UNIT_X, V3D_UNIT_Y, V3D_UNIT_Z, V3D_ZERO, Vector3D
 
 
 class RCSSRobots(Enum):
@@ -233,7 +233,7 @@ class RCSSNaoHeteroDescription(RobotDescription):
 
         # fmt: off
         # bodies                              name, position(     x,      y,      z)
-        self._add_body(BodyDescription(    'torso', Vector3D()))
+        self._add_body(BodyDescription(    'torso', V3D_ZERO))
         # head
         self._add_body(BodyDescription(     'neck', Vector3D(     0,      0,  0.090)))
         self._add_body(BodyDescription(     'head', Vector3D(     0,      0,  0.065)))
@@ -262,34 +262,34 @@ class RCSSNaoHeteroDescription(RobotDescription):
         self._add_body(BodyDescription(   'lankle', Vector3D(     0, -0.010, -0.055)))
         self._add_body(BodyDescription(    'lfoot', Vector3D(     0,  0.030, -0.035)))
 
-        # joints                                          name, parent body,   child body, perceptor,   anchor(     x,      y,      z),     axis(x, y, z),   limits( min, max),            motor(effetor, max_speed, max_torque)
+        # joints                                          name, parent body,   child body, perceptor, (                anchor),       axis, (   limits),            motor(effetor, max_speed, max_torque)
         # head
-        self._add_joint(HingeJointDescription(       'NeckYaw',     'torso',       'neck',     'hj1', Vector3D(     0,      0,      0), Vector3D(0, 0, 1), Vector2D(-120, 120), MotorDescription(  'he1',      7.03,        0.0)))
-        self._add_joint(HingeJointDescription(     'NeckPitch',      'neck',       'head',     'hj2', Vector3D(     0,      0, -0.005), Vector3D(1, 0, 0), Vector2D( -45,  45), MotorDescription(  'he2',      7.03,        0.0)))
+        self._add_joint(HingeJointDescription(       'NeckYaw',     'torso',       'neck',     'hj1', (     0,      0,      0), V3D_UNIT_Z, (-120, 120), MotorDescription(  'he1',      7.03,        0.0)))
+        self._add_joint(HingeJointDescription(     'NeckPitch',      'neck',       'head',     'hj2', (     0,      0, -0.005), V3D_UNIT_X, ( -45,  45), MotorDescription(  'he2',      7.03,        0.0)))
         # right arm
-        self._add_joint(HingeJointDescription('RShoulderPitch',     'torso',  'rshoulder',    'raj1', Vector3D(     0,      0,      0), Vector3D(1, 0, 0), Vector2D(-120, 120), MotorDescription( 'rae1',      7.03,        0.0)))
-        self._add_joint(HingeJointDescription(  'RShoulderYaw', 'rshoulder',  'rupperarm',    'raj2', Vector3D(-0.010, -0.020,      0), Vector3D(0, 0, 1), Vector2D( -95,   1), MotorDescription( 'rae2',      7.03,        0.0)))
-        self._add_joint(HingeJointDescription(      'RArmRoll', 'rupperarm',     'relbow',    'raj3', Vector3D(     0,      0,      0), Vector3D(0, 1, 0), Vector2D(-120, 120), MotorDescription( 'rae3',      7.03,        0.0)))
-        self._add_joint(HingeJointDescription(       'RArmYaw',    'relbow',  'rlowerarm',    'raj4', Vector3D(     0, -0.050,      0), Vector3D(0, 0, 1), Vector2D(  -1,  90), MotorDescription( 'rae4',      7.03,        0.0)))
+        self._add_joint(HingeJointDescription('RShoulderPitch',     'torso',  'rshoulder',    'raj1', (     0,      0,      0), V3D_UNIT_X, (-120, 120), MotorDescription( 'rae1',      7.03,        0.0)))
+        self._add_joint(HingeJointDescription(  'RShoulderYaw', 'rshoulder',  'rupperarm',    'raj2', (-0.010, -0.020,      0), V3D_UNIT_Z, ( -95,   1), MotorDescription( 'rae2',      7.03,        0.0)))
+        self._add_joint(HingeJointDescription(      'RArmRoll', 'rupperarm',     'relbow',    'raj3', (     0,      0,      0), V3D_UNIT_Y, (-120, 120), MotorDescription( 'rae3',      7.03,        0.0)))
+        self._add_joint(HingeJointDescription(       'RArmYaw',    'relbow',  'rlowerarm',    'raj4', (     0, -0.050,      0), V3D_UNIT_Z, (  -1,  90), MotorDescription( 'rae4',      7.03,        0.0)))
         # right leg
-        self._add_joint(HingeJointDescription(  'RHipYawPitch',     'torso',      'rhip1',    'rlj1', Vector3D(     0,      0,      0), Vector3D(-0.7071, 0, 0.7071), Vector2D(-90, 1), MotorDescription('rle1',7.03,       0.0)))
-        self._add_joint(HingeJointDescription(      'RHipRoll',     'rhip1',      'rhip2',    'rlj2', Vector3D(     0,      0,      0), Vector3D(0, 1, 0), Vector2D( -45,  25), MotorDescription( 'rle2',      7.03,        0.0)))
-        self._add_joint(HingeJointDescription(     'RHipPitch',     'rhip2',    'rthight',    'rlj3', Vector3D(     0, -0.010,  0.040), Vector3D(1, 0, 0), Vector2D( -25, 100), MotorDescription( 'rle3',      7.03,        0.0)))
-        self._add_joint(HingeJointDescription(    'RKneePitch',   'rthight',     'rshank',    'rlj4', Vector3D(     0, -0.010,  0.045), Vector3D(1, 0, 0), Vector2D(-130,   1), MotorDescription( 'rle4',      7.03,        0.0)))
-        self._add_joint(HingeJointDescription(    'RFootPitch',    'rshank',     'rankle',    'rlj5', Vector3D(     0,      0,      0), Vector3D(1, 0, 0), Vector2D( -45,  75), MotorDescription( 'rle5',      7.03,        0.0)))
-        self._add_joint(HingeJointDescription(     'RFootRoll',    'rankle',      'rfoot',    'rlj6', Vector3D(     0, -0.030,  0.035), Vector3D(0, 1, 0), Vector2D( -25,  45), MotorDescription( 'rle6',      7.03,        0.0)))
+        self._add_joint(HingeJointDescription(  'RHipYawPitch',     'torso',      'rhip1',    'rlj1', (     0,      0,      0), (-0.7071, 0, 0.7071), (-90, 1), MotorDescription('rle1',7.03,       0.0)))
+        self._add_joint(HingeJointDescription(      'RHipRoll',     'rhip1',      'rhip2',    'rlj2', (     0,      0,      0), V3D_UNIT_Y, ( -45,  25), MotorDescription( 'rle2',      7.03,        0.0)))
+        self._add_joint(HingeJointDescription(     'RHipPitch',     'rhip2',    'rthight',    'rlj3', (     0, -0.010,  0.040), V3D_UNIT_X, ( -25, 100), MotorDescription( 'rle3',      7.03,        0.0)))
+        self._add_joint(HingeJointDescription(    'RKneePitch',   'rthight',     'rshank',    'rlj4', (     0, -0.010,  0.045), V3D_UNIT_X, (-130,   1), MotorDescription( 'rle4',      7.03,        0.0)))
+        self._add_joint(HingeJointDescription(    'RFootPitch',    'rshank',     'rankle',    'rlj5', (     0,      0,      0), V3D_UNIT_X, ( -45,  75), MotorDescription( 'rle5',      7.03,        0.0)))
+        self._add_joint(HingeJointDescription(     'RFootRoll',    'rankle',      'rfoot',    'rlj6', (     0, -0.030,  0.035), V3D_UNIT_Y, ( -25,  45), MotorDescription( 'rle6',      7.03,        0.0)))
         # left arm
-        self._add_joint(HingeJointDescription('LShoulderPitch',     'lorso',  'lshoulder',    'laj1', Vector3D(     0,      0,      0), Vector3D(1, 0, 0), Vector2D(-120, 120), MotorDescription( 'lae1',      7.03,        0.0)))
-        self._add_joint(HingeJointDescription(  'LShoulderYaw', 'lshoulder',  'lupperarm',    'laj2', Vector3D( 0.010, -0.020,      0), Vector3D(0, 0, 1), Vector2D(  -1,  95), MotorDescription( 'lae2',      7.03,        0.0)))
-        self._add_joint(HingeJointDescription(      'LArmRoll', 'lupperarm',     'lelbow',    'laj3', Vector3D(     0,      0,      0), Vector3D(0, 1, 0), Vector2D(-120, 120), MotorDescription( 'lae3',      7.03,        0.0)))
-        self._add_joint(HingeJointDescription(       'LArmYaw',    'lelbow',  'llowerarm',    'laj4', Vector3D(     0, -0.050,      0), Vector3D(0, 0, 1), Vector2D( -90,   1), MotorDescription( 'lae4',      7.03,        0.0)))
+        self._add_joint(HingeJointDescription('LShoulderPitch',     'lorso',  'lshoulder',    'laj1', (     0,      0,      0), V3D_UNIT_X, (-120, 120), MotorDescription( 'lae1',      7.03,        0.0)))
+        self._add_joint(HingeJointDescription(  'LShoulderYaw', 'lshoulder',  'lupperarm',    'laj2', ( 0.010, -0.020,      0), V3D_UNIT_Z, (  -1,  95), MotorDescription( 'lae2',      7.03,        0.0)))
+        self._add_joint(HingeJointDescription(      'LArmRoll', 'lupperarm',     'lelbow',    'laj3', (     0,      0,      0), V3D_UNIT_Y, (-120, 120), MotorDescription( 'lae3',      7.03,        0.0)))
+        self._add_joint(HingeJointDescription(       'LArmYaw',    'lelbow',  'llowerarm',    'laj4', (     0, -0.050,      0), V3D_UNIT_Z, ( -90,   1), MotorDescription( 'lae4',      7.03,        0.0)))
         # left leg
-        self._add_joint(HingeJointDescription(  'LHipYawPitch',     'lorso',      'lhip1',    'llj1', Vector3D(     0,      0,      0), Vector3D(-0.7071, 0, -0.7071), Vector2D(-90, 1), MotorDescription('lle1',7.03,      0.0)))
-        self._add_joint(HingeJointDescription(      'LHipRoll',     'lhip1',      'lhip2',    'llj2', Vector3D(     0,      0,      0), Vector3D(0, 1, 0), Vector2D( -25,  45), MotorDescription( 'lle2',      7.03,        0.0)))
-        self._add_joint(HingeJointDescription(     'LHipPitch',     'lhip2',    'lthight',    'llj3', Vector3D(     0, -0.010,  0.040), Vector3D(1, 0, 0), Vector2D( -25, 100), MotorDescription( 'lle3',      7.03,        0.0)))
-        self._add_joint(HingeJointDescription(    'LKneePitch',   'lthight',     'lshank',    'llj4', Vector3D(     0, -0.010,  0.045), Vector3D(1, 0, 0), Vector2D(-130,   1), MotorDescription( 'lle4',      7.03,        0.0)))
-        self._add_joint(HingeJointDescription(    'LFootPitch',    'lshank',     'lankle',    'llj5', Vector3D(     0,      0,      0), Vector3D(1, 0, 0), Vector2D( -45,  75), MotorDescription( 'lle5',      7.03,        0.0)))
-        self._add_joint(HingeJointDescription(     'LFootRoll',    'lankle',      'lfoot',    'llj6', Vector3D(     0, -0.030,  0.035), Vector3D(0, 1, 0), Vector2D( -45,  25), MotorDescription( 'lle6',      7.03,        0.0)))
+        self._add_joint(HingeJointDescription(  'LHipYawPitch',     'lorso',      'lhip1',    'llj1', (     0,      0,      0), (-0.7071, 0, -0.7071), (-90, 1), MotorDescription('lle1',7.03,      0.0)))
+        self._add_joint(HingeJointDescription(      'LHipRoll',     'lhip1',      'lhip2',    'llj2', (     0,      0,      0), V3D_UNIT_Y, ( -25,  45), MotorDescription( 'lle2',      7.03,        0.0)))
+        self._add_joint(HingeJointDescription(     'LHipPitch',     'lhip2',    'lthight',    'llj3', (     0, -0.010,  0.040), V3D_UNIT_X, ( -25, 100), MotorDescription( 'lle3',      7.03,        0.0)))
+        self._add_joint(HingeJointDescription(    'LKneePitch',   'lthight',     'lshank',    'llj4', (     0, -0.010,  0.045), V3D_UNIT_X, (-130,   1), MotorDescription( 'lle4',      7.03,        0.0)))
+        self._add_joint(HingeJointDescription(    'LFootPitch',    'lshank',     'lankle',    'llj5', (     0,      0,      0), V3D_UNIT_X, ( -45,  75), MotorDescription( 'lle5',      7.03,        0.0)))
+        self._add_joint(HingeJointDescription(     'LFootRoll',    'lankle',      'lfoot',    'llj6', (     0, -0.030,  0.035), V3D_UNIT_Y, ( -45,  25), MotorDescription( 'lle6',      7.03,        0.0)))
         # fmt: off
 
         # virtual actuators
@@ -336,9 +336,9 @@ class RCSSNao1Description(RCSSNaoHeteroDescription):
         self._add_body(BodyDescription('lthight', Vector3D(     0,  0.01000, -0.05832)), override=True)
         self._add_body(BodyDescription( 'lankle', Vector3D(     0, -0.01000, -0.07332)), override=True)
 
-        # joints                                     name, parent body, child body, perceptor,   anchor(     x,      y,       z),     axis(x, y, z),   limits( min, max),            motor(effetor, max_speed, max_torque)
-        self._add_joint(HingeJointDescription('RHipPitch',     'rhip2',  'rthight',    'rlj3', Vector3D(     0, -0.010, 0.05832), Vector3D(1, 0, 0), Vector2D( -25, 100), MotorDescription( 'rle3',      7.03,        0.0)), override=True)
-        self._add_joint(HingeJointDescription('LHipPitch',     'lhip2',  'lthight',    'llj3', Vector3D(     0, -0.010, 0.05832), Vector3D(1, 0, 0), Vector2D( -25, 100), MotorDescription( 'lle3',      7.03,        0.0)), override=True)
+        # joints                                     name, parent body, child body, perceptor, (            anchor),       axis, (  limits),            motor(effetor, max_speed, max_torque)
+        self._add_joint(HingeJointDescription('RHipPitch',     'rhip2',  'rthight',    'rlj3', (0, -0.010, 0.05832), V3D_UNIT_X, (-25, 100), MotorDescription( 'rle3',      7.03,        0.0)), override=True)
+        self._add_joint(HingeJointDescription('LHipPitch',     'lhip2',  'lthight',    'llj3', (0, -0.010, 0.05832), V3D_UNIT_X, (-25, 100), MotorDescription( 'lle3',      7.03,        0.0)), override=True)
         # fmt: on
 
 
@@ -355,12 +355,12 @@ class RCSSNao2Description(RCSSNaoHeteroDescription):
         super().__init__(2)
 
         # fmt: off
-        # joints                                      name, parent body, child body, perceptor,   anchor(     x,      y,      z),     axis(x, y, z),   limits( min, max),            motor(effetor, max_speed, max_torque)
-        self._add_joint(HingeJointDescription('RFootPitch',    'rshank',   'rankle',    'rlj5', Vector3D(     0,      0,      0), Vector3D(1, 0, 0), Vector2D( -45,  75), MotorDescription( 'rle5',   8.80667,        0.0)), override=True)
-        self._add_joint(HingeJointDescription( 'RFootRoll',    'rankle',    'rfoot',    'rlj6', Vector3D(     0, -0.030,  0.035), Vector3D(0, 1, 0), Vector2D( -25,  45), MotorDescription( 'rle6',   3.47234,        0.0)), override=True)
+        # joints                                      name, parent body, child body, perceptor, (           anchor),       axis, (  limits),            motor(effetor, max_speed, max_torque)
+        self._add_joint(HingeJointDescription('RFootPitch',    'rshank',   'rankle',    'rlj5', (0,      0,      0), V3D_UNIT_X, (-45,  75), MotorDescription( 'rle5',   8.80667,        0.0)), override=True)
+        self._add_joint(HingeJointDescription( 'RFootRoll',    'rankle',    'rfoot',    'rlj6', (0, -0.030,  0.035), V3D_UNIT_Y, (-25,  45), MotorDescription( 'rle6',   3.47234,        0.0)), override=True)
 
-        self._add_joint(HingeJointDescription('LFootPitch',    'lshank',   'lankle',    'llj5', Vector3D(     0,      0,      0), Vector3D(1, 0, 0), Vector2D( -45,  75), MotorDescription( 'lle5',   8.80667,        0.0)), override=True)
-        self._add_joint(HingeJointDescription( 'LFootRoll',    'lankle',    'lfoot',    'llj6', Vector3D(     0, -0.030,  0.035), Vector3D(0, 1, 0), Vector2D( -45,  25), MotorDescription( 'lle6',   3.47234,        0.0)), override=True)
+        self._add_joint(HingeJointDescription('LFootPitch',    'lshank',   'lankle',    'llj5', (0,      0,      0), V3D_UNIT_X, (-45,  75), MotorDescription( 'lle5',   8.80667,        0.0)), override=True)
+        self._add_joint(HingeJointDescription( 'LFootRoll',    'lankle',    'lfoot',    'llj6', (0, -0.030,  0.035), V3D_UNIT_Y, (-45,  25), MotorDescription( 'lle6',   3.47234,        0.0)), override=True)
         # fmt: on
 
 
@@ -388,9 +388,9 @@ class RCSSNao3Description(RCSSNaoHeteroDescription):
         self._add_body(BodyDescription('lthight', Vector3D(     0,  0.010, -0.060)), override=True)
         self._add_body(BodyDescription( 'lankle', Vector3D(     0, -0.010, -0.075)), override=True)
 
-        # joints                                     name, parent body, child body, perceptor,   anchor(     x,      y,       z),     axis(x, y, z),   limits( min, max),            motor(effetor, max_speed, max_torque)
-        self._add_joint(HingeJointDescription('RHipPitch',     'rhip2',  'rthight',    'rlj3', Vector3D(     0, -0.010, 0.05832), Vector3D(1, 0, 0), Vector2D( -25, 100), MotorDescription( 'rle3',      7.03,        0.0)), override=True)
-        self._add_joint(HingeJointDescription('LHipPitch',     'lhip2',  'lthight',    'llj3', Vector3D(     0, -0.010, 0.05832), Vector3D(1, 0, 0), Vector2D( -25, 100), MotorDescription( 'lle3',      7.03,        0.0)), override=True)
+        # joints                                     name, parent body, child body, perceptor, (            anchor),       axis, (  limits),            motor(effetor, max_speed, max_torque)
+        self._add_joint(HingeJointDescription('RHipPitch',     'rhip2',  'rthight',    'rlj3', (0, -0.010, 0.05832), V3D_UNIT_X, (-25, 100), MotorDescription( 'rle3',      7.03,        0.0)), override=True)
+        self._add_joint(HingeJointDescription('LHipPitch',     'lhip2',  'lthight',    'llj3', (0, -0.010, 0.05832), V3D_UNIT_X, (-25, 100), MotorDescription( 'lle3',      7.03,        0.0)), override=True)
         # fmt: on
 
 
@@ -414,12 +414,12 @@ class RCSSNao4Description(RCSSNaoHeteroDescription):
         self._add_body(BodyDescription('lfoot', Vector3D(     0,  0.010, -0.035)), override=True)
         self._add_body(BodyDescription( 'ltoe', Vector3D(     0,  0.080, -0.005)))
 
-        # joints                                     name, parent body, child body, perceptor,   anchor(     x,      y,      z),     axis(x, y, z),   limits( min, max),            motor(effetor, max_speed, max_torque)
-        self._add_joint(HingeJointDescription('RFootRoll',    'rankle',    'rfoot',    'rlj6', Vector3D(     0, -0.010,  0.035), Vector3D(0, 1, 0), Vector2D( -25,  45), MotorDescription( 'rle6',      7.03,        0.0)), override=True)
-        self._add_joint(HingeJointDescription('RToePitch',     'rfoot',     'rtoe',    'rlj7', Vector3D(     0, -0.020, -0.005), Vector3D(0, 1, 0), Vector2D(  -1,  70), MotorDescription( 'rle7',      7.03,        0.0)))
+        # joints                                     name, parent body, child body, perceptor, (           anchor),       axis, (  limits),            motor(effetor, max_speed, max_torque)
+        self._add_joint(HingeJointDescription('RFootRoll',    'rankle',    'rfoot',    'rlj6', (0, -0.010,  0.035), V3D_UNIT_Y, (-25,  45), MotorDescription( 'rle6',      7.03,        0.0)), override=True)
+        self._add_joint(HingeJointDescription('RToePitch',     'rfoot',     'rtoe',    'rlj7', (0, -0.020, -0.005), V3D_UNIT_Y, ( -1,  70), MotorDescription( 'rle7',      7.03,        0.0)))
 
-        self._add_joint(HingeJointDescription('LFootRoll',    'lankle',    'lfoot',    'llj6', Vector3D(     0, -0.010,  0.035), Vector3D(0, 1, 0), Vector2D( -45,  25), MotorDescription( 'lle6',      7.03,        0.0)), override=True)
-        self._add_joint(HingeJointDescription('LToePitch',     'lfoot',     'ltoe',    'llj7', Vector3D(     0, -0.020, -0.005), Vector3D(0, 1, 0), Vector2D(  -1,  70), MotorDescription( 'lle7',      7.03,        0.0)))
+        self._add_joint(HingeJointDescription('LFootRoll',    'lankle',    'lfoot',    'llj6', (0, -0.010,  0.035), V3D_UNIT_Y, (-45,  25), MotorDescription( 'lle6',      7.03,        0.0)), override=True)
+        self._add_joint(HingeJointDescription('LToePitch',     'lfoot',     'ltoe',    'llj7', (0, -0.020, -0.005), V3D_UNIT_Y, ( -1,  70), MotorDescription( 'lle7',      7.03,        0.0)))
 
         # force sensors
         self._add_sensor(ForceResistanceDescription('RToeForce', 'rtoe', 'rf1'))
