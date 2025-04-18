@@ -9,9 +9,11 @@ from magma.agent.communication.perception import (
     GyroRatePerceptor,
     IMUPerceptor,
     JointStatePerceptor,
+    Loc2DPerceptor,
+    Loc3DPerceptor,
     Perception,
 )
-from magma.common.math.geometry.pose import P3D_ZERO, Pose3D
+from magma.common.math.geometry.pose import P2D_ZERO, P3D_ZERO, Pose2D, Pose3D
 from magma.common.math.geometry.rotation import R3D_IDENTITY, Rotation3D
 from magma.common.math.geometry.vector import V3D_ZERO, Vector3D
 
@@ -128,6 +130,30 @@ class PFreeJointSensor(PSensor, Protocol):
     def get_pose(self) -> Pose3D:
         """
         Retrieve the joint pose.
+        """
+
+
+@runtime_checkable
+class PLoc2DSensor(PSensor, Protocol):
+    """
+    Protocol for 2D location sensors.
+    """
+
+    def get_loc(self) -> Pose2D:
+        """
+        Retrieve the perceived location.
+        """
+
+
+@runtime_checkable
+class PLoc3DSensor(PSensor, Protocol):
+    """
+    Protocol for 3D location sensors.
+    """
+
+    def get_loc(self) -> Pose3D:
+        """
+        Retrieve the perceived location.
         """
 
 
@@ -375,3 +401,61 @@ class FreeJointSensor(Sensor):
             self._pose = perceptor.pose
 
             self._joint.set(self._pose)
+
+
+class Loc2DSensor(Sensor):
+    """
+    Default 2D location sensor representation.
+    """
+
+    def __init__(self, name: str, frame_id: str, perceptor_name: str) -> None:
+        """
+        Construct a new 2D location sensor.
+        """
+
+        super().__init__(name, frame_id, perceptor_name)
+
+        self._pose: Pose2D = P2D_ZERO
+
+    def get_loc(self) -> Pose2D:
+        """
+        Retrieve the perceived location information.
+        """
+
+        return self._pose
+
+    def update(self, perception: Perception) -> None:
+        perceptor = perception.get_perceptor(self._perceptor_name, Loc2DPerceptor)
+
+        if perceptor is not None:
+            self._time = perception.get_time()
+            self._pose = perceptor.loc
+
+
+class Loc3DSensor(Sensor):
+    """
+    Default 3D location sensor representation.
+    """
+
+    def __init__(self, name: str, frame_id: str, perceptor_name: str) -> None:
+        """
+        Construct a new 3D location sensor.
+        """
+
+        super().__init__(name, frame_id, perceptor_name)
+
+        self._pose: Pose3D = P3D_ZERO
+
+    def get_loc(self) -> Pose3D:
+        """
+        Retrieve the perceived location information.
+        """
+
+        return self._pose
+
+    def update(self, perception: Perception) -> None:
+        perceptor = perception.get_perceptor(self._perceptor_name, Loc3DPerceptor)
+
+        if perceptor is not None:
+            self._time = perception.get_time()
+            self._pose = perceptor.loc

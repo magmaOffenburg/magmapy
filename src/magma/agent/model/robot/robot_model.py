@@ -4,9 +4,10 @@ from typing import TYPE_CHECKING, Protocol, TypeVar
 
 from magma.agent.communication.action import Action
 from magma.agent.model.base import PMutableModel
-from magma.agent.model.robot.actuators import Actuator, Motor
+from magma.agent.model.robot.actuators import Actuator, Motor, OmniSpeedActuator
 from magma.agent.model.robot.robot_description import (
     ActuatorDescription,
+    ActuatorType,
     BodyDescription,
     FixedJointDescription,
     FreeJointDescription,
@@ -23,6 +24,8 @@ from magma.agent.model.robot.sensors import (
     FreeJointSensor,
     Gyroskope,
     HingeJointSensor,
+    Loc2DSensor,
+    Loc3DSensor,
     Sensor,
 )
 
@@ -253,6 +256,12 @@ class RobotModel:
         if desc.sensor_type == SensorType.IMU.value:
             return IMU(desc.name, desc.frame_id, desc.perceptor_name)
 
+        if desc.sensor_type == SensorType.LOC2D.value:
+            return Loc2DSensor(desc.name, desc.frame_id, desc.perceptor_name)
+
+        if desc.sensor_type == SensorType.LOC3D.value:
+            return Loc3DSensor(desc.name, desc.frame_id, desc.perceptor_name)
+
         print(f'WARNING: Unknown sensor description for "{desc.name}" of type "{desc.sensor_type}"!')  # noqa: T201
 
         return None
@@ -262,6 +271,9 @@ class RobotModel:
         """
         Create an actuator representation for the given description.
         """
+
+        if desc.actuator_type == ActuatorType.OMNI_SPEED.value:
+            return OmniSpeedActuator(desc.name, desc.effector_name)
 
         print(f'WARNING: Unknown actuator description for "{desc.name}" of type "{desc.actuator_type}"!')  # noqa: T201
 

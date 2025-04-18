@@ -2,7 +2,10 @@ from __future__ import annotations
 
 from collections.abc import ItemsView, Iterator, KeysView, Mapping, Sequence, ValuesView
 from dataclasses import dataclass
-from typing import Protocol, TypeVar, overload
+from typing import TYPE_CHECKING, Protocol, TypeVar, overload
+
+if TYPE_CHECKING:
+    from magma.common.math.geometry.vector import Vector3D
 
 
 class PEffector(Protocol):
@@ -53,6 +56,18 @@ class MotorEffector(Effector):
     kd: float
     """
     The motor controller derivative gain parameter.
+    """
+
+
+@dataclass(frozen=True)
+class OmniSpeedEffector(Effector):
+    """
+    Effector for commanding a desired omni-directional speed towards an external movement platform.
+    """
+
+    desired_speed: Vector3D
+    """
+    The desired speed vector.
     """
 
 

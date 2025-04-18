@@ -26,13 +26,29 @@ class SensorType(Enum):
     """
     An IMU sensor, receiving rotational velocity as well as linear acceleration information together with an orientation prediction.
     """
+
     CAMERA = 'camera'
     """
     A camera sensor, receiving various state information about visible objects in the environment.
     """
 
+    LOC2D = 'loc2d'
+    """
+    A virtual sensor, receiving 2D position and orientation (location) information.
+    """
+
+    LOC3D = 'loc3d'
+    """
+    A virtual sensor, receiving 3D position and orientation (location) information.
+    """
+
 
 class ActuatorType(Enum):
+    OMNI_SPEED = 'omni_speed'
+    """
+    Actuator for commanding omni-directional speeds towards an external movement platform.
+    """
+
     LIGHT = 'light'
     """
     A light that can be regulated in brightness.
@@ -175,6 +191,26 @@ class IMUDescription(SensorDescription):
 
 
 @dataclass(frozen=True)
+class Loc2DDescription(SensorDescription):
+    """
+    Default 2D location sensor description.
+    """
+
+    def __init__(self, name: str, frame_id: str, perceptor_name: str):
+        super().__init__(name, frame_id, perceptor_name, SensorType.LOC2D.value)
+
+
+@dataclass(frozen=True)
+class Loc3DDescription(SensorDescription):
+    """
+    Default 3D location sensor description.
+    """
+
+    def __init__(self, name: str, frame_id: str, perceptor_name: str):
+        super().__init__(name, frame_id, perceptor_name, SensorType.LOC3D.value)
+
+
+@dataclass(frozen=True)
 class CameraDescription(SensorDescription):
     """
     Default camera sensor description.
@@ -239,6 +275,16 @@ class MotorDescription:
     """
     The maximum possible force / torque of the motor.
     """
+
+
+@dataclass(frozen=True)
+class OmniSpeedPlatformDescription(ActuatorDescription):
+    """
+    Default omni-directional speed-based movement platform actuator description.
+    """
+
+    def __init__(self, name: str, effector_name: str):
+        super().__init__(name, effector_name, ActuatorType.OMNI_SPEED.value)
 
 
 @dataclass(frozen=True)

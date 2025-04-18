@@ -1,14 +1,16 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Protocol
+from typing import TYPE_CHECKING, Protocol, runtime_checkable
 
-from magma.agent.communication.action import Action, MotorEffector
+from magma.agent.communication.action import Action, MotorEffector, OmniSpeedEffector
 
 if TYPE_CHECKING:
     from magma.agent.model.robot.robot_tree import HingeJoint
+    from magma.common.math.geometry.vector import Vector3D
 
 
+@runtime_checkable
 class PActuator(Protocol):
     """
     Protocol for actuators of a robot model.
@@ -20,6 +22,7 @@ class PActuator(Protocol):
         """
 
 
+@runtime_checkable
 class PMotor(PActuator, Protocol):
     """
     Protocol for motor actuators.
@@ -78,6 +81,23 @@ class PMotor(PActuator, Protocol):
     def get_prev_target_kd(self) -> float:
         """
         Retrieve the previously performed target kd.
+        """
+
+
+@runtime_checkable
+class POmniSpeedActuator(PActuator, Protocol):
+    """
+    Protocol for omni-directional speed actuators.
+    """
+
+    def set(self, desired_speed: Vector3D) -> None:
+        """
+        Set the omni-directional speed action.
+        """
+
+    def get_desired_walk_speed(self) -> Vector3D | None:
+        """
+        Retrieve the desired  speed.
         """
 
 
@@ -231,3 +251,39 @@ class Motor(Actuator):
         self._previous_target_velocity = self._target_velocity
         self._previous_target_kp = self._target_kp
         self._previous_target_kd = self._target_kd
+
+
+class OmniSpeedActuator(Actuator):
+    """
+    Default omni-directional speed actuator implementation.
+    """
+
+    def __init__(self, name: str, effector_name: str) -> None:
+        """
+        Create a new omni-directional speed actuator.
+        """
+
+        super().__init__(name, effector_name)
+
+        self._desired_speed: Vector3D | None = None
+
+    def set(self, desired_speed: Vector3D) -> None:
+        """
+        Set the omni-directional speed action.
+        """
+
+        self._desired_speed = desired_speed
+
+    def get_desired_speed(self) -> Vector3D | None:
+        """
+        Retrieve the desired speed.
+        """
+
+        return self._desired_speed
+
+    def commit(self, action: Action) -> None:
+        if self._desired_speed is not None:
+            action.put(OmniSpeedEffector(self._effector_name, self._desired_speed))
+
+        # reset actuator
+        self._desired_speed = None

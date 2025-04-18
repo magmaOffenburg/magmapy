@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING, Protocol, TypeVar, overload
 
 if TYPE_CHECKING:
-    from magma.common.math.geometry.pose import Pose3D
+    from magma.common.math.geometry.pose import Pose2D, Pose3D
     from magma.common.math.geometry.rotation import Rotation3D
     from magma.common.math.geometry.vector import Vector3D
 
@@ -165,6 +165,30 @@ class FreeJointPerceptor(Perceptor):
     pose: Pose3D
     """
     The perceived joint pose.
+    """
+
+
+@dataclass(frozen=True)
+class Loc2DPerceptor(Perceptor):
+    """
+    Perceptor representing a 2D location perception.
+    """
+
+    loc: Pose2D
+    """
+    The perceived 2D location.
+    """
+
+
+@dataclass(frozen=True)
+class Loc3DPerceptor(Perceptor):
+    """
+    Perceptor representing a 3D location perception.
+    """
+
+    loc: Pose3D
+    """
+    The perceived 3D location.
     """
 
 
