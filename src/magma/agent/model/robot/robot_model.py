@@ -9,6 +9,7 @@ from magma.agent.model.robot.robot_description import (
     ActuatorDescription,
     ActuatorType,
     BodyDescription,
+    CameraDescription,
     FixedJointDescription,
     FreeJointDescription,
     HingeJointDescription,
@@ -21,6 +22,7 @@ from magma.agent.model.robot.robot_tree import BodyPart, FixedJoint, FreeJoint, 
 from magma.agent.model.robot.sensors import (
     IMU,
     Accelerometer,
+    Camera,
     FreeJointSensor,
     Gyroskope,
     HingeJointSensor,
@@ -97,8 +99,8 @@ class RobotModel:
         """
 
         self._time: float = 0.0
-        self._sensors: dict[str, Sensor] = {sensor.get_name(): sensor for sensor in sensors}
-        self._actuators: dict[str, Actuator] = {actuator.get_name(): actuator for actuator in actuators}
+        self._sensors: dict[str, Sensor] = {sensor.name: sensor for sensor in sensors}
+        self._actuators: dict[str, Actuator] = {actuator.name: actuator for actuator in actuators}
         self._root_body: BodyPart = root_body
 
     def get_time(self) -> float:
@@ -255,6 +257,9 @@ class RobotModel:
 
         if desc.sensor_type == SensorType.IMU.value:
             return IMU(desc.name, desc.frame_id, desc.perceptor_name)
+
+        if isinstance(desc, CameraDescription):
+            return Camera(desc.name, desc.frame_id, desc.perceptor_name, desc.horizontal_fov, desc.vertical_fov)
 
         if desc.sensor_type == SensorType.LOC2D.value:
             return Loc2DSensor(desc.name, desc.frame_id, desc.perceptor_name)

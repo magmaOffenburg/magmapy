@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Protocol, runtime_checkable
+from typing import TYPE_CHECKING, Final, Protocol, runtime_checkable
 
 from magma.agent.communication.perception import (
     AccelerometerPerceptor,
@@ -26,14 +26,16 @@ class PSensor(Protocol):
     Protocol for sensors attached to specific body parts or joints of a robot model.
     """
 
-    def get_name(self) -> str:
+    @property
+    def name(self) -> str:
         """
-        Retrieve the name of the sensor.
+        The name of the sensor.
         """
 
-    def get_frame_id(self) -> str:
+    @property
+    def frame_id(self) -> str:
         """
-        Retrieve the frame-id (the name) of the body part this sensor is attached to.
+        The frame-id (the name) of the body part this sensor is attached to.
         """
 
     def get_time(self) -> float:
@@ -169,24 +171,11 @@ class Sensor(ABC):
 
         super().__init__()
 
-        self._name: str = name
-        self._frame_id: str = parent
+        self.name: Final[str] = name
+        self.frame_id: Final[str] = parent
+        self.perceptor_name: Final[str] = perceptor_name
+
         self._time: float = 0.0
-        self._perceptor_name: str = perceptor_name
-
-    def get_name(self) -> str:
-        """
-        Retrieve the name of the sensor.
-        """
-
-        return self._name
-
-    def get_frame_id(self) -> str:
-        """
-        Retrieve the frame-id (the name) of the body part this sensor is attached to.
-        """
-
-        return self._frame_id
 
     def get_time(self) -> float:
         """
@@ -224,7 +213,7 @@ class Accelerometer(Sensor):
         return self._acc
 
     def update(self, perception: Perception) -> None:
-        perceptor = perception.get_perceptor(self._perceptor_name, AccelerometerPerceptor)
+        perceptor = perception.get_perceptor(self.perceptor_name, AccelerometerPerceptor)
 
         if perceptor is not None:
             self._time = perception.get_time()
@@ -253,7 +242,7 @@ class Gyroskope(Sensor):
         return self._rpy
 
     def update(self, perception: Perception) -> None:
-        perceptor = perception.get_perceptor(self._perceptor_name, GyroRatePerceptor)
+        perceptor = perception.get_perceptor(self.perceptor_name, GyroRatePerceptor)
 
         if perceptor is not None:
             self._time = perception.get_time()
@@ -298,7 +287,7 @@ class IMU(Sensor):
         return self._rpy
 
     def update(self, perception: Perception) -> None:
-        perceptor = perception.get_perceptor(self._perceptor_name, IMUPerceptor)
+        perceptor = perception.get_perceptor(self.perceptor_name, IMUPerceptor)
 
         if perceptor is not None:
             self._time = perception.get_time()
@@ -325,7 +314,7 @@ class HingeJointSensor(Sensor):
 
         super().__init__(name, frame_id, perceptor_name)
 
-        self._joint: HingeJoint = joint
+        self.joint: Final[HingeJoint] = joint
 
         self._position: float = 0.0
         self._velocity: float = 0.0
@@ -353,7 +342,7 @@ class HingeJointSensor(Sensor):
         return self._effort
 
     def update(self, perception: Perception) -> None:
-        perceptor = perception.get_perceptor(self._perceptor_name, JointStatePerceptor)
+        perceptor = perception.get_perceptor(self.perceptor_name, JointStatePerceptor)
 
         if perceptor is not None:
             self._time = perception.get_time()
@@ -361,7 +350,7 @@ class HingeJointSensor(Sensor):
             self._velocity = perceptor.velocity
             self._effort = perceptor.effort
 
-            self._joint.set(self._position, self._velocity, self._effort)
+            self.joint.set(self._position, self._velocity, self._effort)
 
 
 class FreeJointSensor(Sensor):
@@ -382,7 +371,7 @@ class FreeJointSensor(Sensor):
 
         super().__init__(name, frame_id, perceptor_name)
 
-        self._joint: FreeJoint = joint
+        self.joint: Final[FreeJoint] = joint
 
         self._pose: Pose3D = P3D_ZERO
 
@@ -394,13 +383,32 @@ class FreeJointSensor(Sensor):
         return self._pose
 
     def update(self, perception: Perception) -> None:
-        perceptor = perception.get_perceptor(self._perceptor_name, FreeJointPerceptor)
+        perceptor = perception.get_perceptor(self.perceptor_name, FreeJointPerceptor)
 
         if perceptor is not None:
             self._time = perception.get_time()
             self._pose = perceptor.pose
 
-            self._joint.set(self._pose)
+            self.joint.set(self._pose)
+
+
+class Camera(Sensor):
+    """
+    Default camera sensor representation.
+    """
+
+    def __init__(self, name: str, frame_id: str, perceptor_name: str, h_fov: float, v_fov: float) -> None:
+        """
+        Construct a new camera sensor.
+        """
+
+        super().__init__(name, frame_id, perceptor_name)
+
+        self.horizontal_fov: Final[float] = h_fov
+        self.vertical_fov: Final[float] = v_fov
+
+    def update(self, perception: Perception) -> None:
+        del perception  # signal unused parameter
 
 
 class Loc2DSensor(Sensor):
@@ -425,7 +433,7 @@ class Loc2DSensor(Sensor):
         return self._pose
 
     def update(self, perception: Perception) -> None:
-        perceptor = perception.get_perceptor(self._perceptor_name, Loc2DPerceptor)
+        perceptor = perception.get_perceptor(self.perceptor_name, Loc2DPerceptor)
 
         if perceptor is not None:
             self._time = perception.get_time()
@@ -454,7 +462,7 @@ class Loc3DSensor(Sensor):
         return self._pose
 
     def update(self, perception: Perception) -> None:
-        perceptor = perception.get_perceptor(self._perceptor_name, Loc3DPerceptor)
+        perceptor = perception.get_perceptor(self.perceptor_name, Loc3DPerceptor)
 
         if perceptor is not None:
             self._time = perception.get_time()

@@ -110,24 +110,20 @@ def axis_angle(axis: Vector3D, angle_rad: float) -> Rotation3D:
     if aar:
         return aar(angle_rad)
 
-    x = axis.x
-    y = axis.y
-    z = axis.z
-
     sa = sin(angle_rad)
     ca = cos(angle_rad)
     ca1 = 1 - ca
 
-    xx1ca = x * x * ca1
-    yy1ca = y * y * ca1
-    zz1ca = z * z * ca1
-    xy1ca = x * y * ca1
-    xz1ca = x * z * ca1
-    yz1ca = y * z * ca1
+    xx1ca = axis.x * axis.x * ca1
+    yy1ca = axis.y * axis.y * ca1
+    zz1ca = axis.z * axis.z * ca1
+    xy1ca = axis.x * axis.y * ca1
+    xz1ca = axis.x * axis.z * ca1
+    yz1ca = axis.y * axis.z * ca1
 
-    xsa = x * sa
-    ysa = y * sa
-    zsa = z * sa
+    xsa = axis.x * sa
+    ysa = axis.y * sa
+    zsa = axis.z * sa
 
     # fmt: off
     return Rotation3D(

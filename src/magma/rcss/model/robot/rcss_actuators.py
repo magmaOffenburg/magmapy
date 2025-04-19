@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Protocol
+from typing import TYPE_CHECKING, Final, Protocol, runtime_checkable
 
 from magma.agent.model.robot.actuators import Actuator, PActuator
 from magma.rcss.communication.rcss_action import (
@@ -16,6 +16,7 @@ if TYPE_CHECKING:
     from magma.common.math.geometry.pose import Pose2D
 
 
+@runtime_checkable
 class PCreateActuator(Protocol):
     """
     Protocol for create actuators.
@@ -26,12 +27,14 @@ class PCreateActuator(Protocol):
         Set the create action.
         """
 
-    def get_scene(self) -> str:
+    @property
+    def scene(self) -> str:
         """
-        Retrieve the scene path.
+        The scene path.
         """
 
-    def get_model_type(self) -> int:
+    @property
+    def model_type(self) -> int:
         """
         Retrieve the model type number.
         """
@@ -42,6 +45,7 @@ class PCreateActuator(Protocol):
         """
 
 
+@runtime_checkable
 class PInitActuator(Protocol):
     """
     Protocol for init actuators.
@@ -68,6 +72,7 @@ class PInitActuator(Protocol):
         """
 
 
+@runtime_checkable
 class PSyncActuator(Protocol):
     """
     Protocol for synchronize actuators.
@@ -84,6 +89,7 @@ class PSyncActuator(Protocol):
         """
 
 
+@runtime_checkable
 class PScotty(PActuator, Protocol):
     """
     Protocol for beam actuators.
@@ -100,6 +106,7 @@ class PScotty(PActuator, Protocol):
         """
 
 
+@runtime_checkable
 class PPassModeActuator(PActuator, Protocol):
     """
     Protocol for pass mode actuators.
@@ -134,8 +141,9 @@ class CreateActuator(Actuator):
 
         super().__init__(name, effector_name)
 
-        self._scene: str = scene
-        self._model_type: int = model_type
+        self.scene: Final[str] = scene
+        self.model_type: Final[int] = model_type
+
         self._active: bool = False
 
     def set(self, *, active: bool = True) -> None:
@@ -144,20 +152,6 @@ class CreateActuator(Actuator):
         """
 
         self._active = active
-
-    def get_scene(self) -> str:
-        """
-        Retrieve the scene path.
-        """
-
-        return self._scene
-
-    def get_model_type(self) -> int:
-        """
-        Retrieve the model type number.
-        """
-
-        return self._model_type
 
     def is_active(self) -> bool:
         """
@@ -168,7 +162,7 @@ class CreateActuator(Actuator):
 
     def commit(self, action: Action) -> None:
         if self._active:
-            action.put(CreateEffector(self._effector_name, self._scene, self._model_type))
+            action.put(CreateEffector(self.effector_name, self.scene, self.model_type))
 
         # reset actuator
         self._active = False
@@ -188,7 +182,7 @@ class InitActuator(Actuator):
 
         self._team_name: str = 'unknown'
         self._player_no: int = 0
-        self._active = False
+        self._active: bool = False
 
     def set(self, team_name: str, player_no: int) -> None:
         """
@@ -222,7 +216,7 @@ class InitActuator(Actuator):
 
     def commit(self, action: Action) -> None:
         if self._active:
-            action.put(InitEffector(self._effector_name, self._team_name, self._player_no))
+            action.put(InitEffector(self.effector_name, self._team_name, self._player_no))
 
         # reset actuator
         self._active = False
@@ -246,8 +240,9 @@ class SyncActuator(Actuator):
 
         super().__init__(name, effector_name)
 
-        self._auto_active = auto_active
-        self._active = auto_active
+        self.auto_active: Final[bool] = auto_active
+
+        self._active: bool = auto_active
 
     def set(self, *, active: bool = True) -> None:
         """
@@ -265,10 +260,10 @@ class SyncActuator(Actuator):
 
     def commit(self, action: Action) -> None:
         if self._active:
-            action.put(SyncEffector(self._effector_name))
+            action.put(SyncEffector(self.effector_name))
 
         # reset actuator
-        self._active = self._auto_active
+        self._active = self.auto_active
 
 
 class Scotty(Actuator):
@@ -301,7 +296,7 @@ class Scotty(Actuator):
 
     def commit(self, action: Action) -> None:
         if self._beam_pose is not None:
-            action.put(BeamEffector(self._effector_name, self._beam_pose))
+            action.put(BeamEffector(self.effector_name, self._beam_pose))
 
         # reset actuator
         self._beam_pose = None
@@ -337,7 +332,7 @@ class PassModeActuator(Actuator):
 
     def commit(self, action: Action) -> None:
         if self._request_pass_mode:
-            action.put(PassModeEffector(self._effector_name))
+            action.put(PassModeEffector(self.effector_name))
 
         # reset actuator
         self._request_pass_mode = False

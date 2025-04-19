@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Protocol, runtime_checkable
+from typing import TYPE_CHECKING, Final, Protocol, runtime_checkable
 
 from magma.common.math.geometry.pose import P3D_ZERO, Pose3D
-from magma.common.math.geometry.rotation import R3D_IDENTITY, Rotation3D
+from magma.common.math.geometry.rotation import R3D_IDENTITY, Rotation3D, axis_angle
 from magma.common.math.geometry.vector import V3D_ZERO, Vector3D
 
 if TYPE_CHECKING:
@@ -18,14 +18,16 @@ class PJoint(Protocol):
     Protocol for joints connecting body parts of a robot model.
     """
 
-    def get_name(self) -> str:
+    @property
+    def name(self) -> str:
         """
-        Retrieve the name of the joint.
+        The name of the joint.
         """
 
-    def get_anchor(self) -> Vector3D:
+    @property
+    def anchor(self) -> Vector3D:
         """
-        Retrieve the joint anchor.
+        The joint anchor.
         """
 
     def get_rotation(self) -> Rotation3D:
@@ -52,19 +54,20 @@ class PHingeJoint(PJoint, Protocol):
     Protocol for hinge joints.
     """
 
-    def get_axis(self) -> Vector3D:
+    @property
+    def axis(self) -> Vector3D:
         """
-        Retrieve the joint axis.
-        """
-
-    def get_min(self) -> float:
-        """
-        Retrieve the minimum possible joint position.
+        The joint rotation axis.
         """
 
-    def get_max(self) -> float:
+    def ax_min(self) -> float:
         """
-        Retrieve the maximum possible joint position.
+        The minimum possible joint position.
+        """
+
+    def ax_max(self) -> float:
+        """
+        The maximum possible joint position.
         """
 
 
@@ -85,24 +88,27 @@ class PBodyPart(Protocol):
     Protocol for body part representations.
     """
 
-    def get_name(self) -> str:
+    @property
+    def name(self) -> str:
         """
-        Retrieve the name of the body part.
+        The name of the body part.
         """
 
-    def get_parent(self) -> PBodyPart | None:
+    def parent(self) -> PBodyPart | None:
         """
         Retrieve the parent body part (if existing).
         """
 
-    def get_children(self) -> Sequence[PBodyPart]:
+    @property
+    def children(self) -> Sequence[PBodyPart]:
         """
-        Retrieve the collection of child body parts.
+        The collection of child body parts.
         """
 
-    def get_joint(self) -> Joint | None:
+    @property
+    def joint(self) -> Joint | None:
         """
-        Retrieve the joint by which this body part is attached to its parent body part (if existing).
+        The joint by which this body part is attached to its parent body part (if existing).
         """
 
 
@@ -116,24 +122,11 @@ class Joint:
         Construct a new joint.
         """
 
-        self._name = name
-        self._anchor: Vector3D = anchor
+        self.name: Final[str] = name
+        self.anchor: Final[Vector3D] = anchor
+
         self._translation: Vector3D = V3D_ZERO
         self._rotation: Rotation3D = R3D_IDENTITY
-
-    def get_name(self) -> str:
-        """
-        Retrieve the name of the joint.
-        """
-
-        return self._name
-
-    def get_anchor(self) -> Vector3D:
-        """
-        Retrieve the joint anchor.
-        """
-
-        return self._anchor
 
     def get_rotation(self) -> Rotation3D:
         """
@@ -177,8 +170,8 @@ class HingeJoint(Joint):
 
         super().__init__(name, anchor)
 
-        self._axis: Vector3D = axis
-        self._limits: Vector2D = limits
+        self.axis: Final[Vector3D] = axis
+        self.limits: Final[Vector2D] = limits
 
         self._ax_position: float = 0.0
         self._ax_velocity: float = 0.0
@@ -194,28 +187,21 @@ class HingeJoint(Joint):
         self._ax_effort = effort
 
         # update rotation information
-        # self._rotation = Rotation3D.from_axis_angle(self._axis, self._ax_position)
+        self._rotation = axis_angle(self.axis, self._ax_position)
 
-    def get_axis(self) -> Vector3D:
+    def ax_min(self) -> float:
         """
-        Retrieve the joint axis.
-        """
-
-        return self._axis
-
-    def get_min(self) -> float:
-        """
-        Retrieve the minimum possible joint position.
+        The minimum possible joint position.
         """
 
-        return self._limits.x
+        return self.limits.x
 
-    def get_max(self) -> float:
+    def ax_max(self) -> float:
         """
-        Retrieve the maximum possible joint position.
+        The maximum possible joint position.
         """
 
-        return self._limits.y
+        return self.limits.y
 
     def ax_pos(self) -> float:
         """
@@ -288,54 +274,28 @@ class BodyPart:
         Construct a new body part.
         """
 
-        self._name: str = name
+        self.name: Final[str] = name
+        self.children: Final[Sequence[BodyPart]] = children
+        self.position: Final[Vector3D] = position
+        self.joint: Final[Joint | None] = joint
+
         self._parent: BodyPart | None = None
-        self._children: Sequence[BodyPart] = children
-        self._position: Vector3D = position
-        self._joint: Joint | None = joint
 
         # set parent references of child body parts
         for child in children:
+            # object.__setattr__(child, '_parent', self)
             child._parent = self  # noqa: SLF001 - prevent private member access warning for instances of the same class
 
-    def get_name(self) -> str:
-        """
-        Retrieve the name of the body part.
-        """
-
-        return self._name
-
-    def get_parent(self) -> BodyPart | None:
+    def parent(self) -> BodyPart | None:
         """
         Retrieve the parent body part (if existing).
         """
 
         return self._parent
 
-    def get_children(self) -> Sequence[BodyPart]:
-        """
-        Retrieve the collection of child body parts.
-        """
-
-        return self._children
-
-    def get_joint(self) -> Joint | None:
-        """
-        Retrieve the joint by which this body part is attached to its parent body part (if existing).
-        """
-
-        return self._joint
-
-    def get_position(self) -> Vector3D:
-        """
-        Retrieve the current position of the body part in the local robot frame.
-        """
-
-        return self._position
-
     def is_root_body(self) -> bool:
         """
         Check if this body part represents the root body part of the robot.
         """
 
-        return self._joint is None
+        return self.joint is None

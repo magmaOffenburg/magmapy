@@ -20,7 +20,7 @@ class ForceResistance(Sensor):
         self._origin: Vector3D = V3D_ZERO
 
     def update(self, perception: Perception) -> None:
-        perceptor = perception.get_perceptor(self._perceptor_name, ForceResistancePerceptor)
+        perceptor = perception.get_perceptor(self.perceptor_name, ForceResistancePerceptor)
 
         if perceptor is not None:
             self._time = perception.get_time()

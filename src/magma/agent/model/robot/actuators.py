@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Protocol, runtime_checkable
+from typing import TYPE_CHECKING, Final, Protocol, runtime_checkable
 
 from magma.agent.communication.action import Action, MotorEffector, OmniSpeedEffector
 
@@ -16,9 +16,10 @@ class PActuator(Protocol):
     Protocol for actuators of a robot model.
     """
 
-    def get_name(self) -> str:
+    @property
+    def name(self) -> str:
         """
-        Retrieve the name of the actuator.
+        The name of the actuator.
         """
 
 
@@ -33,14 +34,16 @@ class PMotor(PActuator, Protocol):
         Set the motor action.
         """
 
-    def get_max_velocity(self) -> float:
+    @property
+    def max_velocity(self) -> float:
         """
-        Retrieve the maximum motor velocity.
+        The maximum motor velocity.
         """
 
-    def get_max_effort(self) -> float:
+    @property
+    def max_effort(self) -> float:
         """
-        Retrieve the maximum motor effort (force / torque).
+        The maximum motor effort (force / torque).
         """
 
     def get_target_position(self) -> float:
@@ -95,9 +98,9 @@ class POmniSpeedActuator(PActuator, Protocol):
         Set the omni-directional speed action.
         """
 
-    def get_desired_walk_speed(self) -> Vector3D | None:
+    def get_desired_speed(self) -> Vector3D | None:
         """
-        Retrieve the desired  speed.
+        Retrieve the desired speed.
         """
 
 
@@ -113,15 +116,8 @@ class Actuator(ABC):
 
         super().__init__()
 
-        self._name: str = name
-        self._effector_name: str = effector_name
-
-    def get_name(self) -> str:
-        """
-        Retrieve the name of the actuator.
-        """
-
-        return self._name
+        self.name: Final[str] = name
+        self.effector_name: Final[str] = effector_name
 
     @abstractmethod
     def commit(self, action: Action) -> None:
@@ -149,9 +145,9 @@ class Motor(Actuator):
 
         super().__init__(name, effector_name)
 
-        self._max_velocity: float = max_speed
-        self._max_effort: float = max_effort
-        self._joint: HingeJoint = joint
+        self.max_velocity: Final[float] = max_speed
+        self.max_effort: Final[float] = max_effort
+        self.joint: Final[HingeJoint] = joint
 
         self._target_position: float = 0.0
         self._target_velocity: float = 0.0
@@ -172,20 +168,6 @@ class Motor(Actuator):
         self._target_velocity = vel
         self._target_kp = kp
         self._target_kd = kd
-
-    def get_max_velocity(self) -> float:
-        """
-        Retrieve the maximum motor velocity.
-        """
-
-        return self._max_velocity
-
-    def get_max_effort(self) -> float:
-        """
-        Retrieve the maximum motor effort (force / torque).
-        """
-
-        return self._max_effort
 
     def get_target_position(self) -> float:
         """
@@ -244,7 +226,7 @@ class Motor(Actuator):
         return self._previous_target_kd
 
     def commit(self, action: Action) -> None:
-        action.put(MotorEffector(self._effector_name, self._target_position, self._target_velocity, self._target_kp, self._target_kd))
+        action.put(MotorEffector(self.effector_name, self._target_position, self._target_velocity, self._target_kp, self._target_kd))
 
         # set current target as previous targets
         self._previous_target_position = self._target_position
@@ -283,7 +265,7 @@ class OmniSpeedActuator(Actuator):
 
     def commit(self, action: Action) -> None:
         if self._desired_speed is not None:
-            action.put(OmniSpeedEffector(self._effector_name, self._desired_speed))
+            action.put(OmniSpeedEffector(self.effector_name, self._desired_speed))
 
         # reset actuator
         self._desired_speed = None
