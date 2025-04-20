@@ -40,6 +40,11 @@ class PJoint(Protocol):
         Retrieve the current 3D translation of the joint in the joint local frame.
         """
 
+    def get_transform(self) -> Pose3D:
+        """
+        Retrieve the current 3D transformation of the joint in the joint local frame (translation and rotation).
+        """
+
 
 @runtime_checkable
 class PFixedJoint(PJoint, Protocol):
@@ -123,6 +128,16 @@ class PBodyPart(Protocol):
         The body part visual appearance.
         """
 
+    def is_root_body(self) -> bool:
+        """
+        Check if this body part represents the root body part of the robot.
+        """
+
+    def get_pose(self) -> Pose3D:
+        """
+        Calculate the current pose of the body part in the robot frame.
+        """
+
 
 class Joint:
     """
@@ -153,6 +168,13 @@ class Joint:
         """
 
         return self._translation
+
+    def get_transform(self) -> Pose3D:
+        """
+        Retrieve the current 3D transformation of the joint in the joint local frame (translation and rotation).
+        """
+
+        return Pose3D(self._translation, self._rotation)
 
 
 class FixedJoint(Joint):
@@ -356,4 +378,19 @@ class BodyPart:
         Check if this body part represents the root body part of the robot.
         """
 
-        return self.joint is None
+        return self._parent is None or self.joint is None
+
+    def get_pose(self) -> Pose3D:
+        """
+        Calculate the current pose of the body part in the robot frame.
+        """
+
+        if self._parent is None:
+            # root body part -> zero pose
+            return P3D_ZERO
+
+        if self.joint is None:
+            # should not happen, as the root body without a parent body should be the only body with no joint reference
+            return self._parent.get_pose()
+
+        return self._parent.get_pose().tf_pose(self.joint.get_transform())
