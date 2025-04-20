@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from math import cos, radians, sin
+from math import ceil, cos, radians, sin
 
 from magma.agent.communication.action import Action, MotorEffector
 from magma.agent.communication.perception import (
@@ -468,32 +468,38 @@ class RCSSMessageEncoder:
         Encode the given action commands into a message.
         """
 
-        msg: str = ''
+        def round3(val: float) -> float:
+            """Round the given float value to 3 digits."""
+            return ceil(val * 1000) / 1000.0
+
+        msgs: list[str] = []
 
         for effector in action.values():
             if isinstance(effector, CreateEffector):
                 # ignore all other effectors when a create effector is present
-                msg = f'({effector.name} {effector.scene} {effector.model_type})'
+                msgs = [f'({effector.name} {effector.scene} {effector.model_type})']
                 break
 
             if isinstance(effector, InitEffector):
                 # ignore all other effectors when an init effector is present
-                msg = f'({effector.name} (unum {effector.player_no}) (teamname {effector.team_name}))'
+                msgs = [f'({effector.name} (unum {effector.player_no}) (teamname {effector.team_name}))']
                 break
 
             if isinstance(effector, BeamEffector):
                 pose = effector.beam_pose
-                msg += f'({effector.name} {pose.x()} {pose.y()} {pose.theta.deg()})'
+                msgs.append(f'({effector.name} {round3(pose.x())} {round3(pose.y())} {round3(pose.theta.deg())})')
 
             elif isinstance(effector, MotorEffector):
-                msg += f'({effector.name} {effector.velocity})'
+                msgs.append(f'({effector.name} {round3(effector.velocity)})')
 
             elif isinstance(effector, SayEffector):
-                msg += f'({effector.name} {effector.message})'
+                msgs.append(f'({effector.name} {effector.message})')
 
             elif isinstance(effector, (PassModeEffector, SyncEffector)):
-                msg += f'({effector.name})'
+                msgs.append(f'({effector.name})')
 
+        msg = ''.join(msgs)
+        # print(msg)
         return msg.encode()
 
 
