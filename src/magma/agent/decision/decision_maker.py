@@ -61,6 +61,7 @@ class DecisionMakerBase(Generic[MT], ABC):
         self._behaviors: dict[str, PBehavior] = behaviors
         self._current_behavior: PBehavior = self._behaviors[BehaviorID.NONE.value]
         self._desired_behavior: PBehavior = self._behaviors[BehaviorID.NONE.value]
+        self._init_behavior: PBehavior = self._behaviors.get(BehaviorID.INIT.value, self._behaviors[BehaviorID.NONE.value])
 
     def get_behaviors(self) -> Mapping[str, PBehavior]:
         """
@@ -95,12 +96,18 @@ class DecisionMakerBase(Generic[MT], ABC):
         Take a decision based on the current state and perform an action.
         """
 
-        # decide for next behavior
-        desired_behavior_id = self._decide_next_behavior()
-        if desired_behavior_id in self._behaviors:
-            self._desired_behavior = self._behaviors[desired_behavior_id]
+        if self._init_behavior.is_finished():
+            # decide for next behavior
+            desired_behavior_id = self._decide_next_behavior()
+
+            if desired_behavior_id in self._behaviors:
+                self._desired_behavior = self._behaviors[desired_behavior_id]
+            else:
+                self._desired_behavior = self._behaviors[BehaviorID.NONE.value]
+                print(f'WARNING: Desired behavior with name "{desired_behavior_id}" not found in behavior map!')  # noqa: T201
         else:
-            print(f'WARNING: Desired behavior with name "{desired_behavior_id}" not found in behavior map!')  # noqa: T201
+            # perform initialization behavior
+            self._desired_behavior = self._init_behavior
 
         # try switching to the requested behavior
         if self._desired_behavior != self._current_behavior:

@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from magma.rcss.decision.rcss_base_behaviors import RCSSBehaviorID
 from magma.soccer_agent.decision.soccer_decision_maker import SoccerDecisionMaker
 
 if TYPE_CHECKING:
@@ -21,18 +20,6 @@ class RCSSDecisionMaker(SoccerDecisionMaker):
         """
 
         super().__init__(model, behaviors)
-
-        self._create_behavior: PBehavior = self._behaviors[RCSSBehaviorID.CREATE.value]
-        self._init_behavior: PBehavior = self._behaviors[RCSSBehaviorID.INIT.value]
-
-    def _setup(self) -> str | None:
-        if not self._create_behavior.is_finished():
-            return self._create_behavior.get_name()
-
-        if not self._init_behavior.is_finished():
-            return self._init_behavior.get_name()
-
-        return None
 
     def _get_ready(self) -> str | None:
         return None

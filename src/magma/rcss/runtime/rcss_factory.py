@@ -4,7 +4,7 @@ from magma.agent.decision.decision_maker import PDecisionMaker
 from magma.agent.model.robot.robot_description import PRobotDescription
 from magma.agent.model.robot.robot_model import PMutableRobotModel
 from magma.rcss.communication.rcss_channel import RCSSServerChannel
-from magma.rcss.decision.rcss_base_behaviors import CreateBehavior, InitBehavior
+from magma.rcss.decision.rcss_base_behaviors import InitBehavior
 from magma.rcss.decision.rcss_decision_maker import RCSSDecisionMaker
 from magma.rcss.model.rcss_rules import RCSSRules
 from magma.rcss.model.robot.rcss_robot_description import (
@@ -84,7 +84,6 @@ class RCSSAgentFactory(SoccerAgentFactory):
         def add_behavior(behavior: PBehavior) -> None:
             behaviors[behavior.get_name()] = behavior
 
-        add_behavior(CreateBehavior(model))
         add_behavior(InitBehavior(model))
 
         return behaviors

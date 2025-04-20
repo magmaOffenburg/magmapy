@@ -15,6 +15,11 @@ class BehaviorID(Enum):
     The none behavior used to do nothing.
     """
 
+    INIT = 'init'
+    """
+    The init behavior used to initialize a robot.
+    """
+
 
 class PBehavior(Protocol):
     """
@@ -90,6 +95,7 @@ class NoneBehavior(Behavior):
         """
         Construct a new none-behavior.
         """
+
         super().__init__(BehaviorID.NONE.value)
 
     def perform(self) -> None:

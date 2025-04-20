@@ -23,7 +23,6 @@ class SoccerDecisionMaker(DecisionMakerBase[PSoccerAgentModel]):
         super().__init__(model, behaviors)
 
         self._behavior_suppliers: list[Callable[[], str | None]] = [
-            self._setup,
             self._get_ready,
             self._react_to_game_end,
             self._wait_for_game_start,
@@ -37,13 +36,6 @@ class SoccerDecisionMaker(DecisionMakerBase[PSoccerAgentModel]):
                 return behavior
 
         return BehaviorID.NONE.value
-
-    def _setup(self) -> str | None:
-        """
-        Decide if we should take any (re-)initialization actions.
-        """
-
-        return None
 
     def _get_ready(self) -> str | None:
         """
