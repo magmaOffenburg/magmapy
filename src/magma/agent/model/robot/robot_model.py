@@ -18,7 +18,7 @@ from magma.agent.model.robot.robot_description import (
     SensorDescription,
     SensorType,
 )
-from magma.agent.model.robot.robot_tree import BodyPart, FixedJoint, FreeJoint, HingeJoint, Joint, PBodyPart
+from magma.agent.model.robot.robot_tree import ZERO_INERTIA, BodyPart, BodyVisual, FixedJoint, FreeJoint, HingeJoint, Joint, PBodyPart, RigidBodyInertia
 from magma.agent.model.robot.sensors import (
     IMU,
     Accelerometer,
@@ -206,11 +206,17 @@ class RobotModel:
         # create child body parts
         children = tuple(cls._create_body(child_desc, robot, sensors, actuators) for child_desc in robot.get_children_for(body))
 
+        # create rigid body inertia
+        inertia = ZERO_INERTIA if body.inertia is None else RigidBodyInertia(body.inertia.origin, body.inertia.mass, body.inertia.inertia)
+
         # create joint
         joint = cls._create_joint(robot.get_joint_for(body), sensors, actuators)
 
+        # create body appearance
+        appearance = None if body.visual is None else BodyVisual(body.visual.origin, body.visual.geometry)
+
         # create body part
-        return BodyPart(body.name, children, body.translation, joint)
+        return BodyPart(body.name, children, inertia, joint, appearance)
 
     @classmethod
     def _create_joint(cls, desc: JointDescription | None, sensors: list[Sensor], actuators: list[Actuator]) -> Joint | None:

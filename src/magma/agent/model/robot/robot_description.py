@@ -5,7 +5,7 @@ from enum import Enum
 from typing import TYPE_CHECKING, Protocol
 
 from magma.common.math.geometry.rotation import R3D_IDENTITY, Rotation3D
-from magma.common.math.geometry.vector import Vector2D, Vector3D
+from magma.common.math.geometry.vector import V3D_ZERO, Vector2D, Vector3D
 
 if TYPE_CHECKING:
     from collections.abc import Generator, ValuesView
@@ -427,6 +427,63 @@ class FreeJointDescription(JointDescription):
 
 
 @dataclass(frozen=True)
+class InertiaDescription:
+    """
+    Description of a body part inertia.
+    """
+
+    origin: Vector3D
+    """
+    The origin of the body CoM.
+    """
+
+    mass: float
+    """
+    The body mass.
+    """
+
+    inertia: Vector3D
+    """
+    The inertia vector (diagonal entries).
+    """
+
+    def __init__(
+        self,
+        origin: Vector3D | tuple[float, float, float],
+        mass: float,
+        inertia: Vector3D | tuple[float, float, float] = V3D_ZERO,
+    ):
+        object.__setattr__(self, 'origin', origin if isinstance(origin, Vector3D) else Vector3D(origin[0], origin[1], origin[2]))
+        object.__setattr__(self, 'mass', mass)
+        object.__setattr__(self, 'inertia', inertia if isinstance(inertia, Vector3D) else Vector3D(inertia[0], inertia[1], inertia[2]))
+
+
+@dataclass(frozen=True)
+class VisualDescription:
+    """
+    Description of a visual representation of a body part.
+    """
+
+    origin: Vector3D
+    """
+    The origin of the visual.
+    """
+
+    geometry: Vector3D
+    """
+    The visual body geometry (for now simply an axis-aligned bounding box).
+    """
+
+    def __init__(
+        self,
+        origin: Vector3D | tuple[float, float, float],
+        geometry: Vector3D | tuple[float, float, float],
+    ):
+        object.__setattr__(self, 'origin', origin if isinstance(origin, Vector3D) else Vector3D(origin[0], origin[1], origin[2]))
+        object.__setattr__(self, 'geometry', geometry if isinstance(geometry, Vector3D) else Vector3D(geometry[0], geometry[1], geometry[2]))
+
+
+@dataclass(frozen=True)
 class BodyDescription:
     """
     Description of a body part of the robot.
@@ -437,9 +494,14 @@ class BodyDescription:
     The name of the body.
     """
 
-    translation: Vector3D
+    inertia: InertiaDescription | None = None
     """
-    The translation of the body.
+    The body inertia.
+    """
+
+    visual: VisualDescription | None = None
+    """
+    The body appearance.
     """
 
 

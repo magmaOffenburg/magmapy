@@ -106,9 +106,21 @@ class PBodyPart(Protocol):
         """
 
     @property
+    def inertia(self) -> RigidBodyInertia:
+        """
+        The body part inertia.
+        """
+
+    @property
     def joint(self) -> Joint | None:
         """
         The joint by which this body part is attached to its parent body part (if existing).
+        """
+
+    @property
+    def appearance(self) -> BodyVisual | None:
+        """
+        The body part visual appearance.
         """
 
 
@@ -125,7 +137,7 @@ class Joint:
         self.name: Final[str] = name
         self.anchor: Final[Vector3D] = anchor
 
-        self._translation: Vector3D = V3D_ZERO
+        self._translation: Vector3D = anchor
         self._rotation: Rotation3D = R3D_IDENTITY
 
     def get_rotation(self) -> Rotation3D:
@@ -248,7 +260,7 @@ class FreeJoint(Joint):
 
         # update joint rotation and translation information
         self._rotation = pose.rot
-        self._translation = pose.pos
+        self._translation = self.anchor + pose.pos
 
     def joint_pose(self) -> Pose3D:
         """
@@ -256,6 +268,50 @@ class FreeJoint(Joint):
         """
 
         return self._pose
+
+
+class RigidBodyInertia:
+    """
+    Default inertia representation for a rigid body part.
+    """
+
+    def __init__(
+        self,
+        origin: Vector3D,
+        mass: float,
+        inertia: Vector3D,
+    ) -> None:
+        """
+        Construct a new body inertia.
+        """
+
+        self.origin: Final[Vector3D] = origin
+        self.mass: Final[float] = mass
+        self.inertia: Final[Vector3D] = inertia
+
+
+ZERO_INERTIA: Final[RigidBodyInertia] = RigidBodyInertia(V3D_ZERO, 0, V3D_ZERO)
+"""
+The zero rigid body inertia with no mass and zero inertia.
+"""
+
+
+class BodyVisual:
+    """
+    Default body visual representation.
+    """
+
+    def __init__(
+        self,
+        origin: Vector3D,
+        dimensions: Vector3D,
+    ) -> None:
+        """
+        Construct a new body inertia.
+        """
+
+        self.origin: Final[Vector3D] = origin
+        self.dimensions: Final[Vector3D] = dimensions
 
 
 class BodyPart:
@@ -267,8 +323,9 @@ class BodyPart:
         self,
         name: str,
         children: Sequence[BodyPart],
-        position: Vector3D,
+        inertia: RigidBodyInertia,
         joint: Joint | None,
+        appearance: BodyVisual | None,
     ) -> None:
         """
         Construct a new body part.
@@ -276,8 +333,9 @@ class BodyPart:
 
         self.name: Final[str] = name
         self.children: Final[Sequence[BodyPart]] = children
-        self.position: Final[Vector3D] = position
+        self.inertia: Final[RigidBodyInertia] = inertia
         self.joint: Final[Joint | None] = joint
+        self.appearance: Final[BodyVisual | None] = appearance
 
         self._parent: BodyPart | None = None
 
