@@ -1,9 +1,9 @@
 [build-system]
 requires = [
-  # NOTE: this needs to be kept in sync with build-requirements.txt and mypy-requirements.txt
+  # NOTE: this needs to be kept in sync with build-requirements.txt and requirements.txt
   # build-requirements.txt
   "hatchling",
-  # mypy-requirements.txt
+  # requirements.txt
   "numpy >= 2.0.0"
 ]
 build-backend = "hatchling.build"
@@ -28,17 +28,17 @@ classifiers = [
 ]
 requires-python = ">= 3.9"
 dependencies = [
-  # When changing this, also update build-system.requires and mypy-requirements.txt
+  # When changing this, also update build-system.requires and requirements.txt
   "numpy >= 2.0.0"
 ]
 dynamic = ["version"]
 
 [project.urls]
 Homepage = "https://magma.hs-offenburg.de"
-Documentation = "https://git.hs-offenburg.de/sglaser/magmapy"
-Repository = "https://git.hs-offenburg.de/sglaser/magmapy/-/blob/main/doc"
-Changelog = "https://git.hs-offenburg.de/sglaser/magmapy/-/blob/main/CHANGELOG.md"
-Issues = "https://git.hs-offenburg.de/sglaser/magmapy/-/issues"
+Repository = "https://github.com/magmaOffenburg/magmapy"
+Documentation = "https://github.com/magmaOffenburg/magmapy/tree/main/src/magma"
+Changelog = "https://github.com/magmaOffenburg/magmapy/blob/main/CHANGELOG.md"
+Issues = "https://github.com/magmaOffenburg/magmapy/issues"
 
 [project.scripts]
 magma = "magma.__main__:magma_agent"

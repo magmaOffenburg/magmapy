@@ -4,44 +4,40 @@ Python implementation of the magma agent framework.
 
 ## Getting Started
 
-Clone the repository somewhere:
-
-```bash
-git clone git@git.hs-offenburg.de:sglaser/magmapy.git
-```
+Clone the repository somewhere...
 
 ### Build System
 
-I'm experimenting with [hatchling](https://hatch.pypa.io) as a build system (no clue if it is a good choice or not, but that's what it is at the moment).
+This project uses [hatch](https://hatch.pypa.io) as project management tool.  
+You can install _hatch_ via your package manager or `pip install hatch` (or `pipx install hatch` on managed systems).
 
-Hatchling is somehow managing some virtual environments in the background, which are used to run tests, etc. but also for running scripts of the package itself. Check out the [Docs](https://hatch.pypa.io/dev/tutorials/environment/basic-usage/) for more information.
-
-So, in order to use hatchling, you need to install it:
-
-```bash
-pip3 install hatchling
-```
+Hatch is managing various virtual environments in the background, which are used to run scripts, tests, etc.
+You don't need to create any virtual environment by yourself.
+Virtual environments are automatically created by hatch on demand (when running scripts).
+The project itself and the environment specific dependencies specified in the _pyproject.toml_ file are automatically installed in these virtual environments.
+Check out the [Docs](https://hatch.pypa.io/dev/tutorials/environment/basic-usage/) for more information.
 
 ### Default Development Environment(s)
 
-Navigate to the project directory (containing the _pyproject.toml_ file) and create the default virtual environment(s) via:
+Even though virtual environments are created on demand, let's create the default virtual environment(s) by running:
 
 ```bash
 hatch env create
 ```
 
-Hatchling will create the default virtual environment and install the package in dev-mode as well as its dependencies.
+in the project directory (containing the _pyproject.toml_ file).
+Hatch will create the default virtual environment and install the package in dev-mode as well as its dependencies.
 
 ### Type Checking and Formatting
 
 This project heavily relies on type hints.
-You can run a mypy type checking with the following command:
+You can run a MyPy type checking with the following command:
 
 ```bash
 hatch run types:check
 ```
 
-Which will effectively execute the "check" command, defined in the _pyproject.toml_ file in the "types" environment (in which mypy is installed).
+Which will effectively execute the "check" command, defined in the _pyproject.toml_ file in the "types" environment (in which MyPy is installed).
 
 You can also run the ruff code formatter via:
 
