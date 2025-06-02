@@ -58,6 +58,11 @@ class MotorEffector(Effector):
     The motor controller derivative gain parameter.
     """
 
+    tau: float
+    """
+    The motor torque.
+    """
+
 
 @dataclass(frozen=True)
 class OmniSpeedEffector(Effector):

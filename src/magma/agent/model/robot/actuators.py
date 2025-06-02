@@ -66,6 +66,11 @@ class PMotor(PActuator, Protocol):
         Retrieve the target kd.
         """
 
+    def get_target_tau(self) -> float:
+        """
+        Retrieve the target torque.
+        """
+
     def get_prev_target_position(self) -> float:
         """
         Retrieve the previously performed target position.
@@ -84,6 +89,11 @@ class PMotor(PActuator, Protocol):
     def get_prev_target_kd(self) -> float:
         """
         Retrieve the previously performed target kd.
+        """
+
+    def get_prev_target_tau(self) -> float:
+        """
+        Retrieve the previously performed target torque.
         """
 
 
@@ -153,13 +163,15 @@ class Motor(Actuator):
         self._target_velocity: float = 0.0
         self._target_kp: float = 0.0
         self._target_kd: float = 0.0
+        self._target_tau: float = 0.0
 
         self._previous_target_position: float = 0.0
         self._previous_target_velocity: float = 0.0
         self._previous_target_kp: float = 0.0
         self._previous_target_kd: float = 0.0
+        self._previous_target_tau: float = 0.0
 
-    def set(self, pos: float, vel: float, kp: float, kd: float) -> None:
+    def set(self, pos: float, vel: float, kp: float, kd: float, tau: float) -> None:
         """
         Set the motor target action.
         """
@@ -168,6 +180,7 @@ class Motor(Actuator):
         self._target_velocity = vel
         self._target_kp = kp
         self._target_kd = kd
+        self._target_tau = tau
 
     def get_target_position(self) -> float:
         """
@@ -197,6 +210,13 @@ class Motor(Actuator):
 
         return self._target_kd
 
+    def get_target_tau(self) -> float:
+        """
+        Retrieve the target torque.
+        """
+
+        return self._target_tau
+
     def get_prev_target_position(self) -> float:
         """
         Retrieve the previously performed target position.
@@ -225,14 +245,22 @@ class Motor(Actuator):
 
         return self._previous_target_kd
 
+    def get_prev_target_tau(self) -> float:
+        """
+        Retrieve the previously performed target torque.
+        """
+
+        return self._previous_target_tau
+
     def commit(self, action: Action) -> None:
-        action.put(MotorEffector(self.effector_name, self._target_position, self._target_velocity, self._target_kp, self._target_kd))
+        action.put(MotorEffector(self.effector_name, self._target_position, self._target_velocity, self._target_kp, self._target_kd, self._target_tau))
 
         # set current target as previous targets
         self._previous_target_position = self._target_position
         self._previous_target_velocity = self._target_velocity
         self._previous_target_kp = self._target_kp
         self._previous_target_kd = self._target_kd
+        self._previous_target_tau = self._target_tau
 
 
 class OmniSpeedActuator(Actuator):
