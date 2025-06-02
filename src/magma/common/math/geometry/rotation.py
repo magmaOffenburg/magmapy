@@ -1,12 +1,12 @@
 from __future__ import annotations
 
 from math import cos, sin
-from typing import TYPE_CHECKING, Callable, Final
+from typing import TYPE_CHECKING, Final
 
 from magma.common.math.geometry.vector import Vector3D
 
 if TYPE_CHECKING:
-    from collections.abc import Mapping
+    from collections.abc import Callable, Mapping
 
 
 class Rotation3D:

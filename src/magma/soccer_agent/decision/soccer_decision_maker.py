@@ -1,12 +1,14 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING
 
 from magma.agent.decision.behavior import BehaviorID
 from magma.agent.decision.decision_maker import DecisionMakerBase
 from magma.soccer_agent.model.soccer_agent import PSoccerAgentModel
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     from magma.agent.decision.behavior import PBehavior
 
 

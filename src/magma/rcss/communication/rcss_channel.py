@@ -495,7 +495,7 @@ class RCSSMessageEncoder:
             elif isinstance(effector, SayEffector):
                 msgs.append(f'({effector.name} {effector.message})')
 
-            elif isinstance(effector, (PassModeEffector, SyncEffector)):
+            elif isinstance(effector, PassModeEffector | SyncEffector):
                 msgs.append(f'({effector.name})')
 
         msg = ''.join(msgs)

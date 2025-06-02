@@ -26,7 +26,7 @@ classifiers = [
   "Topic :: Software Development",
   "Typing :: Typed",
 ]
-requires-python = ">= 3.9"
+requires-python = ">= 3.10"
 dependencies = [
   # When changing this, also update build-system.requires and requirements.txt
   "numpy >= 2.0.0"
@@ -51,7 +51,7 @@ quote-style = "single"
 indent-style = "space"
 
 [tool.mypy]
-python_version = "3.9"
+python_version = "3.10"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
@@ -64,6 +64,7 @@ disallow_untyped_defs = false
 [tool.hatch.envs.types]
 extra-dependencies = [
   "mypy>=1.0.0",
+  "pytest"
 ]
 
 [tool.hatch.envs.types.scripts]
