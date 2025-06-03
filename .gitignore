@@ -1,10 +1,15 @@
-# Pyhon byte-compiled / optimized files
+# Python byte-compiled / optimized files
 __pycache__/
 *.py[cod]
 *$py.class
 
-# Distribution files
+# build artifacts
 dist/
+build/
+doc/**/generated/
 
-# Cache files
+# cache files
 .*_cache
+
+# logfiles
+console.log

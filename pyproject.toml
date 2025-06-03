@@ -69,6 +69,21 @@ extra-dependencies = [
 [tool.hatch.envs.types.scripts]
 check = "mypy --install-types --non-interactive {args:src/magma tests}"
 
+[tool.hatch.envs.doc]
+extra-dependencies = [
+  "sphinx",
+  "pydata-sphinx-theme"
+]
+
+[tool.hatch.envs.doc.scripts]
+html = "sphinx-build -M html doc/source doc/build"
+clean = "sphinx-build -M clean doc/source doc/build"
+
+[tool.hatch.envs.test]
+extra-dependencies = [
+  "pytest"
+]
+
 [tool.hatch.version]
 path = "src/magma/__about__.py"
 
