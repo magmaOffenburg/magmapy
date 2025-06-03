@@ -1,12 +1,13 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Protocol, runtime_checkable
+from typing import TYPE_CHECKING, Final, Protocol, runtime_checkable
 
 from magma.agent.model.base import PMutableModel
 
 if TYPE_CHECKING:
     from magma.agent.communication.action import Action
     from magma.agent.communication.perception import Perception
+    from magma.agent.model.belief import Belief, PBelief
     from magma.agent.model.robot.robot_model import PMutableRobotModel, PRobotModel
 
 
@@ -24,6 +25,11 @@ class PAgentModel(Protocol):
     def get_robot(self) -> PRobotModel:
         """
         Retrieve the robot model.
+        """
+
+    def get_belief(self, name: str) -> PBelief | None:
+        """
+        Retrieve the belief with the given name.
         """
 
 
@@ -55,7 +61,8 @@ class AgentModel:
         """
 
         self._time: float = 0
-        self._robot: PMutableRobotModel = robot
+        self._robot: Final[PMutableRobotModel] = robot
+        self._beliefs: Final[dict[str, Belief]] = {}
 
     def get_time(self) -> float:
         """
@@ -71,6 +78,13 @@ class AgentModel:
 
         return self._robot
 
+    def get_belief(self, name: str) -> PBelief | None:
+        """
+        Retrieve the belief with the given name.
+        """
+
+        return self._beliefs.get(name, None)
+
     def update(self, perception: Perception) -> None:
         """
         Update the state of the agent model from the given perceptions.
@@ -82,6 +96,9 @@ class AgentModel:
 
         # 2: update sensor states
         self._update_robot_model(perception)
+
+        # 3: update state of beliefs
+        self._update_beliefs()
 
     def _update_global_time(self, perception: Perception) -> None:
         """
@@ -96,6 +113,14 @@ class AgentModel:
         """
 
         self._robot.update(perception)
+
+    def _update_beliefs(self) -> None:
+        """
+        Update the state of beliefs.
+        """
+
+        for belief in self._beliefs.values():
+            belief.update()
 
     def generate_action(self) -> Action:
         """

@@ -102,6 +102,9 @@ class SoccerAgentModel(AgentModel):
         # 4: update world state
         self._update_world(perception)
 
+        # 5: update state of beliefs
+        self._update_beliefs()
+
     def _update_game_state(self, perception: Perception) -> None:
         """
         Update the game state model from the given perception.
