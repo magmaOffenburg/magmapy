@@ -173,13 +173,14 @@ class InitActuator(Actuator):
     Default init actuator implementation.
     """
 
-    def __init__(self, name: str, effector_name: str) -> None:
+    def __init__(self, name: str, effector_name: str, model_name: str = '') -> None:
         """
         Create a new init actuator.
         """
 
         super().__init__(name, effector_name)
 
+        self._model_name: Final[str] = model_name
         self._team_name: str = 'unknown'
         self._player_no: int = 0
         self._active: bool = False
@@ -192,6 +193,11 @@ class InitActuator(Actuator):
         self._team_name = team_name
         self._player_no = player_no
         self._active = True
+
+    def get_model_name(self) -> str:
+        """Retrieve the robot model name."""
+
+        return self._team_name
 
     def get_team_name(self) -> str:
         """
@@ -216,7 +222,7 @@ class InitActuator(Actuator):
 
     def commit(self, action: Action) -> None:
         if self._active:
-            action.put(InitEffector(self.effector_name, self._team_name, self._player_no))
+            action.put(InitEffector(self.effector_name, self._team_name, self._player_no, self._model_name))
 
         # reset actuator
         self._active = False

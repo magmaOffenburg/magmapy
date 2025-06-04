@@ -1,8 +1,7 @@
 from __future__ import annotations
 
-from math import ceil, cos, radians, sin
+from math import cos, radians, sin
 
-from magma.agent.communication.action import Action, MotorEffector
 from magma.agent.communication.perception import (
     AccelerometerPerceptor,
     BumperPerceptor,
@@ -12,17 +11,8 @@ from magma.agent.communication.perception import (
     PPerceptor,
     TimePerceptor,
 )
-from magma.agent.communication.tcp_lpm_channel import TCPLPMChannel
 from magma.common.communication.sexpression import SExpParser, SExpression
 from magma.common.math.geometry.vector import V3D_ZERO, Vector3D
-from magma.rcss.communication.rcss_action import (
-    BeamEffector,
-    CreateEffector,
-    InitEffector,
-    PassModeEffector,
-    SayEffector,
-    SyncEffector,
-)
 from magma.rcss.communication.rcss_perception import (
     ForceResistancePerceptor,
     RCSSAgentStatePerceptor,
@@ -50,6 +40,11 @@ class RCSSMessageParser:
     def parse(self, msg: bytes | bytearray) -> Perception:
         """
         Parse the given message into a list of perceptions.
+
+        Parameter
+        ---------
+        msg : bytes | bytearray
+            The perception message to parse.
         """
 
         perception: Perception = Perception()
@@ -456,61 +451,3 @@ class RCSSMessageParser:
         msg_parts: list[str] = [self._as_str(node[i]) for i in range(4, len(node))]
 
         return RCSSHearPerceptor(self._as_str(node[0]), time, team, direction, ' '.join(msg_parts))
-
-
-class RCSSMessageEncoder:
-    """
-    Encoder for RoboCup Soccer Simulation action messages.
-    """
-
-    def encode(self, action: Action) -> bytes | bytearray:
-        """
-        Encode the given action commands into a message.
-        """
-
-        def round3(val: float) -> float:
-            """Round the given float value to 3 digits."""
-            return ceil(val * 1000) / 1000.0
-
-        msgs: list[str] = []
-
-        for effector in action.values():
-            if isinstance(effector, CreateEffector):
-                # ignore all other effectors when a create effector is present
-                msgs = [f'({effector.name} {effector.scene} {effector.model_type})']
-                break
-
-            if isinstance(effector, InitEffector):
-                # ignore all other effectors when an init effector is present
-                msgs = [f'({effector.name} (unum {effector.player_no}) (teamname {effector.team_name}))']
-                break
-
-            if isinstance(effector, BeamEffector):
-                pose = effector.beam_pose
-                msgs.append(f'({effector.name} {round3(pose.x())} {round3(pose.y())} {round3(pose.theta.deg())})')
-
-            elif isinstance(effector, MotorEffector):
-                msgs.append(f'({effector.name} {round3(effector.velocity)})')
-
-            elif isinstance(effector, SayEffector):
-                msgs.append(f'({effector.name} {effector.message})')
-
-            elif isinstance(effector, PassModeEffector | SyncEffector):
-                msgs.append(f'({effector.name})')
-
-        msg = ''.join(msgs)
-        # print(msg)
-        return msg.encode()
-
-
-class RCSSServerChannel(TCPLPMChannel):
-    """
-    Channel for client communication with the RoboCup Soccer Simulation server.
-    """
-
-    def __init__(self, name: str, host: str, port: int = 3100) -> None:
-        """
-        Construct a new RoboCup soccer simulation server channel.
-        """
-
-        super().__init__(name, host, port, RCSSMessageParser(), RCSSMessageEncoder(), 4)

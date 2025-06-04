@@ -45,6 +45,7 @@ magma = "magma.__main__:magma_agent"
 
 [tool.ruff]
 line-length = 240
+exclude = ["doc"]
 
 [tool.ruff.format]
 quote-style = "single"

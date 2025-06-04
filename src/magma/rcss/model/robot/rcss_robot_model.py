@@ -3,20 +3,10 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from magma.agent.model.robot.robot_model import BodyPart, RobotModel
-from magma.rcss.model.robot.rcss_actuators import (
-    CreateActuator,
-    InitActuator,
-    PassModeActuator,
-    Scotty,
-    SyncActuator,
-)
-from magma.rcss.model.robot.rcss_robot_description import (
-    RCSSActuatorType,
-    RCSSSensorType,
-    SceneDescription,
-    SyncDescription,
-)
+from magma.rcss.model.robot.rcss_actuators import CreateActuator, InitActuator, PassModeActuator, Scotty, SyncActuator
+from magma.rcss.model.robot.rcss_robot_description import RCSSActuatorType, RCSSSensorType
 from magma.rcss.model.robot.rcss_sensors import ForceResistance
+from magma.rcss.model.robot.spark_robot_description import InitDescription, SceneDescription, SyncDescription
 
 if TYPE_CHECKING:
     from magma.agent.model.robot.actuators import Actuator
@@ -49,8 +39,8 @@ class RCSSRobotModel(RobotModel):
         if isinstance(desc, SceneDescription):
             return CreateActuator(desc.name, desc.effector_name, desc.scene, desc.model_type)
 
-        if desc.actuator_type == RCSSActuatorType.INIT.value:
-            return InitActuator(desc.name, desc.effector_name)
+        if isinstance(desc, InitDescription):
+            return InitActuator(desc.name, desc.effector_name, desc.model_name)
 
         if isinstance(desc, SyncDescription):
             return SyncActuator(desc.name, desc.effector_name, auto_active=desc.auto_sync)

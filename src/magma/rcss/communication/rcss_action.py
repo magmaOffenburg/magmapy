@@ -42,6 +42,13 @@ class InitEffector(Effector):
     The own player number.
     """
 
+    model_name: str
+    """
+    The name of the robot model to load for the agent.
+
+    Note: Not used for SimSpark.
+    """
+
 
 @dataclass(frozen=True)
 class SyncEffector(Effector):
