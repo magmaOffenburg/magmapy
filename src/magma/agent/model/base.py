@@ -8,11 +8,13 @@ if TYPE_CHECKING:
 
 @runtime_checkable
 class PMutableModel(Protocol):
-    """
-    Protocol for mutable models.
-    """
+    """Protocol for mutable models."""
 
     def update(self, perception: Perception) -> None:
-        """
-        Update the state of the model from the given perceptions.
+        """Update the state of the model from the given perceptions.
+
+        Parameter
+        ---------
+        perception : Perception
+            The collection of perceived sensor information.
         """

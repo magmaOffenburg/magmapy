@@ -7,40 +7,26 @@ from magma.soccer_agent.model.world.soccer_field_description import SoccerFieldD
 
 
 class RCHLFieldVersion(Enum):
-    """
-    Enum specifying the available RoboCup Humanoid Soccer league field versions.
-    """
+    """Enum specifying the available RoboCup Humanoid Soccer league field versions."""
 
     UNKNOWN = 'unknown'
-    """
-    Unknown field version.
-    """
+    """Unknown field version."""
 
     ADULT_2014 = 'hl_adult_2014'
-    """
-    2014 version of the Adult Size soccer field.
-    """
+    """2014 version of the Adult Size soccer field."""
 
     ADULT_2017 = 'hl_adult_2017'
-    """
-    2017 version of the Adult Size soccer field.
-    """
+    """2017 version of the Adult Size soccer field."""
 
     ADULT_2019 = 'hl_adult_2019'
-    """
-    2019 version of the Adult Size soccer field.
-    """
+    """2019 version of the Adult Size soccer field."""
 
     ADULT_2021 = 'hl_adult_2021'
-    """
-    2021 version of the Adult Size soccer field.
-    """
+    """2021 version of the Adult Size soccer field."""
 
     @staticmethod
     def from_value(version: str) -> RCHLFieldVersion:
-        """
-        Fetch the enum entry corresponding to the given version value.
-        """
+        """Fetch the enum entry corresponding to the given version value."""
 
         for v in RCHLFieldVersion:
             if v.value == version:
@@ -52,9 +38,7 @@ class RCHLFieldVersion(Enum):
 
     @staticmethod
     def create_description_for(version: str) -> SoccerFieldDescription:
-        """
-        Create a field description for the given field version.
-        """
+        """Create a field description for the given field version."""
 
         version_id = RCHLFieldVersion.from_value(version)
 
@@ -70,9 +54,7 @@ class RCHLFieldVersion(Enum):
 
 
 class RCHLAdultField2014(SoccerFieldDescription):
-    """
-    Class representing the soccer field used by the RoboCup Humanoid Adult Size in 2014, 2015 and 2016.
-    """
+    """Class representing the soccer field used by the RoboCup Humanoid Adult Size in 2014, 2015 and 2016."""
 
     def __init__(
         self,
@@ -83,9 +65,7 @@ class RCHLAdultField2014(SoccerFieldDescription):
         middle_circle_radius: float | None = None,
         penalty_spot_distance: float | None = None,
     ) -> None:
-        """
-        Construct a new soccer field description.
-        """
+        """Construct a new soccer field description."""
 
         super().__init__(
             Vector2D(9.0, 6.0) if field_dim is None else field_dim,
@@ -154,9 +134,7 @@ class RCHLAdultField2014(SoccerFieldDescription):
 
 
 class RCHLAdultField2017(RCHLAdultField2014):
-    """
-    Class representing the soccer field used by the RoboCup Humanoid Adult Size in 2017 and 2018.
-    """
+    """Class representing the soccer field used by the RoboCup Humanoid Adult Size in 2017 and 2018."""
 
     def __init__(
         self,
@@ -167,9 +145,7 @@ class RCHLAdultField2017(RCHLAdultField2014):
         middle_circle_radius: float | None = None,
         penalty_spot_distance: float | None = None,
     ) -> None:
-        """
-        Construct a new soccer field description.
-        """
+        """Construct a new soccer field description."""
 
         super().__init__(
             field_dim,
@@ -182,9 +158,7 @@ class RCHLAdultField2017(RCHLAdultField2014):
 
 
 class RCHLAdultField2019(RCHLAdultField2017):
-    """
-    Class representing the soccer field used by the RoboCup Humanoid Adult Size in 2019 and 2020.
-    """
+    """Class representing the soccer field used by the RoboCup Humanoid Adult Size in 2019 and 2020."""
 
     def __init__(
         self,
@@ -195,9 +169,7 @@ class RCHLAdultField2019(RCHLAdultField2017):
         middle_circle_radius: float | None = None,
         penalty_spot_distance: float | None = None,
     ) -> None:
-        """
-        Construct a new soccer field description.
-        """
+        """Construct a new soccer field description."""
 
         super().__init__(
             Vector2D(14, 9) if field_dim is None else field_dim,
@@ -210,9 +182,7 @@ class RCHLAdultField2019(RCHLAdultField2017):
 
 
 class RCHLAdultField2021(RCHLAdultField2019):
-    """
-    Class representing the soccer field used by the RoboCup Humanoid Adult Size since 2021 until now.
-    """
+    """Class representing the soccer field used by the RoboCup Humanoid Adult Size since 2021 until now."""
 
     def __init__(
         self,
@@ -223,9 +193,7 @@ class RCHLAdultField2021(RCHLAdultField2019):
         middle_circle_radius: float | None = None,
         penalty_spot_distance: float | None = None,
     ) -> None:
-        """
-        Construct a new soccer field description.
-        """
+        """Construct a new soccer field description."""
 
         super().__init__(
             field_dim,

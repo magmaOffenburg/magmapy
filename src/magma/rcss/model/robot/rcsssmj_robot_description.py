@@ -19,24 +19,22 @@ from magma.rcss.model.robot.rcss_robot_description import BeamDescription, InitD
 
 
 class RCSSSMJRobots(Enum):
-    """
-    Enum specifying the available robot models within the RCSSSMJ simulator.
-    """
+    """Enum specifying the available robot models within the RCSSSMJ simulator."""
 
     UNKNOWN = 'unknown'
-    """
-    Unknown robot model.
-    """
+    """Unknown robot model."""
 
     T1 = 'T1'
-    """
-    The T1 robot.
-    """
+    """The T1 robot."""
 
     @staticmethod
     def from_value(name: str) -> RCSSSMJRobots:
-        """
-        Fetch the enum entry corresponding to the given name value.
+        """Fetch the enum entry corresponding to the given name value.
+
+        Parameter
+        ---------
+        name : str
+            The name of the robot model.
         """
 
         for v in RCSSSMJRobots:
@@ -49,8 +47,12 @@ class RCSSSMJRobots(Enum):
 
     @staticmethod
     def create_description_for(name: str) -> RobotDescription:
-        """
-        Create a robot model description for the given name.
+        """Create a robot model description for the given name.
+
+        Parameter
+        ---------
+        name : str
+            The name of the robot model.
         """
 
         robot_id = RCSSSMJRobots.from_value(name)
@@ -63,14 +65,10 @@ class RCSSSMJRobots(Enum):
 
 
 class T1Description(RobotDescription):
-    """
-    Description for the T1 model used in the RCSSMJ soccer simulation.
-    """
+    """Description for the T1 model used in the RCSSMJ soccer simulation."""
 
     def __init__(self) -> None:
-        """
-        Construct a new T1 model.
-        """
+        """Construct a new T1 model."""
 
         super().__init__(RCSSSMJRobots.T1.value)
 

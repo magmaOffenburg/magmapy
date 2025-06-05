@@ -11,29 +11,25 @@ if TYPE_CHECKING:
 
 
 class PlaySide(Enum):
-    """
-    Enum specifying the different play side options in a soccer game,
-    """
+    """Enum specifying the different play side options in a soccer game,"""
 
     UNKNOWN = 'unknown'
-    """
-    We play from left to right.
-    """
+    """We play from left to right."""
 
     LEFT = 'left'
-    """
-    We play from left to right.
-    """
+    """We play from left to right."""
 
     RIGHT = 'right'
-    """
-    We play from right to left.
-    """
+    """We play from right to left."""
 
     @staticmethod
     def from_value(side_id: str) -> PlaySide:
-        """
-        Fetch the enum entry corresponding to the given side identifier.
+        """Fetch the enum entry corresponding to the given side identifier.
+
+        Parameter
+        ---------
+        side_id : str
+            The side identifier.
         """
 
         side_id = side_id.lower()
@@ -48,199 +44,175 @@ class PlaySide(Enum):
 
 
 class SoccerGameMode(Enum):
-    """
-    Enum specifying the different game modes of a soccer game (tailored towards RoboCup leagues).
-    """
+    """Enum specifying the different game modes of a soccer game (tailored towards RoboCup leagues)."""
 
     NONE = 'none'
-    """
-    No game mode or an unknown one (should not be used!).
-    """
+    """No game mode or an unknown one (should not be used!)."""
 
     FREEZE = 'freeze'
-    """
-    Don't move!
+    """Don't move!
 
     The game is freezed / on hold and nobody should actively move around.
     """
 
     BEFORE_KICK_OFF = 'before-kick-off'
-    """
-    The game has not started yet.
+    """The game has not started yet.
 
     Players may position themselves on their half of the soccer field.
     """
 
     GAME_OVER = 'game-over'
-    """
-    The game is over.
-    """
+    """The game is over."""
 
     OWN_KICK_OFF = 'own-kick-off'
-    """
-    Kick-off for our team.
+    """Kick-off for our team.
 
     The ball is in the center, and our team is allowed to kick it first.
     """
 
     OPPONENT_KICK_OFF = 'opponent-kick-off'
-    """
-    Kick-off for the opponent team.
+    """Kick-off for the opponent team.
 
     The ball is in the center, and the opponent team is allowed to kick it.
     """
 
     PLAY_ON = 'play-on'
-    """
-    Normal gameplay.
+    """Normal gameplay.
 
     The game is processing normally, no special rules are in place.
     """
 
     OWN_GOAL_KICK = 'own-goal-kick'
-    """
-    Goal-kick for our team.
+    """Goal-kick for our team.
 
     The opponent team kicked the ball outside the play field across our side line and our team is allowed to perform a goal kick (kick-off from goal).
     """
 
     OPPONENT_GOAL_KICK = 'opponent-goal-kick'
-    """
-    Goal-kick for the opponent team.
+    """Goal-kick for the opponent team.
 
     Our team kicked the ball outside the play field across the opponent side line and the opponent team is allowed to perform a goal kick (kick-off from goal).
     """
 
     OWN_THROW_IN = 'own-throw-in'
-    """
-    Throw-in for our team.
+    """Throw-in for our team.
 
     The opponent team has kicked the ball outside the play field across the upper / lower ground line and our team is allowed to throw / kick it back into the field.
     """
 
     OPPONENT_THROW_IN = 'opponent-throw-in'
-    """
-    Throw-in for the opponent team.
+    """Throw-in for the opponent team.
 
     Our team has kicked the ball outside the play field across the upper / lower ground line and the opponent team is allowed to throw / kick it back into the field.
     """
 
     OWN_CORNER_KICK = 'own-corner-kick'
-    """
-    Corner-kick for our team.
+    """Corner-kick for our team.
 
     The opponent team kicked the ball outside the play field across their side line and our team is allowed to perform a corner kick.
     """
 
     OPPONENT_CORNER_KICK = 'opponent-corner-kick'
-    """
-    Corner-kick for the opponent team.
+    """Corner-kick for the opponent team.
 
     Our team kicked the ball outside the play field across our side line and the opponent team is allowed to perform a corner kick.
     """
 
     OWN_FREE_KICK = 'own-free-kick'
-    """
-    Indirect free-kick for our team.
+    """Indirect free-kick for our team.
 
     Our team got an indirect free kick and may kick the ball first.
     """
 
     OPPONENT_FREE_KICK = 'opponent-free-kick'
-    """
-    Indirect free-kick for the opponent team.
+    """Indirect free-kick for the opponent team.
 
     The opponent team got an indirect free kick and may kick the ball first.
     """
 
     OWN_DIRECT_FREE_KICK = 'own-direct-free-kick'
-    """
-    Direct free-kick for our team.
+    """Direct free-kick for our team.
 
     Our team got a direct free kick and may kick the ball first.
     """
 
     OPPONENT_DIRECT_FREE_KICK = 'opponent-direct-free-kick'
-    """
-    Direct free-kick for the opponent team.
+    """Direct free-kick for the opponent team.
 
     The opponent team got a direct free kick and may kick the ball first.
     """
 
     OWN_PENALTY_KICK = 'own-penalty-kick'
-    """
-    Penalty-kick for our team.
+    """Penalty-kick for our team.
 
     Our team should perform a penalty kick. The ball is at the penalty spot in front of the opponent goal.
     """
 
     OPPONENT_PENALTY_KICK = 'opponent-penalty-kick'
-    """
-    Penalty-kick for the opponent team.
+    """Penalty-kick for the opponent team.
 
     The opponent team should perform a penalty kick. The ball is at the penalty spot in front of our goal.
     """
 
     OWN_PENALTY_SHOOT = 'own-penalty-shoot'
-    """
-    Penalty-shoot for our team.
+    """Penalty-shoot for our team.
 
     Our team should perform a penalty shootout by somehow dribbling / kicking the ball into the opponent goal. The ball is initially at the center of the field.
     """
 
     OPPONENT_PENALTY_SHOOT = 'opponent-penalty-shoot'
-    """
-    Penalty-shoot for the opponent team.
+    """Penalty-shoot for the opponent team.
 
     The opponent team should perform a penalty shootout by somehow dribbling / kicking the ball into our goal. The ball is initially at the center of the field.
     """
 
     OWN_PASS = 'own-pass'  # noqa: S105 - Prevent ruff hardcoded-passwort-assignment warning
-    """
-    Pass-mode for our team.
+    """Pass-mode for our team.
 
     Our team has exclusive access to the ball for passing, while the opponent team players are not allowed to get too close to the ball.
     """
 
     OPPONENT_PASS = 'opponent-pass'  # noqa: S105 - Prevent ruff hardcoded-passwort-assignment warning
-    """
-    Pass-mode for the opponent team.
+    """Pass-mode for the opponent team.
 
     The opponent team has exclusive access to the ball for passing, while our team players are not allowed to get too close to the ball.
     """
 
     OWN_OFFSIDE = 'own-offside'
-    """
-    Offside in favour of our team.
+    """Offside in favour of our team.
 
     The opponent team violated the offside rule and our team is allowed to kick the ball first.
     """
 
     OPPONENT_OFFSIDE = 'opponent-offside'
-    """
-    Offside in favour of the opponent team.
+    """Offside in favour of the opponent team.
 
     Our team violated the offside rule and the opponent team is allowed to kick the ball first.
     """
 
     OWN_GOAL = 'own-goal'
-    """
-    Our team scored a goal.
+    """Our team scored a goal.
 
     A goal was counted for our team and everybody can celebrate.
     """
 
     OPPONENT_GOAL = 'opponent-goal'
-    """
-    The opponent team scored a goal.
+    """The opponent team scored a goal.
 
     A goal was counted for the opponent team. Should not happen... team! Get your stuff together!
     """
 
 
 def decode_rcss_game_mode(play_mode: str, play_side: PlaySide) -> SoccerGameMode:
-    """
-    Decode the given play mode and side into a game mode.
+    """Decode the given play mode and side into a game mode.
+
+    Parameter
+    ---------
+    play_mode : str
+        The server play mode.
+
+    play_side : PlaySide
+        Our play side.
     """
 
     left_side: bool = play_side == PlaySide.LEFT
@@ -306,85 +278,67 @@ def decode_rcss_game_mode(play_mode: str, play_side: PlaySide) -> SoccerGameMode
 
 
 class PSoccerGameState(Protocol):
-    """
-    Protocol for a soccer game state.
-    """
+    """Protocol for a soccer game state."""
 
     def get_time(self) -> float:
-        """
-        Retrieve the time of the last update.
-        """
+        """Retrieve the time of the last update."""
 
     def get_play_time(self) -> float:
-        """
-        Retrieve the current play time.
-        """
+        """Retrieve the current play time."""
 
     def get_play_side(self) -> PlaySide:
-        """
-        Retrieve the current play side.
-        """
+        """Retrieve the current play side."""
 
     def get_game_mode(self) -> SoccerGameMode:
-        """
-        Retrieve the current game mode.
-        """
+        """Retrieve the current game mode."""
 
     def get_own_score(self) -> int:
-        """
-        Retrieve the current score of our own team.
-        """
+        """Retrieve the current score of our own team."""
 
     def get_opponent_score(self) -> int:
-        """
-        Retrieve the current score of the opponent team.
-        """
+        """Retrieve the current score of the opponent team."""
 
     def is_game_running(self) -> bool:
-        """
-        Check if the game is currently running.
-        """
+        """Check if the game is currently running."""
 
     def is_own_kick(self) -> bool:
-        """
-        Check if our team has exclusive access to the ball and is expected to perform a kick.
-        """
+        """Check if our team has exclusive access to the ball and is expected to perform a kick."""
 
     def is_opponent_kick(self) -> bool:
-        """
-        Check if the opponent team has exclusive access to the ball and is expected to perform a kick.
-        """
+        """Check if the opponent team has exclusive access to the ball and is expected to perform a kick."""
 
     def is_beaming_allowed(self) -> bool:
-        """
-        Check if beaming is currently allowed / enabled (although beaming is unfortunately still not well supported by real robots...).
-        """
+        """Check if beaming is currently allowed / enabled (although beaming is unfortunately still not well supported by real robots...)."""
 
     def get_mode_time(self, mode: SoccerGameMode | None = None) -> float:
-        """
-        Retrieve the time at which the given game mode has last been set (0 when is has not been encountered in this game, yet).
+        """Retrieve the time at which the given game mode has last been set (0 when is has not been encountered in this game, yet).
 
         Note: If no mode is specified, the current game mode of this game state is used.
+
+        Parameter
+        ---------
+        mode : SoccerGameMode | None, default=None
+            The soccer game mode for which to fetch the last activation time. If ``None``, the current game mode is used.
         """
 
     def get_play_side_time(self, play_side: PlaySide | None = None) -> float:
-        """
-        Retrieve the time at which the given play side has last been set (0 when is has not been encountered in this game, yet).
+        """Retrieve the time at which the given play side has last been set (0 when is has not been encountered in this game, yet).
 
         Note: If no play side is specified, the current play side of this game state is used.
+
+        Parameter
+        ---------
+        play_side: PlaySide | None, default=None
+            The play side for which to fetch the last activation time. If ``None``, the current play side is used.
         """
 
 
 class PMutableSoccerGameState(PSoccerGameState, PMutableModel, Protocol):
-    """
-    Protocol for a mutable soccer game state.
-    """
+    """Protocol for a mutable soccer game state."""
 
 
 class SoccerGameState:
-    """
-    Representation of a soccer game state.
-    """
+    """Representation of a soccer game state."""
 
     _RUNNING_MODES = frozenset(
         [
@@ -441,127 +395,137 @@ class SoccerGameState:
     )
 
     def __init__(self, team_name: str) -> None:
-        """
-        Construct a new soccer game state.
+        """Construct a new soccer game state.
+
+        Parameter
+        ---------
+        team_name : str
+            Our team name.
         """
 
         self._time: float = 0.0
+        """The time of the most recent update."""
+
         self._own_team_name: str = team_name
+        """The name of our team."""
+
         self._opponent_team_name: str = ''
+        """The name of the opponent team."""
+
         self._play_time: float = 0.0
+        """The current play time."""
+
         self._game_mode: SoccerGameMode = SoccerGameMode.BEFORE_KICK_OFF
+        """The current game mode."""
+
         self._play_side: PlaySide = PlaySide.LEFT
+        """The current play side of our team."""
+
         self._own_score: int = 0
+        """The score of our team."""
+
         self._opponent_score: int = 0
+        """The score of the opponent team."""
 
         self._game_mode_times: dict[SoccerGameMode, float] = {gm: 0.0 for gm in SoccerGameMode}
+        """History of game mode changes."""
+
         self._play_side_times: dict[PlaySide, float] = {ps: 0.0 for ps in PlaySide}
+        """History of play side changes."""
 
     def get_time(self) -> float:
-        """
-        Retrieve the time of the last update.
-        """
+        """Retrieve the time of the last update."""
 
         return self._time
 
     def get_own_team_name(self) -> str:
-        """
-        Retrieve the name of the own team.
-        """
+        """Retrieve the name of the own team."""
 
         return self._own_team_name
 
     def get_opponent_team_name(self) -> str:
-        """
-        Retrieve the name of the opponent team.
-        """
+        """Retrieve the name of the opponent team."""
 
         return self._opponent_team_name
 
     def get_play_time(self) -> float:
-        """
-        Retrieve the current play time.
-        """
+        """Retrieve the current play time."""
 
         return self._play_time
 
     def get_play_side(self) -> PlaySide:
-        """
-        Retrieve the current play side.
-        """
+        """Retrieve the current play side."""
 
         return self._play_side
 
     def get_game_mode(self) -> SoccerGameMode:
-        """
-        Retrieve the current game mode.
-        """
+        """Retrieve the current game mode."""
 
         return self._game_mode
 
     def get_own_score(self) -> int:
-        """
-        Retrieve the current score of our own team.
-        """
+        """Retrieve the current score of our own team."""
 
         return self._own_score
 
     def get_opponent_score(self) -> int:
-        """
-        Retrieve the current score of the opponent team.
-        """
+        """Retrieve the current score of the opponent team."""
 
         return self._opponent_score
 
     def is_game_running(self) -> bool:
-        """
-        Check if the game is currently running.
-        """
+        """Check if the game is currently running."""
 
         return self._game_mode in SoccerGameState._RUNNING_MODES
 
     def is_own_kick(self) -> bool:
-        """
-        Check if our team has exclusive access to the ball and is expected to perform a kick.
-        """
+        """Check if our team has exclusive access to the ball and is expected to perform a kick."""
 
         return self._game_mode in SoccerGameState._OWN_KICK_MODES
 
     def is_opponent_kick(self) -> bool:
-        """
-        Check if the opponent team has exclusive access to the ball and is expected to perform a kick.
-        """
+        """Check if the opponent team has exclusive access to the ball and is expected to perform a kick."""
 
         return self._game_mode in SoccerGameState._OPPONENT_KICK_MODES
 
     def is_beaming_allowed(self) -> bool:
-        """
-        Check if beaming is currently allowed / enabled (although beaming is unfortunately still not well supported by real robots...).
-        """
+        """Check if beaming is currently allowed / enabled (although beaming is unfortunately still not well supported by real robots...)."""
 
         return self._game_mode in SoccerGameState._BEAM_MODES
 
     def get_mode_time(self, mode: SoccerGameMode | None = None) -> float:
-        """
-        Retrieve the time at which the given game mode has last been set (0 when is has not been encountered in this game, yet).
+        """Retrieve the time at which the given game mode has last been set (0 when is has not been encountered in this game, yet).
 
         Note: If no mode is specified, the current game mode of this game state is used.
+
+        Parameter
+        ---------
+        mode : SoccerGameMode | None, default=None
+            The soccer game mode for which to fetch the last activation time. If ``None``, the current game mode is used.
         """
 
         return self._game_mode_times[self._game_mode if mode is None else mode]
 
     def get_play_side_time(self, play_side: PlaySide | None = None) -> float:
-        """
-        Retrieve the time at which the given play side has last been set (0 when is has not been encountered in this game, yet).
+        """Retrieve the time at which the given play side has last been set (0 when is has not been encountered in this game, yet).
 
         Note: If no play side is specified, the current play side of this game state is used.
+
+        Parameter
+        ---------
+        play_side: PlaySide | None, default=None
+            The play side for which to fetch the last activation time. If ``None``, the current play side is used.
         """
 
         return self._play_side_times[self._play_side if play_side is None else play_side]
 
     def update(self, perception: Perception) -> None:
-        """
-        Update the state of the game state from the given perceptions.
+        """Update the state of the game state from the given perceptions.
+
+        Parameter
+        ---------
+        perception : Perception
+            The collection of perceived sensor information.
         """
 
         # fetch game state perceptor

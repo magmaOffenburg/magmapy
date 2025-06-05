@@ -16,9 +16,7 @@ if TYPE_CHECKING:
 
 
 class TCPLPMChannel(CommunicationChannelBase):
-    """
-    TCP/IP channel implementation for receiving and sending (4-byte) length prefixed messages.
-    """
+    """TCP/IP channel implementation for receiving and sending (4-byte) length prefixed messages."""
 
     def __init__(
         self,
@@ -29,28 +27,63 @@ class TCPLPMChannel(CommunicationChannelBase):
         encoder: PByteMessageEncoder,
         length_prefix_size: int = 4,
     ) -> None:
-        """
-        Construct a new TCP/IP channel.
+        """Construct a new TCP/IP channel.
+
+        Parameter
+        ---------
+        name : str
+            The name of the channel.
+
+        host : str
+            The server IP or hostname.
+
+        port : int
+            The server port.
+
+        parser : PByteMessageParser
+            The message parser instance for parsing incoming messages.
+
+        encoder : PByteMessageEncoder
+            The message encoder for encoding outgoing messages.
+
+        length_prefix_size : int, default=4
+            The message size prefix length in bytes.
         """
 
         super().__init__(name)
 
         self._host: str = host
+        """The server IP or hostname."""
+
         self._port: int = port
+        """The server port."""
 
         self._parser: PByteMessageParser = parser
+        """The parser instance for parsing incoming perception messages."""
+
         self._encoder: PByteMessageEncoder = encoder
+        """The encoder instance for encoding outgoing action messages."""
 
         self._length_prefix_size: int = length_prefix_size
+        """The message size prefix length in bytes."""
 
         self._socket: socket.socket | None = None
+        """The TCP/IP socket."""
+
         self._rcv_buffer_size = 8192
+        """The current size of the receive buffer."""
+
         self._rcv_buffer = bytearray(self._rcv_buffer_size)
+        """A buffer for receiving messages."""
 
         self._receive_thread: Thread | None = None
+        """The thread running the receive loop."""
+
         self._shutdown: bool = False
+        """Flag indicating if the channel should shutdown."""
 
         self._perceptions_queue: Queue[Perception] | None = None
+        """The queue to which to forward incoming perceptions."""
 
     def start(self, perceptions_queue: Queue[Perception]) -> None:
         if self._socket is None:
@@ -86,15 +119,15 @@ class TCPLPMChannel(CommunicationChannelBase):
         return self._socket is not None
 
     def send_action(self, action: Action) -> None:
-        """
-        Send the action commands of the given action map.
-        """
-
         self.send_message(self._encoder.encode(action))
 
     def send_message(self, msg: bytes | bytearray) -> None:
-        """
-        Send the given message.
+        """Send the given message.
+
+        Parameter
+        ---------
+        msg : bytes | bytearray
+            The message to send.
         """
 
         if self._socket is None:
@@ -103,9 +136,7 @@ class TCPLPMChannel(CommunicationChannelBase):
         self._socket.send((len(msg)).to_bytes(self._length_prefix_size, byteorder='big') + msg)
 
     def receive_loop(self) -> None:
-        """
-        Receive messages from the TCP/IP socket in a loop until the channel is shutdown.
-        """
+        """Receive messages from the TCP/IP socket in a loop until the channel is shutdown."""
 
         if self._socket is None or self._perceptions_queue is None:
             return
@@ -132,9 +163,7 @@ class TCPLPMChannel(CommunicationChannelBase):
         self._perceptions_queue = None
 
     def receive_next_message(self) -> bytes:
-        """
-        Receive the next message from the TCP/IP socket.
-        """
+        """Receive the next message from the TCP/IP socket."""
 
         if self._socket is None:
             raise ConnectionResetError

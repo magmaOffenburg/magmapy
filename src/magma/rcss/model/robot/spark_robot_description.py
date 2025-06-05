@@ -20,54 +20,40 @@ from magma.rcss.model.robot.rcss_robot_description import BeamDescription, Force
 
 
 class SimSparkRobots(Enum):
-    """
-    Enum specifying the available robot models within the SimSpark simulator.
-    """
+    """Enum specifying the available robot models within the SimSpark simulator."""
 
     UNKNOWN = 'unknown'
-    """
-    Unknown robot model.
-    """
+    """Unknown robot model."""
 
     NAO = 'Nao'
-    """
-    The default Nao robot model.
-    """
+    """The default Nao robot model."""
 
     NAO0 = 'Nao0'
-    """
-    Type variant 0 of the Nao-Hetero robot model.
-    """
+    """Type variant 0 of the Nao-Hetero robot model."""
 
     NAO1 = 'Nao1'
-    """
-    Type variant 1 of the Nao-Hetero robot model.
-    """
+    """Type variant 1 of the Nao-Hetero robot model."""
 
     NAO2 = 'Nao2'
-    """
-    Type variant 2 of the Nao-Hetero robot model.
-    """
+    """Type variant 2 of the Nao-Hetero robot model."""
 
     NAO3 = 'Nao3'
-    """
-    Type variant 3 of the Nao-Hetero robot model.
-    """
+    """Type variant 3 of the Nao-Hetero robot model."""
 
     NAO4 = 'Nao4'
-    """
-    Type variant 4 of the Nao-Hetero robot model.
-    """
+    """Type variant 4 of the Nao-Hetero robot model."""
 
     NAO_TOE = 'NaoToe'
-    """
-    Synonym for type variant 4 of the Nao robot model.
-    """
+    """Synonym for type variant 4 of the Nao robot model."""
 
     @staticmethod
     def from_value(name: str) -> SimSparkRobots:
-        """
-        Fetch the enum entry corresponding to the given name value.
+        """Fetch the enum entry corresponding to the given name value.
+
+        Parameter
+        ---------
+        name : str
+            The name of the robot model.
         """
 
         for v in SimSparkRobots:
@@ -80,8 +66,12 @@ class SimSparkRobots(Enum):
 
     @staticmethod
     def create_description_for(name: str) -> RobotDescription:
-        """
-        Create a robot model description for the given name.
+        """Create a robot model description for the given name.
+
+        Parameter
+        ---------
+        name : str
+            The name of the robot model.
         """
 
         robot_id = SimSparkRobots.from_value(name)
@@ -100,13 +90,15 @@ class SimSparkRobots(Enum):
 
 
 class NaoHeteroDescription(RobotDescription):
-    """
-    Base description for the Nao-Hetero model used in the SimSpark soccer simulation.
-    """
+    """Base description for the Nao-Hetero model used in the SimSpark soccer simulation."""
 
     def __init__(self, model_subtype: int = 0) -> None:
-        """
-        Construct a new Nao-Hetero model.
+        """Construct a new Nao-Hetero model.
+
+        Parameter
+        ---------
+        model_subtype : int, default=0
+            The model type variant.
         """
 
         super().__init__(f'{SimSparkRobots.NAO.value}{model_subtype}')
@@ -199,14 +191,10 @@ class NaoHeteroDescription(RobotDescription):
 
 
 class Nao1Description(NaoHeteroDescription):
-    """
-    Base description for the Nao-Hetero type 1 model used in the SimSpark soccer simulation.
-    """
+    """Base description for the Nao-Hetero type 1 model used in the SimSpark soccer simulation."""
 
     def __init__(self) -> None:
-        """
-        Construct a new Nao-Hetero model.
-        """
+        """Construct a new Nao-Hetero model."""
 
         super().__init__(1)
 
@@ -226,14 +214,10 @@ class Nao1Description(NaoHeteroDescription):
 
 
 class Nao2Description(NaoHeteroDescription):
-    """
-    Base description for the Nao-Hetero type 2 model used in the SimSpark soccer simulation.
-    """
+    """Base description for the Nao-Hetero type 2 model used in the SimSpark soccer simulation."""
 
     def __init__(self) -> None:
-        """
-        Construct a new Nao-Hetero type 2 model.
-        """
+        """Construct a new Nao-Hetero type 2 model."""
 
         super().__init__(2)
 
@@ -248,14 +232,10 @@ class Nao2Description(NaoHeteroDescription):
 
 
 class Nao3Description(NaoHeteroDescription):
-    """
-    Base description for the Nao-Hetero type 3 model used in the SimSpark soccer simulation.
-    """
+    """Base description for the Nao-Hetero type 3 model used in the SimSpark soccer simulation."""
 
     def __init__(self) -> None:
-        """
-        Construct a new Nao-Hetero type 3 model.
-        """
+        """Construct a new Nao-Hetero type 3 model."""
 
         super().__init__(3)
 
@@ -279,14 +259,10 @@ class Nao3Description(NaoHeteroDescription):
 
 
 class Nao4Description(NaoHeteroDescription):
-    """
-    Base description for the Nao-Hetero type 4 (toe) model used in the SimSpark soccer simulation.
-    """
+    """Base description for the Nao-Hetero type 4 (toe) model used in the SimSpark soccer simulation."""
 
     def __init__(self) -> None:
-        """
-        Construct a new Nao-Hetero type 4 (toe) model.
-        """
+        """Construct a new Nao-Hetero type 4 (toe) model."""
 
         super().__init__(4)
 

@@ -22,193 +22,174 @@ if TYPE_CHECKING:
 
 
 class PSensor(Protocol):
-    """
-    Protocol for sensors attached to specific body parts or joints of a robot model.
-    """
+    """Protocol for sensors attached to specific body parts or joints of a robot model."""
 
     @property
     def name(self) -> str:
-        """
-        The name of the sensor.
-        """
+        """The name of the sensor."""
 
     @property
     def frame_id(self) -> str:
-        """
-        The frame-id (the name) of the body part this sensor is attached to.
-        """
+        """The frame-id (the name) of the body part this sensor is attached to."""
 
     def get_time(self) -> float:
-        """
-        Retrieve the time at which this sensor received its last update.
-        """
+        """Retrieve the time at which this sensor received its last update."""
 
 
 class PMutableSensor(PSensor, Protocol):
-    """
-    Protocol for mutable sensors.
-    """
+    """Protocol for mutable sensors."""
 
     def update(self, perception: Perception) -> None:
-        """
-        Update the sensor state from the given perception.
+        """Update the sensor state from the given perception.
+
+        Parameter
+        ---------
+        perception : Perception
+            The collection of perceived sensor information.
         """
 
 
 @runtime_checkable
 class PAccelerometer(PSensor, Protocol):
-    """
-    Protocol for accelerometer sensors.
-    """
+    """Protocol for accelerometer sensors."""
 
     def get_acc(self) -> Vector3D:
-        """
-        Retrieve the sensed linear acceleration.
-        """
+        """Retrieve the sensed linear acceleration."""
 
 
 @runtime_checkable
 class PGyroscope(PSensor, Protocol):
-    """
-    Protocol for gyroscope sensors.
-    """
+    """Protocol for gyroscope sensors."""
 
     def get_rpy(self) -> Vector3D:
-        """
-        Retrieve the sensed angular velocities.
-        """
+        """Retrieve the sensed angular velocities."""
 
 
 @runtime_checkable
 class PIMU(PSensor, Protocol):
-    """
-    Protocol for IMU sensors.
-    """
+    """Protocol for IMU sensors."""
 
     def get_acc(self) -> Vector3D:
-        """
-        Retrieve the sensed linear acceleration.
-        """
+        """Retrieve the sensed linear acceleration."""
 
     def get_rpy(self) -> Vector3D:
-        """
-        Retrieve the sensed angular velocities.
-        """
+        """Retrieve the sensed angular velocities."""
 
     def get_orientation(self) -> Rotation3D:
-        """
-        Retrieve the estimated orientation.
-        """
+        """Retrieve the estimated orientation."""
 
 
 @runtime_checkable
 class PHingeJointSensor(PSensor, Protocol):
-    """
-    Protocol for hinge joint sensors.
-    """
+    """Protocol for hinge joint sensors."""
 
     def get_position(self) -> float:
-        """
-        Retrieve the joint position.
-        """
+        """Retrieve the joint position."""
 
     def get_velocity(self) -> float:
-        """
-        Retrieve the joint velocity.
-        """
+        """Retrieve the joint velocity."""
 
     def get_effort(self) -> float:
-        """
-        Retrieve the joint effort.
-        """
+        """Retrieve the joint effort."""
 
 
 @runtime_checkable
 class PFreeJointSensor(PSensor, Protocol):
-    """
-    Protocol for free joint sensors.
-    """
+    """Protocol for free joint sensors."""
 
     def get_pose(self) -> Pose3D:
-        """
-        Retrieve the joint pose.
-        """
+        """Retrieve the joint pose."""
 
 
 @runtime_checkable
 class PLoc2DSensor(PSensor, Protocol):
-    """
-    Protocol for 2D location sensors.
-    """
+    """Protocol for 2D location sensors."""
 
     def get_loc(self) -> Pose2D:
-        """
-        Retrieve the perceived location.
-        """
+        """Retrieve the perceived location."""
 
 
 @runtime_checkable
 class PLoc3DSensor(PSensor, Protocol):
-    """
-    Protocol for 3D location sensors.
-    """
+    """Protocol for 3D location sensors."""
 
     def get_loc(self) -> Pose3D:
-        """
-        Retrieve the perceived location.
-        """
+        """Retrieve the perceived location."""
 
 
 class Sensor(ABC):
-    """
-    Base class for all sensors of a robot model.
-    """
+    """Base class for all sensors of a robot model."""
 
-    def __init__(self, name: str, parent: str, perceptor_name: str):
-        """
-        Construct a new sensor.
+    def __init__(self, name: str, frame_id: str, perceptor_name: str):
+        """Construct a new sensor.
+
+        Parameter
+        ---------
+        name : str
+            The unique name of the sensor.
+
+        frame_id : str
+            The name of the body the sensor is attached to.
+
+        perceptor_name : str
+            The name of the perceptor associated with the sensor.
         """
 
         super().__init__()
 
         self.name: Final[str] = name
-        self.frame_id: Final[str] = parent
+        """The name of the sensor."""
+
+        self.frame_id: Final[str] = frame_id
+        """The frame-id (the name) of the body part this sensor is attached to."""
+
         self.perceptor_name: Final[str] = perceptor_name
+        """The name of the perceptor associated with this sensor."""
 
         self._time: float = 0.0
+        """The time this sensor received tis last update."""
 
     def get_time(self) -> float:
-        """
-        Retrieve the time at which this sensor received its last update.
-        """
+        """Retrieve the time at which this sensor received its last update."""
 
         return self._time
 
     @abstractmethod
     def update(self, perception: Perception) -> None:
-        """
-        Update the sensor state from the given perception.
+        """Update the sensor state from the given perception.
+
+        Parameter
+        ---------
+        perception : Perception
+            The collection of perceived sensor information.
         """
 
 
 class Accelerometer(Sensor):
-    """
-    Accelerometer sensor representation.
-    """
+    """Accelerometer sensor representation."""
 
     def __init__(self, name: str, frame_id: str, perceptor_name: str) -> None:
-        """
-        Construct a new accelerometer sensor.
+        """Construct a new accelerometer sensor.
+
+        Parameter
+        ---------
+        name : str
+            The unique name of the sensor.
+
+        frame_id : str
+            The name of the body the sensor is attached to.
+
+        perceptor_name : str
+            The name of the perceptor associated with the sensor.
         """
 
         super().__init__(name, frame_id, perceptor_name)
 
         self._acc: Vector3D = V3D_ZERO
+        """The sensed linear acceleration."""
 
     def get_acc(self) -> Vector3D:
-        """
-        Retrieve the sensed acceleration.
-        """
+        """Retrieve the sensed linear acceleration."""
 
         return self._acc
 
@@ -220,24 +201,31 @@ class Accelerometer(Sensor):
             self._acc = perceptor.acceleration
 
 
-class Gyroskope(Sensor):
-    """
-    Gyro rate sensor representation.
-    """
+class Gyroscope(Sensor):
+    """Gyro rate sensor representation."""
 
     def __init__(self, name: str, frame_id: str, perceptor_name: str) -> None:
-        """
-        Construct a new gyro rate sensor.
+        """Construct a new gyro rate sensor.
+
+        Parameter
+        ---------
+        name : str
+            The unique name of the sensor.
+
+        frame_id : str
+            The name of the body the sensor is attached to.
+
+        perceptor_name : str
+            The name of the perceptor associated with the sensor.
         """
 
         super().__init__(name, frame_id, perceptor_name)
 
         self._rpy: Vector3D = V3D_ZERO
+        """The sensed angular velocities."""
 
     def get_rpy(self) -> Vector3D:
-        """
-        Retrieve the sensed angular velocities.
-        """
+        """Retrieve the sensed angular velocities."""
 
         return self._rpy
 
@@ -250,39 +238,46 @@ class Gyroskope(Sensor):
 
 
 class IMU(Sensor):
-    """
-    Inertial Measurement Unit (IMU) sensor representation.
-    """
+    """Inertial Measurement Unit (IMU) sensor representation."""
 
     def __init__(self, name: str, frame_id: str, perceptor_name: str) -> None:
-        """
-        Construct a new IMU sensor.
+        """Construct a new IMU sensor.
+
+        Parameter
+        ---------
+        name : str
+            The unique name of the sensor.
+
+        frame_id : str
+            The name of the body the sensor is attached to.
+
+        perceptor_name : str
+            The name of the perceptor associated with the sensor.
         """
 
         super().__init__(name, frame_id, perceptor_name)
 
         self._orientation: Rotation3D = R3D_IDENTITY
+        """The current orientation estimation."""
+
         self._acc: Vector3D = V3D_ZERO
+        """The sensed linear acceleration."""
+
         self._rpy: Vector3D = V3D_ZERO
+        """The sensed angular velocities."""
 
     def get_orientation(self) -> Rotation3D:
-        """
-        Retrieve the estimated orientation.
-        """
+        """Retrieve the estimated orientation."""
 
         return self._orientation
 
     def get_acc(self) -> Vector3D:
-        """
-        Retrieve the sensed linear acceleration.
-        """
+        """Retrieve the sensed linear acceleration."""
 
         return self._acc
 
     def get_rpy(self) -> Vector3D:
-        """
-        Retrieve the sensed angular velocities.
-        """
+        """Retrieve the sensed angular velocities."""
 
         return self._rpy
 
@@ -297,9 +292,7 @@ class IMU(Sensor):
 
 
 class HingeJointSensor(Sensor):
-    """
-    Hinge joint state sensor representation.
-    """
+    """Hinge joint state sensor representation."""
 
     def __init__(
         self,
@@ -308,36 +301,49 @@ class HingeJointSensor(Sensor):
         perceptor_name: str,
         joint: HingeJoint,
     ) -> None:
-        """
-        Construct a new hinge joint state sensor.
+        """Construct a new hinge joint state sensor.
+
+        Parameter
+        ---------
+        name : str
+            The unique name of the sensor.
+
+        frame_id : str
+            The name of the body the sensor is attached to.
+
+        perceptor_name : str
+            The name of the perceptor associated with the sensor.
+
+        joint : HingeJoint
+            The joint associated with the joint sensor.
         """
 
         super().__init__(name, frame_id, perceptor_name)
 
         self.joint: Final[HingeJoint] = joint
+        """The joint associated with this joint sensor."""
 
         self._position: float = 0.0
+        """The sensed joint position."""
+
         self._velocity: float = 0.0
+        """The sensed joint velocity."""
+
         self._effort: float = 0.0
+        """The sensed joint torque."""
 
     def get_position(self) -> float:
-        """
-        Retrieve the joint position.
-        """
+        """Retrieve the joint position."""
 
         return self._position
 
     def get_velocity(self) -> float:
-        """
-        Retrieve the joint velocity.
-        """
+        """Retrieve the joint velocity."""
 
         return self._velocity
 
     def get_effort(self) -> float:
-        """
-        Retrieve the joint effort.
-        """
+        """Retrieve the joint effort."""
 
         return self._effort
 
@@ -354,9 +360,7 @@ class HingeJointSensor(Sensor):
 
 
 class FreeJointSensor(Sensor):
-    """
-    Free joint state sensor representation.
-    """
+    """Free joint state sensor representation."""
 
     def __init__(
         self,
@@ -365,20 +369,33 @@ class FreeJointSensor(Sensor):
         perceptor_name: str,
         joint: FreeJoint,
     ) -> None:
-        """
-        Construct a new hinge joint state sensor.
+        """Construct a new hinge joint state sensor.
+
+        Parameter
+        ---------
+        name : str
+            The unique name of the sensor.
+
+        frame_id : str
+            The name of the body the sensor is attached to.
+
+        perceptor_name : str
+            The name of the perceptor associated with the sensor.
+
+        joint : FreeJoint
+            The joint associated with the joint sensor.
         """
 
         super().__init__(name, frame_id, perceptor_name)
 
         self.joint: Final[FreeJoint] = joint
+        """The joint associated with this joint sensor."""
 
         self._pose: Pose3D = P3D_ZERO
+        """The sensed joint pose."""
 
     def get_pose(self) -> Pose3D:
-        """
-        Retrieve the joint pose.
-        """
+        """Retrieve the joint pose."""
 
         return self._pose
 
@@ -393,32 +410,57 @@ class FreeJointSensor(Sensor):
 
 
 class Camera(Sensor):
-    """
-    Default camera sensor representation.
-    """
+    """Default camera sensor representation."""
 
     def __init__(self, name: str, frame_id: str, perceptor_name: str, h_fov: float, v_fov: float) -> None:
-        """
-        Construct a new camera sensor.
+        """Construct a new camera sensor.
+
+        Parameter
+        ---------
+        name : str
+            The unique name of the sensor.
+
+        frame_id : str
+            The name of the body the sensor is attached to.
+
+        perceptor_name : str
+            The name of the perceptor associated with the sensor.
+
+        h_fov : float
+            The horizontal field of view.
+
+        v_fov : float
+            The vertical field of view.
         """
 
         super().__init__(name, frame_id, perceptor_name)
 
         self.horizontal_fov: Final[float] = h_fov
+        """The horizontal field of view."""
+
         self.vertical_fov: Final[float] = v_fov
+        """The vertical field of view."""
 
     def update(self, perception: Perception) -> None:
         del perception  # signal unused parameter
 
 
 class Loc2DSensor(Sensor):
-    """
-    Default 2D location sensor representation.
-    """
+    """Default 2D location sensor representation."""
 
     def __init__(self, name: str, frame_id: str, perceptor_name: str) -> None:
-        """
-        Construct a new 2D location sensor.
+        """Construct a new 2D location sensor.
+
+        Parameter
+        ---------
+        name : str
+            The unique name of the sensor.
+
+        frame_id : str
+            The name of the body the sensor is attached to.
+
+        perceptor_name : str
+            The name of the perceptor associated with the sensor.
         """
 
         super().__init__(name, frame_id, perceptor_name)
@@ -426,9 +468,7 @@ class Loc2DSensor(Sensor):
         self._pose: Pose2D = P2D_ZERO
 
     def get_loc(self) -> Pose2D:
-        """
-        Retrieve the perceived location information.
-        """
+        """Retrieve the perceived location information."""
 
         return self._pose
 
@@ -441,13 +481,21 @@ class Loc2DSensor(Sensor):
 
 
 class Loc3DSensor(Sensor):
-    """
-    Default 3D location sensor representation.
-    """
+    """Default 3D location sensor representation."""
 
     def __init__(self, name: str, frame_id: str, perceptor_name: str) -> None:
-        """
-        Construct a new 3D location sensor.
+        """Construct a new 3D location sensor.
+
+        Parameter
+        ---------
+        name : str
+            The unique name of the sensor.
+
+        frame_id : str
+            The name of the body the sensor is attached to.
+
+        perceptor_name : str
+            The name of the perceptor associated with the sensor.
         """
 
         super().__init__(name, frame_id, perceptor_name)
@@ -455,9 +503,7 @@ class Loc3DSensor(Sensor):
         self._pose: Pose3D = P3D_ZERO
 
     def get_loc(self) -> Pose3D:
-        """
-        Retrieve the perceived location information.
-        """
+        """Retrieve the perceived location information."""
 
         return self._pose
 

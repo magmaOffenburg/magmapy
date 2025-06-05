@@ -26,20 +26,15 @@ from magma.soccer_agent.communication.soccer_perception import SoccerGameStatePe
 
 
 class RCSSMessageParser:
-    """
-    Parser for RoboCup Soccer Simulation perception messages.
-    """
+    """Parser for RoboCup Soccer Simulation perception messages."""
 
     def __init__(self) -> None:
-        """
-        Construct a new RoboCup Soccer Simulation message parser.
-        """
+        """Construct a new RoboCup Soccer Simulation message parser."""
 
         self._sexp_parser = SExpParser()
 
     def parse(self, msg: bytes | bytearray) -> Perception:
-        """
-        Parse the given message into a list of perceptions.
+        """Parse the given message into a list of perceptions.
 
         Parameter
         ---------
@@ -115,9 +110,7 @@ class RCSSMessageParser:
         return perception
 
     def _as_str(self, child: str | SExpression) -> str:
-        """
-        Parse a int value.
-        """
+        """Parse a int value."""
 
         if isinstance(child, SExpression):
             msg = f'Expected string atom: {child}'
@@ -126,9 +119,7 @@ class RCSSMessageParser:
         return child
 
     def _as_int(self, child: str | SExpression) -> int:
-        """
-        Parse a int value.
-        """
+        """Parse a int value."""
 
         if isinstance(child, SExpression):
             msg = f'Expected int atom: {child}'
@@ -137,9 +128,7 @@ class RCSSMessageParser:
         return int(child)
 
     def _as_float(self, child: str | SExpression) -> float:
-        """
-        Parse a float value.
-        """
+        """Parse a float value."""
 
         if isinstance(child, SExpression):
             msg = f'Expected float atom: {child}'
@@ -148,9 +137,7 @@ class RCSSMessageParser:
         return float(child)
 
     def _as_bool(self, child: str | SExpression) -> bool:
-        """
-        Parse a bool value.
-        """
+        """Parse a bool value."""
 
         if isinstance(child, SExpression):
             return False
@@ -158,8 +145,7 @@ class RCSSMessageParser:
         return child.lower() not in ('false', 'off', 'no', '0')
 
     def _parse_time(self, node: SExpression) -> TimePerceptor:
-        """
-        Parse a time expression.
+        """Parse a time expression.
 
         Definition: (time (now <float>))
         """
@@ -173,8 +159,7 @@ class RCSSMessageParser:
         return TimePerceptor(self._as_str(now_node[0]), self._as_float(now_node[1]))
 
     def _parse_game_state(self, node: SExpression) -> SoccerGameStatePerceptor:
-        """
-        Parse a game state expression.
+        """Parse a game state expression.
 
         Definition: (GS (sl <sl>) (sr <sr>) (t <play_time>) (pm <play_mode>))
         """
@@ -208,8 +193,7 @@ class RCSSMessageParser:
         return SoccerGameStatePerceptor('game_state', play_time, play_side, play_mode, player_no, score_left, score_right)
 
     def _parse_agent_state(self, node: SExpression) -> RCSSAgentStatePerceptor:
-        """
-        Parse a agent state expression.
+        """Parse a agent state expression.
 
         Definition: (AgentState (temp <degree>) (battery <percentile>))
         """
@@ -231,8 +215,7 @@ class RCSSMessageParser:
         return RCSSAgentStatePerceptor('agent_state', temperature, battery)
 
     def _parse_hinge_joint(self, node: SExpression) -> JointStatePerceptor:
-        """
-        Parse a hinge joint expression.
+        """Parse a hinge joint expression.
 
         Definition: (HJ (n <name>) (ax <ax>))
         """
@@ -254,8 +237,7 @@ class RCSSMessageParser:
         return JointStatePerceptor(name, ax)
 
     def _parse_gyro_rate(self, node: SExpression) -> GyroRatePerceptor:
-        """
-        Parse a game gyro rate expression.
+        """Parse a game gyro rate expression.
 
         Definition: (GYR (n <name>) (rt <rx> <ry> <rz>))
         """
@@ -277,8 +259,7 @@ class RCSSMessageParser:
         return GyroRatePerceptor(name + '_gyro', rot)
 
     def _parse_accelerometer(self, node: SExpression) -> AccelerometerPerceptor:
-        """
-        Parse a accelerometer expression.
+        """Parse a accelerometer expression.
 
         Definition: (ACC (n <name>) (a <ax> <ay> <az>))
         """
@@ -300,8 +281,7 @@ class RCSSMessageParser:
         return AccelerometerPerceptor(name + '_acc', acc)
 
     def _parse_touch(self, node: SExpression) -> PPerceptor:
-        """
-        Parse a touch expression.
+        """Parse a touch expression.
 
         Definition: (TCH n <name> val <bit>)
         """
@@ -309,8 +289,7 @@ class RCSSMessageParser:
         return BumperPerceptor(self._as_str(node[2]), active=self._as_bool(node[4]))
 
     def _parse_force_resistance(self, node: SExpression) -> PPerceptor:
-        """
-        Parse a force resistance expression.
+        """Parse a force resistance expression.
 
         Definition: (FRP (n <name>) (c <px> <py> <pz>) (f <fx> <fy> <fz>))
         """
@@ -335,8 +314,7 @@ class RCSSMessageParser:
         return ForceResistancePerceptor(name, origin, force)
 
     def _parse_vision(self, node: SExpression) -> RCSSVisionPerceptor:
-        """
-        Parse a vision expression.
+        """Parse a vision expression.
 
         Definition: (See +(<name> (pol <distance> <angle1> <angle2>))
                          +(P (team <teamname>) (id <playerID>) +(<bodypart> (pol <distance> <angle1> <angle2>)))
@@ -361,8 +339,7 @@ class RCSSMessageParser:
         return RCSSVisionPerceptor(self._as_str(node[0]), objects, lines, players)
 
     def _parse_point_object(self, node: SExpression) -> RCSSObjectDetection:
-        """
-        Parse a visible object expression.
+        """Parse a visible object expression.
 
         Definition: (<name> (pol <distance> <angle1> <angle2>))
         """
@@ -377,8 +354,7 @@ class RCSSMessageParser:
         return RCSSObjectDetection(name, self._parse_pol(pol_node))
 
     def _parse_line_object(self, node: SExpression) -> RCSSLineDetection:
-        """
-        Parse a line expression.
+        """Parse a line expression.
 
         Definition: (L (pol <distance> <angle1> <angle2>) (pol <distance> <angle1> <angle2>))
         """
@@ -393,8 +369,7 @@ class RCSSMessageParser:
         return RCSSLineDetection(self._parse_pol(p1_node), self._parse_pol(p2_node))
 
     def _parse_player_object(self, node: SExpression) -> RCSSPlayerDetection:
-        """
-        Parse a player expression.
+        """Parse a player expression.
 
         Definition: (P (team <teamname>) (id <playerID>) (pol <distance> <angle1> <angle2>)|+(<bodypart> (pol <distance> <angle1> <angle2>)))
         """
@@ -421,8 +396,7 @@ class RCSSMessageParser:
         return RCSSPlayerDetection(team_name, player_no, body_parts)
 
     def _parse_pol(self, node: SExpression) -> Vector3D:
-        """
-        Parse a pol expression into a 3D vector.
+        """Parse a pol expression into a 3D vector.
 
         Definition: (pol <distance> <angle1> <angle2>)
         """
@@ -439,8 +413,7 @@ class RCSSMessageParser:
         return Vector3D(x, y, z)
 
     def _parse_hear(self, node: SExpression) -> RCSSHearPerceptor:
-        """
-        Parse a head expression.
+        """Parse a head expression.
 
         Definition: (hear <team> <time> self/<direction> <message>)
         """

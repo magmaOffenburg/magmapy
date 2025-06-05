@@ -6,95 +6,75 @@ from typing import Protocol
 
 
 class BehaviorID(Enum):
-    """
-    Enum specifying behavior names.
-    """
+    """Enum specifying behavior names."""
 
     NONE = 'none'
-    """
-    The none behavior used to do nothing.
-    """
+    """The none behavior used to do nothing."""
 
     INIT = 'init'
-    """
-    The init behavior used to initialize a robot.
-    """
+    """The init behavior used to initialize a robot."""
 
 
 class PBehavior(Protocol):
-    """
-    Base protocol for behaviors.
-    """
+    """Base protocol for behaviors."""
 
     def get_name(self) -> str:
-        """
-        Retrieve the unique name of the behavior.
-        """
+        """Retrieve the unique name of the behavior."""
 
     def perform(self) -> None:
-        """
-        Perform the next step of this behavior.
-        """
+        """Perform the next step of this behavior."""
 
     def is_finished(self) -> bool:
-        """
-        Check if the behavior is finished.
-        """
+        """Check if the behavior is finished."""
 
     def switch_to(self, behavior: PBehavior) -> PBehavior:
-        """
-        Try switching to the given behavior.
+        """Try switching to the given behavior.
+
+        Parameter
+        ---------
+        behavior : PBehavior
+            The target behavior (intended to replace this behavior).
         """
 
 
 class Behavior(ABC):
-    """
-    The behavior class for representing agent action threads.
-    """
+    """The behavior class for representing agent action threads."""
 
     def __init__(self, name: str) -> None:
-        """
-        Construct a new behavior.
-        """
+        """Construct a new behavior."""
 
         self._name = name
 
     def get_name(self) -> str:
-        """
-        Retrieve the unique name of the behavior.
-        """
+        """Retrieve the unique name of the behavior."""
 
         return self._name
 
     @abstractmethod
     def perform(self) -> None:
-        """
-        Perform the next step of this behavior.
-        """
+        """Perform the next step of this behavior."""
 
     @abstractmethod
     def is_finished(self) -> bool:
-        """
-        Check if the behavior is finished.
-        """
+        """Check if the behavior is finished."""
 
     def switch_to(self, behavior: PBehavior) -> PBehavior:
-        """
-        Try switching to the given behavior.
+        """Try switching to the given behavior.
+
+        Parameter
+        ---------
+        behavior : PBehavior
+            The target behavior (intended to replace this behavior).
         """
 
         return behavior if self.is_finished() else self
 
 
 class NoneBehavior(Behavior):
-    """
-    A behavior that does nothing.
-    """
+    """A behavior that does nothing."""
 
     def __init__(self) -> None:
-        """
-        Construct a new none-behavior.
-        """
+        """Construct a new none-behavior."""
 
         super().__init__(BehaviorID.NONE.value)
 

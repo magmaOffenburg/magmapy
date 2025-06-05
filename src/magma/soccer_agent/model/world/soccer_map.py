@@ -14,145 +14,89 @@ if TYPE_CHECKING:
 
 
 class PSoccerMap(PFeatureMap, Protocol):
-    """
-    Protocol for a soccer map.
-    """
+    """Protocol for a soccer map."""
 
     def get_field_dimensions(self) -> Vector2D:
-        """
-        Retrieve the soccer field dimensions.
-        """
+        """Retrieve the soccer field dimensions."""
 
     def get_field_half_length(self) -> float:
-        """
-        Half of the soccer field length (x-coordinate).
-        """
+        """Half of the soccer field length (x-coordinate)."""
 
     def get_field_half_width(self) -> float:
-        """
-        Half of the soccer field width (y-coordinate).
-        """
+        """Half of the soccer field width (y-coordinate)."""
 
     def get_goal_dimensions(self) -> Vector3D:
-        """
-        Retrieve the goal dimensions.
-        """
+        """Retrieve the goal dimensions."""
 
     def get_goal_half_width(self) -> float:
-        """
-        Half of the goal width (y-coordinate).
-        """
+        """Half of the goal width (y-coordinate)."""
 
     def get_goal_depth(self) -> float:
-        """
-        Depth of the goal (x-coordinate).
-        """
+        """Depth of the goal (x-coordinate)."""
 
     def get_goal_height(self) -> float:
-        """
-        Height of the goal (z-coordinate).
-        """
+        """Height of the goal (z-coordinate)."""
 
     def get_goalie_area_dimensions(self) -> Vector2D:
-        """
-        Retrieve the goalie area dimensions.
-        """
+        """Retrieve the goalie area dimensions."""
 
     def get_goalie_area_half_width(self) -> float:
-        """
-        Half of the goalie area width (y-coordinate).
-        """
+        """Half of the goalie area width (y-coordinate)."""
 
     def get_goalie_area_depth(self) -> float:
-        """
-        Depth of the goalie area area (x-coordinate).
-        """
+        """Depth of the goalie area area (x-coordinate)."""
 
     def get_penalty_area_dimensions(self) -> Vector2D:
-        """
-        Retrieve the penalty area dimensions.
-        """
+        """Retrieve the penalty area dimensions."""
 
     def get_penalty_area_half_width(self) -> float:
-        """
-        Half of the penalty area width (y-coordinate).
-        """
+        """Half of the penalty area width (y-coordinate)."""
 
     def get_penalty_area_depth(self) -> float:
-        """
-        Depth of the penalty area (x-coordinate).
-        """
+        """Depth of the penalty area (x-coordinate)."""
 
     def get_middle_circle_radius(self) -> float:
-        """
-        Retrieve the radius of the middle circle.
-        """
+        """Retrieve the radius of the middle circle."""
 
     def get_penalty_spot_distance(self) -> float:
-        """
-        Retrieve the distance of the penalty spot from the goal line.
-        """
+        """Retrieve the distance of the penalty spot from the goal line."""
 
     def get_own_goal_position(self) -> Vector3D:
-        """
-        Retrieve the position of the own goal.
-        """
+        """Retrieve the position of the own goal."""
 
     def get_opponent_goal_position(self) -> Vector3D:
-        """
-        Retrieve the position of the opponent goal.
-        """
+        """Retrieve the position of the opponent goal."""
 
     def get_own_penalty_spot_position(self) -> Vector3D:
-        """
-        Retrieve the position of the own penalty spot (in front of our goal).
-        """
+        """Retrieve the position of the own penalty spot (in front of our goal)."""
 
     def get_opponent_penalty_spot_position(self) -> Vector3D:
-        """
-        Retrieve the position of the opponent penalty spot (in front of the opponent goal).
-        """
+        """Retrieve the position of the opponent penalty spot (in front of the opponent goal)."""
 
     def get_field_area(self) -> AABB2D:
-        """
-        Retrieve the soccer field area.
-        """
+        """Retrieve the soccer field area."""
 
     def get_own_goal_area(self) -> AABB2D:
-        """
-        Retrieve the own goal area.
-        """
+        """Retrieve the own goal area."""
 
     def get_opponent_goal_area(self) -> AABB2D:
-        """
-        Retrieve the opponent goal area.
-        """
+        """Retrieve the opponent goal area."""
 
     def get_own_goalie_area(self) -> AABB2D:
-        """
-        Retrieve the own goalie area.
-        """
+        """Retrieve the own goalie area."""
 
     def get_opponent_goalie_area(self) -> AABB2D:
-        """
-        Retrieve the opponent goalie area.
-        """
+        """Retrieve the opponent goalie area."""
 
     def get_own_penalty_area(self) -> AABB2D:
-        """
-        Retrieve the own penalty area.
-        """
+        """Retrieve the own penalty area."""
 
     def get_opponent_penalty_area(self) -> AABB2D:
-        """
-        Retrieve the opponent penalty area.
-        """
+        """Retrieve the opponent penalty area."""
 
 
 class SoccerMap(FeatureMap):
-    """
-    Class representing a soccer field.
-    """
+    """Class representing a soccer field."""
 
     def __init__(
         self,
@@ -165,9 +109,7 @@ class SoccerMap(FeatureMap):
         point_features: Sequence[PPointFeature] | None = None,
         line_features: Sequence[PLineFeature] | None = None,
     ) -> None:
-        """
-        Construct a new soccer feature map.
-        """
+        """Construct a new soccer feature map."""
 
         super().__init__(point_features, line_features)
 
@@ -195,9 +137,7 @@ class SoccerMap(FeatureMap):
 
     @staticmethod
     def from_description(desc: PSoccerFieldDescription) -> SoccerMap:
-        """
-        Construct a new soccer feature map from the given field description.
-        """
+        """Construct a new soccer feature map from the given field description."""
 
         s_map: SoccerMap = SoccerMap(
             desc.get_field_dimensions(),
@@ -213,183 +153,131 @@ class SoccerMap(FeatureMap):
         return s_map
 
     def get_field_dimensions(self) -> Vector2D:
-        """
-        Retrieve the soccer field dimensions.
-        """
+        """Retrieve the soccer field dimensions."""
 
         return self._field_dimensions
 
     def get_field_half_length(self) -> float:
-        """
-        Half of the soccer field length (x-coordinate).
-        """
+        """Half of the soccer field length (x-coordinate)."""
 
         return self._field_dimensions.x / 2
 
     def get_field_half_width(self) -> float:
-        """
-        Half of the soccer field width (y-coordinate).
-        """
+        """Half of the soccer field width (y-coordinate)."""
 
         return self._field_dimensions.y / 2
 
     def get_goal_dimensions(self) -> Vector3D:
-        """
-        Retrieve the goal dimensions.
-        """
+        """Retrieve the goal dimensions."""
 
         return self._goal_dimensions
 
     def get_goal_half_width(self) -> float:
-        """
-        Half of the goal width (y-coordinate).
-        """
+        """Half of the goal width (y-coordinate)."""
 
         return self._goal_dimensions.y / 2
 
     def get_goal_depth(self) -> float:
-        """
-        Depth of the goal (x-coordinate).
-        """
+        """Depth of the goal (x-coordinate)."""
 
         return self._goal_dimensions.x
 
     def get_goal_height(self) -> float:
-        """
-        Height of the goal (z-coordinate).
-        """
+        """Height of the goal (z-coordinate)."""
 
         return self._goal_dimensions.z
 
     def get_goalie_area_dimensions(self) -> Vector2D:
-        """
-        Retrieve the goalie area dimensions.
-        """
+        """Retrieve the goalie area dimensions."""
 
         return self._goalie_area_dimensions
 
     def get_goalie_area_half_width(self) -> float:
-        """
-        Half of the goalie area width (y-coordinate).
-        """
+        """Half of the goalie area width (y-coordinate)."""
 
         return self._goalie_area_dimensions.y
 
     def get_goalie_area_depth(self) -> float:
-        """
-        Depth of the goalie area area (x-coordinate).
-        """
+        """Depth of the goalie area area (x-coordinate)."""
 
         return self._goalie_area_dimensions.x
 
     def get_penalty_area_dimensions(self) -> Vector2D:
-        """
-        Retrieve the penalty area dimensions.
-        """
+        """Retrieve the penalty area dimensions."""
 
         return self._penalty_area_dimensions
 
     def get_penalty_area_half_width(self) -> float:
-        """
-        Half of the penalty area width (y-coordinate).
-        """
+        """Half of the penalty area width (y-coordinate)."""
 
         return self._penalty_area_dimensions.y
 
     def get_penalty_area_depth(self) -> float:
-        """
-        Depth of the penalty area (x-coordinate).
-        """
+        """Depth of the penalty area (x-coordinate)."""
 
         return self._penalty_area_dimensions.x
 
     def get_middle_circle_radius(self) -> float:
-        """
-        Retrieve the radius of the middle circle.
-        """
+        """Retrieve the radius of the middle circle."""
 
         return self._middle_circle_radius
 
     def get_penalty_spot_distance(self) -> float:
-        """
-        Retrieve the distance of the penalty spot from the goal line.
-        """
+        """Retrieve the distance of the penalty spot from the goal line."""
 
         return self._penalty_spot_distance
 
     def get_own_goal_position(self) -> Vector3D:
-        """
-        Retrieve the position of the own goal.
-        """
+        """Retrieve the position of the own goal."""
 
         return self._own_goal_position
 
     def get_opponent_goal_position(self) -> Vector3D:
-        """
-        Retrieve the position of the opponent goal.
-        """
+        """Retrieve the position of the opponent goal."""
 
         return self._opponent_goal_position
 
     def get_own_penalty_spot_position(self) -> Vector3D:
-        """
-        Retrieve the position of the own penalty spot (in front of our goal).
-        """
+        """Retrieve the position of the own penalty spot (in front of our goal)."""
 
         return self._own_penalty_spot_position
 
     def get_opponent_penalty_spot_position(self) -> Vector3D:
-        """
-        Retrieve the position of the opponent penalty spot (in front of the opponent goal).
-        """
+        """Retrieve the position of the opponent penalty spot (in front of the opponent goal)."""
 
         return self._opponent_penalty_spot_position
 
     def get_field_area(self) -> AABB2D:
-        """
-        Retrieve the soccer field area.
-        """
+        """Retrieve the soccer field area."""
 
         return self._field_area
 
     def get_own_goal_area(self) -> AABB2D:
-        """
-        Retrieve the own goal area.
-        """
+        """Retrieve the own goal area."""
 
         return self._own_goal_area
 
     def get_opponent_goal_area(self) -> AABB2D:
-        """
-        Retrieve the opponent goal area.
-        """
+        """Retrieve the opponent goal area."""
 
         return self._opponent_goal_area
 
     def get_own_goalie_area(self) -> AABB2D:
-        """
-        Retrieve the own goalie area.
-        """
+        """Retrieve the own goalie area."""
 
         return self._own_goalie_area
 
     def get_opponent_goalie_area(self) -> AABB2D:
-        """
-        Retrieve the opponent goalie area.
-        """
+        """Retrieve the opponent goalie area."""
 
         return self._opponent_goalie_area
 
     def get_own_penalty_area(self) -> AABB2D:
-        """
-        Retrieve the own penalty area.
-        """
+        """Retrieve the own penalty area."""
 
         return self._own_penalty_area
 
     def get_opponent_penalty_area(self) -> AABB2D:
-        """
-        Retrieve the opponent penalty area.
-        """
+        """Retrieve the opponent penalty area."""
 
         return self._opponent_penalty_area

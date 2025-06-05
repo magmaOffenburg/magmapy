@@ -7,11 +7,7 @@ from magma.agent.model.agent_model import PMutableAgentModel
 
 
 class PAgentFactory(Protocol):
-    """
-    Protocol for an agent component factory.
-    """
+    """Protocol for an agent component factory."""
 
     def create_agent_components(self) -> tuple[PChannelManager, PMutableAgentModel, dict[str, PBehavior], PDecisionMaker]:
-        """
-        Create a set of core agent components.
-        """
+        """Create a set of core agent components."""

@@ -10,13 +10,15 @@ if TYPE_CHECKING:
 
 
 class InitBehavior(Behavior):
-    """
-    Behavior for creating and initializing an agent representation in simulation.
-    """
+    """Behavior for creating and initializing an agent representation in simulation."""
 
     def __init__(self, model: PSoccerAgentModel):
-        """
-        Create a new init behavior.
+        """Create a new init behavior.
+
+        Parameter
+        ---------
+        model : PSoccerAgentModel
+            The agent
         """
 
         super().__init__(BehaviorID.INIT.value)

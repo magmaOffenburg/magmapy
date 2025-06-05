@@ -13,138 +13,88 @@ if TYPE_CHECKING:
 
 @dataclass(frozen=True)
 class RCSSAgentStatePerceptor(Perceptor):
-    """
-    Perceptor representing general agent state information used in RoboCup Soccer Simulation.
-    """
+    """Perceptor representing general agent state information used in RoboCup Soccer Simulation."""
 
     temperature: int
-    """
-    The perceived temperature.
-    """
+    """The perceived temperature."""
 
     battery: int
-    """
-    The current battery level.
-    """
+    """The current battery level."""
 
 
 @dataclass(frozen=True)
 class ForceResistancePerceptor(Perceptor):
-    """
-    Perceptor representing an external force sensor in RoboCup Soccer Simulation.
-    """
+    """Perceptor representing an external force sensor in RoboCup Soccer Simulation."""
 
     origin: Vector3D
-    """
-    The force origin (where on the body is the force is applied)
-    """
+    """The force origin (where on the body is the force is applied)"""
 
     force: Vector3D
-    """
-    The force vector acting at the origin.
-    """
+    """The force vector acting at the origin."""
 
 
 @dataclass(frozen=True)
 class RCSSHearPerceptor(Perceptor):
-    """
-    Perceptor representing a hear message.
-    """
+    """Perceptor representing a hear message."""
 
     time: float
-    """
-    The time of the hear perception.
-    """
+    """The time of the hear perception."""
 
     team: str
-    """
-    The team of the player that sad the perceived message.
-    """
+    """The team of the player that sad the perceived message."""
 
     direction: str
-    """
-    The horizontal direction (or "self") of the sound source.
-    """
+    """The horizontal direction (or "self") of the sound source."""
 
     message: str
-    """
-    The perceived message.
-    """
+    """The perceived message."""
 
 
 @dataclass(frozen=True)
 class RCSSObjectDetection:
-    """
-    An object detection.
-    """
+    """An object detection."""
 
     name: str
-    """
-    The name of the object.
-    """
+    """The name of the object."""
 
     position: Vector3D
-    """
-    The object position in the camera local frame.
-    """
+    """The object position in the camera local frame."""
 
 
 @dataclass(frozen=True)
 class RCSSLineDetection:
-    """
-    A line object detection.
-    """
+    """A line object detection."""
 
     position1: Vector3D
-    """
-    The start position of the detected line in the camera local frame.
-    """
+    """The start position of the detected line in the camera local frame."""
 
     position2: Vector3D
-    """
-    The end position of the detected line in the camera local frame.
-    """
+    """The end position of the detected line in the camera local frame."""
 
 
 @dataclass(frozen=True)
 class RCSSPlayerDetection:
-    """
-    A player object detection.
-    """
+    """A player object detection."""
 
     team_name: str
-    """
-    The detected team of the player.
-    """
+    """The detected team of the player."""
 
     player_no: int
-    """
-    The detected player number.
-    """
+    """The detected player number."""
 
     body_parts: Sequence[tuple[str, Vector3D]]
-    """
-    The list of detected body parts of the player.
-    """
+    """The list of detected body parts of the player."""
 
 
 @dataclass(frozen=True)
 class RCSSVisionPerceptor(Perceptor):
-    """
-    Perceptor representing a vision detection in the RoboCup Soccer Simulation.
-    """
+    """Perceptor representing a vision detection in the RoboCup Soccer Simulation."""
 
     objects: Sequence[RCSSObjectDetection]
-    """
-    The collection of (point) object detections.
-    """
+    """The collection of (point) object detections."""
 
     lines: Sequence[RCSSLineDetection]
-    """
-    The collection of line detections.
-    """
+    """The collection of line detections."""
 
     players: Sequence[RCSSPlayerDetection]
-    """
-    The collection of player detections.
-    """
+    """The collection of player detections."""

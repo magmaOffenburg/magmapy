@@ -4,9 +4,7 @@ from magma.soccer_agent.model.soccer_rules import SoccerRules
 
 
 class RCHLRules(SoccerRules):
-    """
-    Rule book for the RoboCup Humanoid League league.
-    """
+    """Rule book for the RoboCup Humanoid League league."""
 
     def __init__(
         self,
@@ -15,9 +13,7 @@ class RCHLRules(SoccerRules):
         kick_off_time: float | None = None,
         throw_in_time: float | None = None,
     ) -> None:
-        """
-        Construct a new RoboCup Humanoid League rule book.
-        """
+        """Construct a new RoboCup Humanoid League rule book."""
 
         super().__init__(
             match_duration=2 * 600 if duration is None else duration,

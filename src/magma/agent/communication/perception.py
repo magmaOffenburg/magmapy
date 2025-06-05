@@ -11,75 +11,51 @@ if TYPE_CHECKING:
 
 
 class PPerceptor(Protocol):
-    """
-    Protocol for all perceptors.
-    """
+    """Protocol for all perceptors."""
 
     @property
     def name(self) -> str:
-        """
-        The perceptor name.
-        """
+        """The perceptor name."""
 
 
 @dataclass(frozen=True)
 class Perceptor:
-    """
-    Base dataclass for perceptors.
-    """
+    """Base dataclass for perceptors."""
 
     name: str
-    """
-    The perceptor name.
-    """
+    """The perceptor name."""
 
 
 @dataclass(frozen=True)
 class TimePerceptor(Perceptor):
-    """
-    Perceptor representing a time perception.
-    """
+    """Perceptor representing a time perception."""
 
     time: float
-    """
-    The perceived time value.
-    """
+    """The perceived time value."""
 
 
 @dataclass(frozen=True)
 class ErrorPerceptor(Perceptor):
-    """
-    Perceptor representing an communication error.
-    """
+    """Perceptor representing an communication error."""
 
     severity: str
-    """
-    The error severity.
-    """
+    """The error severity."""
 
     description: str
-    """
-    A short description of the error.
-    """
+    """A short description of the error."""
 
 
 @dataclass(frozen=True)
 class TextPerceptor(Perceptor):
-    """
-    Perceptor representing a text message.
-    """
+    """Perceptor representing a text message."""
 
     text: str
-    """
-    The perceived text.
-    """
+    """The perceived text."""
 
 
 @dataclass(frozen=True)
 class BumperPerceptor(Perceptor):
-    """
-    Perceptor representing a simple bumper sensor.
-    """
+    """Perceptor representing a simple bumper sensor."""
 
     active: bool
     """
@@ -90,112 +66,74 @@ class BumperPerceptor(Perceptor):
 
 @dataclass(frozen=True)
 class GyroRatePerceptor(Perceptor):
-    """
-    Perceptor representing an 3-dimensional gyroscope sensor.
-    """
+    """Perceptor representing an 3-dimensional gyroscope sensor."""
 
     rpy: Vector3D
-    """
-    Perceived angular velocities for roll-pitch-yaw axes.
-    """
+    """Perceived angular velocities for roll-pitch-yaw axes."""
 
 
 @dataclass(frozen=True)
 class AccelerometerPerceptor(Perceptor):
-    """
-    Perceptor representing an 3-dimensional accelerometer sensor.
-    """
+    """Perceptor representing an 3-dimensional accelerometer sensor."""
 
     acceleration: Vector3D
-    """
-    Perceived linear acceleration.
-    """
+    """Perceived linear acceleration."""
 
 
 @dataclass(frozen=True)
 class IMUPerceptor(Perceptor):
-    """
-    Perceptor representing an 3-dimensional IMU sensor.
-    """
+    """Perceptor representing an 3-dimensional IMU sensor."""
 
     orientation: Rotation3D
-    """
-    Orientation estimation based on gyroscope and accelerometer information.
-    """
+    """Orientation estimation based on gyroscope and accelerometer information."""
 
     acc: Vector3D
-    """
-    Perceived linear acceleration.
-    """
+    """Perceived linear acceleration."""
 
     rpy: Vector3D
-    """
-    Perceived angular velocities for roll-pitch-yaw axes.
-    """
+    """Perceived angular velocities for roll-pitch-yaw axes."""
 
 
 @dataclass(frozen=True)
 class JointStatePerceptor(Perceptor):
-    """
-    Perceptor representing a joint state perception.
-    """
+    """Perceptor representing a joint state perception."""
 
     position: float
-    """
-    The perceived joint position.
-    """
+    """The perceived joint position."""
 
     velocity: float = 0.0
-    """
-    The perceived joint velocity.
-    """
+    """The perceived joint velocity."""
 
     effort: float = 0.0
-    """
-    The perceived joint motor effort.
-    """
+    """The perceived joint motor effort."""
 
 
 @dataclass(frozen=True)
 class FreeJointPerceptor(Perceptor):
-    """
-    Perceptor representing a free joint state perception.
-    """
+    """Perceptor representing a free joint state perception."""
 
     pose: Pose3D
-    """
-    The perceived joint pose.
-    """
+    """The perceived joint pose."""
 
 
 @dataclass(frozen=True)
 class Loc2DPerceptor(Perceptor):
-    """
-    Perceptor representing a 2D location perception.
-    """
+    """Perceptor representing a 2D location perception."""
 
     loc: Pose2D
-    """
-    The perceived 2D location.
-    """
+    """The perceived 2D location."""
 
 
 @dataclass(frozen=True)
 class Loc3DPerceptor(Perceptor):
-    """
-    Perceptor representing a 3D location perception.
-    """
+    """Perceptor representing a 3D location perception."""
 
     loc: Pose3D
-    """
-    The perceived 3D location.
-    """
+    """The perceived 3D location."""
 
 
 class Perception(Mapping[str, PPerceptor]):
-    """
-    Map of perceptions.
-    """
+    """Map of perceptions."""
 
     T = TypeVar('T')
 
@@ -206,55 +144,73 @@ class Perception(Mapping[str, PPerceptor]):
         *,
         shutdown: bool = False,
     ) -> None:
-        """
-        Construct a new perception map.
-        """
+        """Construct a new perception map."""
 
         super().__init__()
 
         self._perceptions: dict[str, PPerceptor] = {} if perceptions is None else {p.name: p for p in perceptions}
+        """The map of individual perceptors."""
+
         self._time: float = time
+        """The time of the perception."""
+
         self._shutdown: bool = shutdown
+        """Flag indicating if the agent received a shutdown trigger."""
 
     def get_time(self) -> float:
-        """
-        Retrieve the time of the perception.
-        """
+        """Retrieve the time of the perception."""
 
         return self._time
 
     def set_time(self, time: float) -> None:
-        """
-        Set the time of the perception.
+        """Set the time of the perception.
+
+        Parameter
+        ---------
+        time : float
+            The time of this perception.
         """
 
         self._time = time
 
     def is_shutdown_requested(self) -> bool:
-        """
-        Flag if the agent perceived a shutdown request.
-        """
+        """Flag if the agent perceived a shutdown request."""
 
         return self._shutdown
 
     def put(self, perceptor: PPerceptor) -> None:
-        """
-        Add the given perceptor to the perception.
+        """Add the given perceptor to the perception.
+
+        Parameter
+        ---------
+        perceptor : PPerceptor
+            The perceptor to add.
         """
 
         self._perceptions[perceptor.name] = perceptor
 
     def get_perceptor(self, name: str, perceptor_type: type[T]) -> T | None:
-        """
-        Retrieve the perceptor with the given name and type if existing.
+        """Retrieve the perceptor with the given name and type if existing.
+
+        Parameter
+        ---------
+        name : str
+            The unique name of the perceptor.
+
+        perceptor_type : type[T]
+            The expected perceptor type.
         """
 
         perceptor = self._perceptions.get(name, None)
         return perceptor if perceptor is not None and isinstance(perceptor, perceptor_type) else None
 
     def get_all(self, perceptor_type: type[T]) -> list[T]:
-        """
-        Retrieve the list of perceptors with the given type.
+        """Retrieve the list of perceptors with the given type.
+
+        Parameter
+        ---------
+        perceptor_type : type[T]
+            The perceptor type to filter.
         """
 
         return [p for p in self._perceptions.values() if isinstance(p, perceptor_type)]

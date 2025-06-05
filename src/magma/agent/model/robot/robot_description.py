@@ -13,158 +13,124 @@ if TYPE_CHECKING:
 
 class SensorType(Enum):
     GYRO = 'gyro'
-    """
-    A gyro rate sensor, receiving rotational velocity information.
-    """
+    """A gyro rate sensor, receiving rotational velocity information."""
 
     ACCELEROMETER = 'accelerometer'
-    """
-    An accelerometer sensor, receiving linear accelerations.
-    """
+    """An accelerometer sensor, receiving linear accelerations."""
 
     IMU = 'imu'
-    """
-    An IMU sensor, receiving rotational velocity as well as linear acceleration information together with an orientation prediction.
-    """
+    """An IMU sensor, receiving rotational velocity as well as linear acceleration information together with an orientation prediction."""
 
     CAMERA = 'camera'
-    """
-    A camera sensor, receiving various state information about visible objects in the environment.
-    """
+    """A camera sensor, receiving various state information about visible objects in the environment."""
 
     LOC2D = 'loc2d'
-    """
-    A virtual sensor, receiving 2D position and orientation (location) information.
-    """
+    """A virtual sensor, receiving 2D position and orientation (location) information."""
 
     LOC3D = 'loc3d'
-    """
-    A virtual sensor, receiving 3D position and orientation (location) information.
-    """
+    """A virtual sensor, receiving 3D position and orientation (location) information."""
 
 
 class ActuatorType(Enum):
     OMNI_SPEED = 'omni_speed'
-    """
-    Actuator for commanding omni-directional speeds towards an external movement platform.
-    """
+    """Actuator for commanding omni-directional speeds towards an external movement platform."""
 
     LIGHT = 'light'
-    """
-    A light that can be regulated in brightness.
-    """
+    """A light that can be regulated in brightness."""
 
     RGB_LIGHT = 'rgb_light'
-    """
-    A light that can be regulated in brightness as well as in color.
-    """
+    """A light that can be regulated in brightness as well as in color."""
 
 
 class JointType(Enum):
     FIXED = 'fixed'
-    """
-    A fixed joint, allowing no movement freedom (0DOF).
-    """
+    """A fixed joint, allowing no movement freedom (0DOF)."""
 
     HINGE = 'hinge'
-    """
-    A hinge joint, allowing 1DOF along one axis.
-    """
+    """A hinge joint, allowing 1DOF along one axis."""
 
     FREE = 'free'
-    """
-    A free joint, allowing full 6DOF translational as well as rotational freedom.
-    """
+    """A free joint, allowing full 6DOF translational as well as rotational freedom."""
 
 
 class PRobotDescription(Protocol):
-    """
-    Protocol for robot descriptions.
-    """
+    """Protocol for robot descriptions."""
 
     def get_name(self) -> str:
-        """
-        Retrieve the name of the robot model.
-        """
+        """Retrieve the name of the robot model."""
 
     def get_root_body(self) -> BodyDescription:
-        """
-        Retrieve the root body part.
-        """
+        """Retrieve the root body part."""
 
     def get_bodies(self) -> ValuesView[BodyDescription]:
-        """
-        Retrieve the collection of body parts.
-        """
+        """Retrieve the collection of body parts."""
 
     def get_body(self, name: str) -> BodyDescription | None:
-        """
-        Retrieve the body part description for the given name.
+        """Retrieve the body part description for the given name.
+
+        Parameter
+        ---------
+        name : str
+            The name of the body.
         """
 
     def get_children_for(self, body: BodyDescription | str) -> Generator[BodyDescription]:
-        """
-        Retrieve the collection of child body parts for the given body part.
+        """Retrieve the collection of child body parts for the given body part.
+
+        Parameter
+        ---------
+        body : BodyDescription | str
+            The body description or body name for which to fetch the children.
         """
 
     def get_joints(self) -> ValuesView[JointDescription]:
-        """
-        Retrieve the collection of joints.
-        """
+        """Retrieve the collection of joints."""
 
     def get_joint(self, name: str) -> JointDescription | None:
-        """
-        Retrieve the collection of joints.
+        """Retrieve the collection of joints.
+
+        Parameter
+        ---------
+        name : str
+            The name of the joint.
         """
 
     def get_joint_for(self, body: BodyDescription | str) -> JointDescription | None:
-        """
-        Retrieve the joint description for the given body part description.
+        """Retrieve the joint description for the given body part description.
+
+        Parameter
+        ---------
+        body : BodyDescription | str
+            The body description or body name for which to fetch the joint.
         """
 
     def get_sensors(self) -> ValuesView[SensorDescription]:
-        """
-        Retrieve the collection of sensors.
-        """
+        """Retrieve the collection of sensors."""
 
     def get_actuators(self) -> ValuesView[ActuatorDescription]:
-        """
-        Retrieve the collection of actuators.
-        """
+        """Retrieve the collection of actuators."""
 
 
 @dataclass(frozen=True)
 class SensorDescription:
-    """
-    Base class for sensor descriptions.
-    """
+    """Base class for sensor descriptions."""
 
     name: str
-    """
-    The name of the sensor.
-    """
+    """The name of the sensor."""
 
     frame_id: str
-    """
-    The frame-id (the name of the body) the sensor is attached to.
-    """
+    """The frame-id (the name of the body) the sensor is attached to."""
 
     perceptor_name: str
-    """
-    The name of the perceptor.
-    """
+    """The name of the perceptor."""
 
     sensor_type: str
-    """
-    The sensor type information.
-    """
+    """The sensor type information."""
 
 
 @dataclass(frozen=True)
 class GyroDescription(SensorDescription):
-    """
-    Default gyro sensor description.
-    """
+    """Default gyro sensor description."""
 
     def __init__(self, name: str, frame_id: str, perceptor_name: str):
         super().__init__(name, frame_id, perceptor_name, SensorType.GYRO.value)
@@ -172,9 +138,7 @@ class GyroDescription(SensorDescription):
 
 @dataclass(frozen=True)
 class AccelerometerDescription(SensorDescription):
-    """
-    Default accelerometer sensor description.
-    """
+    """Default accelerometer sensor description."""
 
     def __init__(self, name: str, frame_id: str, perceptor_name: str):
         super().__init__(name, frame_id, perceptor_name, SensorType.ACCELEROMETER.value)
@@ -182,9 +146,7 @@ class AccelerometerDescription(SensorDescription):
 
 @dataclass(frozen=True)
 class IMUDescription(SensorDescription):
-    """
-    Default IMU sensor description.
-    """
+    """Default IMU sensor description."""
 
     def __init__(self, name: str, frame_id: str, perceptor_name: str):
         super().__init__(name, frame_id, perceptor_name, SensorType.IMU.value)
@@ -192,9 +154,7 @@ class IMUDescription(SensorDescription):
 
 @dataclass(frozen=True)
 class Loc2DDescription(SensorDescription):
-    """
-    Default 2D location sensor description.
-    """
+    """Default 2D location sensor description."""
 
     def __init__(self, name: str, frame_id: str, perceptor_name: str):
         super().__init__(name, frame_id, perceptor_name, SensorType.LOC2D.value)
@@ -202,9 +162,7 @@ class Loc2DDescription(SensorDescription):
 
 @dataclass(frozen=True)
 class Loc3DDescription(SensorDescription):
-    """
-    Default 3D location sensor description.
-    """
+    """Default 3D location sensor description."""
 
     def __init__(self, name: str, frame_id: str, perceptor_name: str):
         super().__init__(name, frame_id, perceptor_name, SensorType.LOC3D.value)
@@ -212,12 +170,13 @@ class Loc3DDescription(SensorDescription):
 
 @dataclass(frozen=True)
 class CameraDescription(SensorDescription):
-    """
-    Default camera sensor description.
-    """
+    """Default camera sensor description."""
 
     horizontal_fov: float
+    """The horizontal field of view angle."""
+
     vertical_fov: float
+    """The vertical field of view angle."""
 
     def __init__(
         self,
@@ -235,53 +194,35 @@ class CameraDescription(SensorDescription):
 
 @dataclass(frozen=True)
 class ActuatorDescription:
-    """
-    Base class for actuator descriptions.
-    """
+    """Base class for actuator descriptions."""
 
     name: str
-    """
-    The name of the actuator.
-    """
+    """The name of the actuator."""
 
     effector_name: str
-    """
-    The name of the effector associated with the actuator.
-    """
+    """The name of the effector associated with the actuator."""
 
     actuator_type: str
-    """
-    The actuator type information.
-    """
+    """The actuator type information."""
 
 
 @dataclass(frozen=True)
 class MotorDescription:
-    """
-    Default motor actuator description.
-    """
+    """Default motor actuator description."""
 
     effector_name: str
-    """
-    The name of the effector associated with the actuator.
-    """
+    """The name of the effector associated with the actuator."""
 
     max_speed: float
-    """
-    The maximum possible speed of the motor.
-    """
+    """The maximum possible speed of the motor."""
 
     max_effort: float = 0.0
-    """
-    The maximum possible force / torque of the motor.
-    """
+    """The maximum possible force / torque of the motor."""
 
 
 @dataclass(frozen=True)
 class OmniSpeedPlatformDescription(ActuatorDescription):
-    """
-    Default omni-directional speed-based movement platform actuator description.
-    """
+    """Default omni-directional speed-based movement platform actuator description."""
 
     def __init__(self, name: str, effector_name: str):
         super().__init__(name, effector_name, ActuatorType.OMNI_SPEED.value)
@@ -289,34 +230,22 @@ class OmniSpeedPlatformDescription(ActuatorDescription):
 
 @dataclass(frozen=True)
 class JointDescription:
-    """
-    Description of a joint connection between two body parts.
-    """
+    """Description of a joint connection between two body parts."""
 
     name: str
-    """
-    The name of the joint.
-    """
+    """The name of the joint."""
 
     parent: str
-    """
-    The parent body of the joint.
-    """
+    """The parent body of the joint."""
 
     child: str
-    """
-    The child body of the joint.
-    """
+    """The child body of the joint."""
 
     joint_type: str
-    """
-    The joint type information.
-    """
+    """The joint type information."""
 
     anchor: Vector3D
-    """
-    The joint anchor.
-    """
+    """The joint anchor."""
 
     def __init__(
         self,
@@ -335,14 +264,10 @@ class JointDescription:
 
 @dataclass(frozen=True)
 class FixedJointDescription(JointDescription):
-    """
-    Description of a fixed joint connection between two body parts.
-    """
+    """Description of a fixed joint connection between two body parts."""
 
     orientation: Rotation3D
-    """
-    The fixed orientation of the joint.
-    """
+    """The fixed orientation of the joint."""
 
     def __init__(
         self,
@@ -359,29 +284,19 @@ class FixedJointDescription(JointDescription):
 
 @dataclass(frozen=True)
 class HingeJointDescription(JointDescription):
-    """
-    Description of a 1DOF hinge joint connection between two body parts.
-    """
+    """Description of a 1DOF hinge joint connection between two body parts."""
 
     perceptor_name: str
-    """
-    The perceptor name of the corresponding joint sensor (if existing).
-    """
+    """The perceptor name of the corresponding joint sensor (if existing)."""
 
     axis: Vector3D
-    """
-    The axis of this hinge joint.
-    """
+    """The axis of this hinge joint."""
 
     limits: Vector2D
-    """
-    The axis limits of this hinge joint.
-    """
+    """The axis limits of this hinge joint."""
 
     motor: MotorDescription | None
-    """
-    Description of the motor driving this joint.
-    """
+    """Description of the motor driving this joint."""
 
     def __init__(
         self,
@@ -404,14 +319,10 @@ class HingeJointDescription(JointDescription):
 
 @dataclass(frozen=True)
 class FreeJointDescription(JointDescription):
-    """
-    Description of a 6DOF free joint connection between two body parts.
-    """
+    """Description of a 6DOF free joint connection between two body parts."""
 
     perceptor_name: str
-    """
-    The perceptor name of the corresponding joint sensor (if existing).
-    """
+    """The perceptor name of the corresponding joint sensor (if existing)."""
 
     def __init__(
         self,
@@ -428,24 +339,16 @@ class FreeJointDescription(JointDescription):
 
 @dataclass(frozen=True)
 class InertiaDescription:
-    """
-    Description of a body part inertia.
-    """
+    """Description of a body part inertia."""
 
     origin: Vector3D
-    """
-    The origin of the body CoM.
-    """
+    """The origin of the body CoM."""
 
     mass: float
-    """
-    The body mass.
-    """
+    """The body mass."""
 
     inertia: Vector3D
-    """
-    The inertia vector (diagonal entries).
-    """
+    """The inertia vector (diagonal entries)."""
 
     def __init__(
         self,
@@ -460,19 +363,13 @@ class InertiaDescription:
 
 @dataclass(frozen=True)
 class VisualDescription:
-    """
-    Description of a visual representation of a body part.
-    """
+    """Description of a visual representation of a body part."""
 
     origin: Vector3D
-    """
-    The origin of the visual.
-    """
+    """The origin of the visual."""
 
     geometry: Vector3D
-    """
-    The visual body geometry (for now simply an axis-aligned bounding box).
-    """
+    """The visual body geometry (for now simply an axis-aligned bounding box)."""
 
     def __init__(
         self,
@@ -485,49 +382,52 @@ class VisualDescription:
 
 @dataclass(frozen=True)
 class BodyDescription:
-    """
-    Description of a body part of the robot.
-    """
+    """Description of a body part of the robot."""
 
     name: str
-    """
-    The name of the body.
-    """
+    """The name of the body."""
 
     inertia: InertiaDescription | None = None
-    """
-    The body inertia.
-    """
+    """The body inertia."""
 
     visual: VisualDescription | None = None
-    """
-    The body appearance.
-    """
+    """The body appearance."""
 
 
 class RobotDescription:
-    """
-    Representation of a robot description.
-    """
+    """Representation of a robot description."""
 
     def __init__(self, name: str) -> None:
+        """Construct a new robot description with the given name.
+
+        Parameter
+        ---------
+        name : str
+            The name of the robot description.
+        """
+
         self._name: str = name
+        """A name identifying this robot description."""
+
         self._bodies: dict[str, BodyDescription] = {}
+        """The map of body part descriptions."""
+
         self._joints: dict[str, JointDescription] = {}
+        """The map of joint descriptions."""
+
         self._sensors: dict[str, SensorDescription] = {}
+        """The map of sensor descriptions of the robot."""
+
         self._actuators: dict[str, ActuatorDescription] = {}
+        """The map of actuator descriptions of the robot."""
 
     def get_name(self) -> str:
-        """
-        Retrieve the name of the robot model.
-        """
+        """Retrieve the name of the robot model."""
 
         return self._name
 
     def get_root_body(self) -> BodyDescription:
-        """
-        Retrieve the root body part.
-        """
+        """Retrieve the root body part."""
 
         no_parent_bodies = [body for body in self._bodies.values() if self.get_joint_for(body) is None]
         n_bodies = len(no_parent_bodies)
@@ -542,22 +442,28 @@ class RobotDescription:
         raise ValueError(msg)
 
     def get_bodies(self) -> ValuesView[BodyDescription]:
-        """
-        Retrieve the collection of body parts.
-        """
+        """Retrieve the collection of body parts."""
 
         return self._bodies.values()
 
     def get_body(self, name: str) -> BodyDescription | None:
-        """
-        Retrieve the body part description for the given name.
+        """Retrieve the body part description for the given name.
+
+        Parameter
+        ---------
+        name : str
+            The name of the body.
         """
 
         return self._bodies.get(name, None)
 
     def get_children_for(self, body: BodyDescription | str) -> Generator[BodyDescription]:
-        """
-        Retrieve the collection of child body parts for the given body part.
+        """Retrieve the collection of child body parts for the given body part.
+
+        Parameter
+        ---------
+        body : BodyDescription | str
+            The body description or body name for which to fetch the children.
         """
 
         if isinstance(body, BodyDescription):
@@ -566,22 +472,28 @@ class RobotDescription:
         return (self._bodies[joint.child] for joint in self._joints.values() if joint.parent == body)
 
     def get_joints(self) -> ValuesView[JointDescription]:
-        """
-        Retrieve the collection of joints.
-        """
+        """Retrieve the collection of joints."""
 
         return self._joints.values()
 
     def get_joint(self, name: str) -> JointDescription | None:
-        """
-        Retrieve the collection of joints.
+        """Retrieve the collection of joints.
+
+        Parameter
+        ---------
+        name : str
+            The name of the joint.
         """
 
         return self._joints.get(name, None)
 
     def get_joint_for(self, body: BodyDescription | str) -> JointDescription | None:
-        """
-        Retrieve the joint description for the given body part description.
+        """Retrieve the joint description for the given body part description.
+
+        Parameter
+        ---------
+        body : BodyDescription | str
+            The body description or body name for which to fetch the joint.
         """
 
         if isinstance(body, BodyDescription):
@@ -599,22 +511,25 @@ class RobotDescription:
         return None
 
     def get_sensors(self) -> ValuesView[SensorDescription]:
-        """
-        Retrieve the collection of sensors.
-        """
+        """Retrieve the collection of sensors."""
 
         return self._sensors.values()
 
     def get_actuators(self) -> ValuesView[ActuatorDescription]:
-        """
-        Retrieve the collection of actuators.
-        """
+        """Retrieve the collection of actuators."""
 
         return self._actuators.values()
 
     def _add_body(self, desc: BodyDescription, *, override: bool = False) -> None:
-        """
-        Add the given body description to the dictionary of bodies.
+        """Add the given body description to the dictionary of bodies.
+
+        Parameter
+        ---------
+        desc : BodyDescription
+            The body description to add.
+
+        override : bool, default=False
+            Flag indicating if overriding an existing body description is intended and should not result in an error.
         """
 
         if not override and desc.name in self._bodies:
@@ -624,8 +539,15 @@ class RobotDescription:
         self._bodies[desc.name] = desc
 
     def _add_joint(self, desc: JointDescription, *, override: bool = False) -> None:
-        """
-        Add the given joint description to the dictionary of joints.
+        """Add the given joint description to the dictionary of joints.
+
+        Parameter
+        ---------
+        desc : JointDescription
+            The joint description to add.
+
+        override : bool, default=False
+            Flag indicating if overriding an existing joint description is intended and should not result in an error.
         """
 
         if not override and desc.name in self._joints:
@@ -635,8 +557,15 @@ class RobotDescription:
         self._joints[desc.name] = desc
 
     def _add_sensor(self, desc: SensorDescription, *, override: bool = False) -> None:
-        """
-        Add the given sensor description to the dictionary of sensors.
+        """Add the given sensor description to the dictionary of sensors.
+
+        Parameter
+        ---------
+        desc : SensorDescription
+            The sensor description to add.
+
+        override : bool, default=False
+            Flag indicating if overriding an existing sensor description is intended and should not result in an error.
         """
 
         if not override and desc.name in self._sensors:
@@ -646,8 +575,15 @@ class RobotDescription:
         self._sensors[desc.name] = desc
 
     def _add_actuator(self, desc: ActuatorDescription, *, override: bool = False) -> None:
-        """
-        Add the given actuator description to the dictionary of actuators.
+        """Add the given actuator description to the dictionary of actuators.
+
+        Parameter
+        ---------
+        desc : ActuatorDescription
+            The actuator description to add.
+
+        override : bool, default=False
+            Flag indicating if overriding an existing actuator description is intended and should not result in an error.
         """
 
         if not override and desc.name in self._actuators:

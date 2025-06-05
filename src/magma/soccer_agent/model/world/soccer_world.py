@@ -17,61 +17,39 @@ from magma.soccer_agent.model.world.soccer_objects import (
 
 
 class PSoccerWorld(Protocol):
-    """
-    Soccer domain specific robot model.
-    """
+    """Soccer domain specific robot model."""
 
     def get_time(self) -> float:
-        """
-        Retrieve the time of the last update.
-        """
+        """Retrieve the time of the last update."""
 
     def get_point_landmarks(self) -> Sequence[PointLandmark]:
-        """
-        Retrieve the collection of known point landmarks.
-        """
+        """Retrieve the collection of known point landmarks."""
 
     def get_line_landmarks(self) -> Sequence[LineLandmark]:
-        """
-        Retrieve the collection of known line landmarks.
-        """
+        """Retrieve the collection of known line landmarks."""
 
     def get_ball(self) -> PSoccerBall:
-        """
-        Retrieve the soccer ball representation.
-        """
+        """Retrieve the soccer ball representation."""
 
     def get_this_player(self) -> PThisSoccerPlayer:
-        """
-        Retrieve this agent's representation in the world.
-        """
+        """Retrieve this agent's representation in the world."""
 
     def get_players(self) -> Sequence[PSoccerPlayer]:
-        """
-        Retrieve the collection of soccer player representations within the world (excluding the this-player).
-        """
+        """Retrieve the collection of soccer player representations within the world (excluding the this-player)."""
 
     def get_map_version(self) -> str:
-        """
-        Retrieve the soccer map version.
-        """
+        """Retrieve the soccer map version."""
 
     def get_map(self) -> PSoccerMap:
-        """
-        Retrieve the soccer map.
-        """
+        """Retrieve the soccer map."""
 
 
 class PMutableSoccerWorld(PSoccerWorld, PMutableModel, Protocol):
-    """
-    Soccer domain specific robot model.
-    """
+    """Soccer domain specific robot model."""
 
 
 class SoccerWorld:
-    """
-    Model representing a soccer world.
-    """
+    """Model representing a soccer world."""
 
     def __init__(
         self,
@@ -80,9 +58,24 @@ class SoccerWorld:
         field_desc: PSoccerFieldDescription,
         ball_radius: float,
     ) -> None:
+        """Construct a new soccer world.
+
+        Parameter
+        ---------
+        team_name : str
+            The name of our team.
+
+        player_no : int
+            Our player number.
+
+        field_desc : PSoccerFieldDescription
+            The soccer field description.
+
+        ball_radius : float
+            The radius of the soccer ball.
         """
-        Construct a new soccer world.
-        """
+
+        # self._field_desc: PSoccerFieldDescription = field_desc
 
         self._time: float = 0.0
 
@@ -107,65 +100,47 @@ class SoccerWorld:
         )
 
     def get_time(self) -> float:
-        """
-        Retrieve the time of the last update.
-        """
+        """Retrieve the time of the last update."""
 
         return self._time
 
     def get_point_landmarks(self) -> Sequence[PointLandmark]:
-        """
-        Retrieve the collection of known point landmarks.
-        """
+        """Retrieve the collection of known point landmarks."""
 
         return self._point_landmarks
 
     def get_line_landmarks(self) -> Sequence[LineLandmark]:
-        """
-        Retrieve the collection of known line landmarks.
-        """
+        """Retrieve the collection of known line landmarks."""
 
         return self._line_landmarks
 
     def get_ball(self) -> SoccerBall:
-        """
-        Retrieve the soccer ball representation.
-        """
+        """Retrieve the soccer ball representation."""
 
         return self._ball
 
     def get_this_player(self) -> ThisSoccerPlayer:
-        """
-        Retrieve this agent's representation in the world.
-        """
+        """Retrieve this agent's representation in the world."""
 
         return self._this_player
 
     def get_players(self) -> Sequence[SoccerPlayer]:
-        """
-        Retrieve the collection of soccer player representations within the world (excluding the this-player).
-        """
+        """Retrieve the collection of soccer player representations within the world (excluding the this-player)."""
 
         return self._players
 
     def get_map_version(self) -> str:
-        """
-        Retrieve the soccer map version.
-        """
+        """Retrieve the soccer map version."""
 
         return self._map_version
 
     def get_map(self) -> PSoccerMap:
-        """
-        Retrieve the soccer map.
-        """
+        """Retrieve the soccer map."""
 
         return self._map
 
     def update(self, perception: Perception) -> None:
-        """
-        Update the state of the world model from the given perceptions.
-        """
+        """Update the state of the world model from the given perceptions."""
 
         self._time = perception.get_time()
 

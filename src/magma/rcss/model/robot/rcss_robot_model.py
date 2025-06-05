@@ -15,13 +15,21 @@ if TYPE_CHECKING:
 
 
 class RCSSRobotModel(RobotModel):
-    """
-    Robot model implementation for RoboCup Soccer Simulation.
-    """
+    """Robot model implementation for RoboCup Soccer Simulation."""
 
     def __init__(self, sensors: list[Sensor], actuators: list[Actuator], root_body: BodyPart) -> None:
-        """
-        Construct a new RoboCup Soccer Simulation robot model.
+        """Construct a new RoboCup Soccer Simulation robot model.
+
+        Parameter
+        ---------
+        sensors : Iterable[Sensor]
+            The collection of sensors of the robot model.
+
+        actuators : Iterable[Actuator]
+            The collection of actuators of the robot model.
+
+        root_body : BodyPart
+            The root body part of the robot body tree.
         """
 
         super().__init__(sensors, actuators, root_body)

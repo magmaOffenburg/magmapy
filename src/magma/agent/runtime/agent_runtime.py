@@ -12,13 +12,15 @@ if TYPE_CHECKING:
 
 
 class AgentRuntime:
-    """
-    The agent runtime is the top-level agent definition.
-    """
+    """The agent runtime is the top-level agent definition."""
 
     def __init__(self, factory: PAgentFactory) -> None:
-        """
-        Create a new agent.
+        """Create a new agent.
+
+        Parameter
+        ---------
+        factory : PAgentFactory
+            The agent factory used to create the individual framework components.
         """
 
         # create agent components
@@ -32,9 +34,7 @@ class AgentRuntime:
         self._perception_queue: Queue[Perception] = Queue[Perception]()
 
     def run(self) -> None:
-        """
-        Run the agent.
-        """
+        """Run the agent."""
 
         # start channel manager
         if self._channel_manager.start(self._perception_queue):
@@ -68,16 +68,12 @@ class AgentRuntime:
                 print(e)  # noqa: T201
 
     def shutdown(self) -> None:
-        """
-        Shutdown agent runtime.
-        """
+        """Shutdown agent runtime."""
 
         self._perception_queue.put(Perception(shutdown=True))
 
     def _act(self) -> None:
-        """
-        The central act method of the agent.
-        """
+        """The central act method of the agent."""
 
         # decide and perform behaviors
         self._decision.decide()

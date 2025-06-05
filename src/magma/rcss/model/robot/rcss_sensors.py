@@ -5,19 +5,30 @@ from magma.rcss.communication.rcss_perception import ForceResistancePerceptor
 
 
 class ForceResistance(Sensor):
-    """
-    Force resistance sensor representation.
-    """
+    """Force resistance sensor representation."""
 
     def __init__(self, name: str, frame_id: str, perceptor_name: str) -> None:
-        """
-        Construct a new force resistance sensor.
+        """Construct a new force resistance sensor.
+
+        Parameter
+        ---------
+        name : str
+            The unique name of the sensor.
+
+        frame_id : str
+            The name of the body the sensor is attached to.
+
+        perceptor_name : str
+            The name of the perceptor associated with the sensor.
         """
 
         super().__init__(name, frame_id, perceptor_name)
 
         self._force: Vector3D = V3D_ZERO
+        """The sensed force vector."""
+
         self._origin: Vector3D = V3D_ZERO
+        """The sensed force origin."""
 
     def update(self, perception: Perception) -> None:
         perceptor = perception.get_perceptor(self.perceptor_name, ForceResistancePerceptor)

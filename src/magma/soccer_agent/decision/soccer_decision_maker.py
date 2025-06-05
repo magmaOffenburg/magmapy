@@ -13,13 +13,18 @@ if TYPE_CHECKING:
 
 
 class SoccerDecisionMaker(DecisionMakerBase[PSoccerAgentModel]):
-    """
-    Decision maker for playing soccer.
-    """
+    """Decision maker for playing soccer."""
 
     def __init__(self, model: PSoccerAgentModel, behaviors: dict[str, PBehavior]) -> None:
-        """
-        Construct a new soccer decision maker.
+        """Construct a new soccer decision maker.
+
+        Parameter
+        ---------
+        model : PSoccerAgentModel
+            The soccer agent model.
+
+        behaviors : dict[str, PBehavior]
+            The map of known behaviors.
         """
 
         super().__init__(model, behaviors)
@@ -30,6 +35,7 @@ class SoccerDecisionMaker(DecisionMakerBase[PSoccerAgentModel]):
             self._wait_for_game_start,
             self._move,
         ]
+        """The sequence of decision steps."""
 
     def _decide_next_behavior(self) -> str:
         for supplier in self._behavior_suppliers:
@@ -40,15 +46,12 @@ class SoccerDecisionMaker(DecisionMakerBase[PSoccerAgentModel]):
         return BehaviorID.NONE.value
 
     def _get_ready(self) -> str | None:
-        """
-        Decide if we should get into ready posture.
-        """
+        """Decide if we should get into ready posture."""
 
         return None
 
     def _react_to_game_end(self) -> str | None:
-        """
-        Decide for an appropriate behavior to celebrate our victory!
+        """Decide for an appropriate behavior to celebrate our victory!
 
         Note: The default implementation also covers the very unlikely edge case that we didn't win... ;)
         """
@@ -64,8 +67,6 @@ class SoccerDecisionMaker(DecisionMakerBase[PSoccerAgentModel]):
         return None
 
     def _move(self) -> str | None:
-        """
-        Decide if we should move somewhere or something.
-        """
+        """Decide if we should move somewhere or something."""
 
         return None

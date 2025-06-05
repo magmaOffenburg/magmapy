@@ -16,18 +16,14 @@ if TYPE_CHECKING:
 
 
 def magma_agent() -> None:
-    """
-    Main function for running a magma agent.
-    """
+    """Main function for running a magma agent."""
 
     # there currently only exists a RCSS agent main, so simply forward to that one
     rcsssmj_agent()
 
 
 def rcss_agent() -> None:
-    """
-    Main function for running a magma RCSS agent.
-    """
+    """Main function for running a magma RCSS agent."""
 
     # fetch argument options
     field_versions: list[str] = [str(version.value) for version in RCSSFieldVersion if version != RCSSFieldVersion.UNKNOWN]
@@ -65,9 +61,7 @@ def rcss_agent() -> None:
 
 
 def rcsssmj_agent() -> None:
-    """
-    Main function for running a magma RCSSSMJ agent.
-    """
+    """Main function for running a magma RCSSSMJ agent."""
 
     # fetch argument options
     field_versions: list[str] = [str(version.value) for version in RCSSFieldVersion if version != RCSSFieldVersion.UNKNOWN]

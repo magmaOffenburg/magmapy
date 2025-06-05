@@ -4,9 +4,7 @@ from magma.soccer_agent.model.soccer_rules import SoccerRules
 
 
 class RCSSRules(SoccerRules):
-    """
-    Rule book for the RoboCup Soccer Simulation league.
-    """
+    """Rule book for the RoboCup Soccer Simulation league."""
 
     def __init__(
         self,
@@ -15,9 +13,7 @@ class RCSSRules(SoccerRules):
         kick_off_time: float | None = None,
         throw_in_time: float | None = None,
     ) -> None:
-        """
-        Construct a new RoboCup Soccer Simulation rule book.
-        """
+        """Construct a new RoboCup Soccer Simulation rule book."""
 
         super().__init__(
             match_duration=2 * 300 if duration is None else duration,

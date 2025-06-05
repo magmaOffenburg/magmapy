@@ -9,39 +9,31 @@ from magma.soccer_agent.model.world.soccer_field_description import SoccerFieldD
 
 
 class RCSSFieldVersion(Enum):
-    """
-    Enum specifying the available RoboCup Soccer Simulation league field versions.
-    """
+    """Enum specifying the available RoboCup Soccer Simulation league field versions."""
 
     UNKNOWN = 0
-    """
-    Unknown field version.
-    """
+    """Unknown field version."""
 
     V62 = 62
-    """
-    Version 62 of the soccer field.
-    """
+    """Version 62 of the soccer field."""
 
     V63 = 63
-    """
-    Version 63 of the soccer field.
-    """
+    """Version 63 of the soccer field."""
 
     V64 = 64
-    """
-    Version 64 of the soccer field.
-    """
+    """Version 64 of the soccer field."""
 
     V66 = 66
-    """
-    Version 66 of the soccer field.
-    """
+    """Version 66 of the soccer field."""
 
     @staticmethod
     def from_value(version: int | str) -> RCSSFieldVersion:
-        """
-        Fetch the enum entry corresponding to the given version value.
+        """Fetch the enum entry corresponding to the given version value.
+
+        Parameter
+        ---------
+        version : int | str
+            The field version number.
         """
 
         version = version if type(version) == 'int' else int(version)
@@ -56,8 +48,12 @@ class RCSSFieldVersion(Enum):
 
     @staticmethod
     def create_description_for(version: int | str) -> SoccerFieldDescription:
-        """
-        Create a field description for the given field version.
+        """Create a field description for the given field version.
+
+        Parameter
+        ---------
+        version : int | str
+            The field version number.
         """
 
         version_id = RCSSFieldVersion.from_value(version)
@@ -74,9 +70,7 @@ class RCSSFieldVersion(Enum):
 
 
 class RCSSFieldV62(SoccerFieldDescription):
-    """
-    Class representing the soccer field used by the RoboCup Soccer Simulation version 62.
-    """
+    """Class representing the soccer field used by the RoboCup Soccer Simulation version 62."""
 
     def __init__(
         self,
@@ -87,9 +81,7 @@ class RCSSFieldV62(SoccerFieldDescription):
         middle_circle_radius: float | None = None,
         penalty_spot_distance: float | None = None,
     ) -> None:
-        """
-        Construct a new soccer field description.
-        """
+        """Construct a new soccer field description."""
 
         super().__init__(
             Vector2D(12.0, 8.9) if field_dim is None else field_dim,
@@ -121,9 +113,7 @@ class RCSSFieldV62(SoccerFieldDescription):
 
 
 class RCSSFieldV63(RCSSFieldV62):
-    """
-    Class representing the soccer field used by the RoboCup Soccer Simulation version 63.
-    """
+    """Class representing the soccer field used by the RoboCup Soccer Simulation version 63."""
 
     def __init__(
         self,
@@ -134,9 +124,7 @@ class RCSSFieldV63(RCSSFieldV62):
         middle_circle_radius: float | None = None,
         penalty_spot_distance: float | None = None,
     ) -> None:
-        """
-        Construct a new soccer field description.
-        """
+        """Construct a new soccer field description."""
 
         super().__init__(
             Vector2D(18.0, 12.0) if field_dim is None else field_dim,
@@ -149,9 +137,7 @@ class RCSSFieldV63(RCSSFieldV62):
 
 
 class RCSSFieldV64(RCSSFieldV63):
-    """
-    Class representing the soccer field used by the RoboCup Soccer Simulation version 64.
-    """
+    """Class representing the soccer field used by the RoboCup Soccer Simulation version 64."""
 
     def __init__(
         self,
@@ -162,9 +148,7 @@ class RCSSFieldV64(RCSSFieldV63):
         middle_circle_radius: float | None = None,
         penalty_spot_distance: float | None = None,
     ) -> None:
-        """
-        Construct a new soccer field description.
-        """
+        """Construct a new soccer field description."""
 
         super().__init__(
             Vector2D(21.0, 14.0) if field_dim is None else field_dim,
@@ -225,16 +209,14 @@ class RCSSFieldV64(RCSSFieldV63):
         rad_steps = deg_steps * np.pi / 180.0
         pxs = np.cos(rad_steps) * self._middle_circle_radius
         pys = np.sin(rad_steps) * self._middle_circle_radius
-        mc_points = [Vector3D(px, py, 0) for px, py in zip(pxs, pys)]
+        mc_points = [Vector3D(px, py, 0) for px, py in zip(pxs, pys, strict=False)]
 
         for i in range(len(mc_points) - 1):
             self._add_line(f'MC_{i}-{deg_steps[i]}', l_type, mc_points[i], mc_points[i + 1])
 
 
 class RCSSFieldV66(RCSSFieldV64):
-    """
-    Class representing the soccer field used by the RoboCup Soccer Simulation version 66.
-    """
+    """Class representing the soccer field used by the RoboCup Soccer Simulation version 66."""
 
     def __init__(
         self,
@@ -245,9 +227,7 @@ class RCSSFieldV66(RCSSFieldV64):
         middle_circle_radius: float | None = None,
         penalty_spot_distance: float | None = None,
     ) -> None:
-        """
-        Construct a new soccer field description.
-        """
+        """Construct a new soccer field description."""
 
         super().__init__(
             Vector2D(30.0, 20.0) if field_dim is None else field_dim,

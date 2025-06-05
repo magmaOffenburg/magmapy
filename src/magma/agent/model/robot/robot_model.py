@@ -24,7 +24,7 @@ from magma.agent.model.robot.sensors import (
     Accelerometer,
     Camera,
     FreeJointSensor,
-    Gyroskope,
+    Gyroscope,
     HingeJointSensor,
     Loc2DSensor,
     Loc3DSensor,
@@ -42,114 +42,163 @@ AT = TypeVar('AT')
 
 
 class PRobotModel(Protocol):
-    """
-    Protocol for robot models.
-    """
+    """Protocol for robot models."""
 
     def get_time(self) -> float:
-        """
-        Retrieve the time of the last update.
-        """
+        """Retrieve the time of the last update."""
 
     def get_sensor(self, name: str, s_type: type[ST]) -> ST | None:
-        """
-        Retrieve the sensor with the given name and type.
+        """Retrieve the sensor with the given name and type.
+
+        Parameter
+        ---------
+        name : str
+            The name of the sensor.
+
+        s_type : type[ST]
+            The expected sensor type.
         """
 
     def get_sensors(self, s_type: type[ST]) -> Generator[ST]:
-        """
-        Retrieve all sensors of the given type.
+        """Retrieve all sensors of the given type.
+
+        Parameter
+        ---------
+        s_type : type[ST]
+            The sensor type to filter.
         """
 
     def get_actuator(self, name: str, a_type: type[AT]) -> AT | None:
-        """
-        Retrieve the actuator with the given name and type.
+        """Retrieve the actuator with the given name and type.
+
+        Parameter
+        ---------
+        name : str
+            The name of the actuator.
+
+        a_type : type[AT]
+            The expected actuator type.
         """
 
     def get_actuators(self, a_type: type[AT]) -> Generator[AT]:
-        """
-        Retrieve all actuators of the given type.
+        """Retrieve all actuators of the given type.
+
+        Parameter
+        ---------
+        a_type : type[AT]
+            The actuator type to filter.
         """
 
     def get_tree(self) -> PBodyPart:
-        """
-        Retrieve the robot tree.
-        """
+        """Retrieve the robot tree."""
 
 
 class PMutableRobotModel(PRobotModel, PMutableModel, Protocol):
-    """
-    Protocol for mutable robot models.
-    """
+    """Protocol for mutable robot models."""
 
     def generate_action(self) -> Action:
-        """
-        Generate a set of actions from all available actuators.
-        """
+        """Generate a set of actions from all available actuators."""
 
 
 class RobotModel:
-    """
-    Default robot model implementation.
-    """
+    """Default robot model implementation."""
 
     def __init__(self, sensors: Iterable[Sensor], actuators: Iterable[Actuator], root_body: BodyPart) -> None:
-        """
-        Construct a new robot model.
+        """Construct a new robot model.
+
+        Parameter
+        ---------
+        sensors : Iterable[Sensor]
+            The collection of sensors of the robot model.
+
+        actuators : Iterable[Actuator]
+            The collection of actuators of the robot model.
+
+        root_body : BodyPart
+            The root body part of the robot body tree.
         """
 
         self._time: float = 0.0
+        """The current global time."""
+
         self._sensors: dict[str, Sensor] = {sensor.name: sensor for sensor in sensors}
+        """The map of known sensors."""
+
         self._actuators: dict[str, Actuator] = {actuator.name: actuator for actuator in actuators}
+        """The map of known actuators."""
+
         self._root_body: BodyPart = root_body
+        """The root body part of the robot body tree."""
 
     def get_time(self) -> float:
-        """
-        Retrieve the time of the last update.
-        """
+        """Retrieve the time of the last update."""
 
         return self._time
 
     def get_sensor(self, name: str, s_type: type[ST]) -> ST | None:
-        """
-        Retrieve the sensor with the given name and type.
+        """Retrieve the sensor with the given name and type.
+
+        Parameter
+        ---------
+        name : str
+            The name of the sensor.
+
+        s_type : type[ST]
+            The expected sensor type.
         """
 
         sensor = self._sensors.get(name, None)
         return sensor if sensor is not None and isinstance(sensor, s_type) else None
 
     def get_sensors(self, s_type: type[ST]) -> Generator[ST]:
-        """
-        Retrieve all sensors of the given type.
+        """Retrieve all sensors of the given type.
+
+        Parameter
+        ---------
+        s_type : type[ST]
+            The sensor type to filter.
         """
 
         return (sensor for sensor in self._sensors.values() if isinstance(sensor, s_type))
 
     def get_actuator(self, name: str, a_type: type[AT]) -> AT | None:
-        """
-        Retrieve the actuator with the given name and type.
+        """Retrieve the actuator with the given name and type.
+
+        Parameter
+        ---------
+        name : str
+            The name of the actuator.
+
+        a_type : type[AT]
+            The expected actuator type.
         """
 
         actuator = self._actuators.get(name, None)
         return actuator if actuator is not None and isinstance(actuator, a_type) else None
 
     def get_actuators(self, a_type: type[AT]) -> Generator[AT]:
-        """
-        Retrieve all actuators of the given type.
+        """Retrieve all actuators of the given type.
+
+        Parameter
+        ---------
+        a_type : type[AT]
+            The actuator type to filter.
         """
 
         return (actuator for actuator in self._actuators.values() if isinstance(actuator, a_type))
 
     def get_tree(self) -> BodyPart:
-        """
-        Retrieve the robot tree.
-        """
+        """Retrieve the robot tree."""
 
         return self._root_body
 
     def update(self, perception: Perception) -> None:
-        """
-        Update the state of the robot model from the given perceptions.
+        """Update the state of the robot model from the given perceptions.
+
+        Parameter
+        ---------
+        perception : Perception
+            The collection of perceived sensor information to process.
         """
 
         self._time = perception.get_time()
@@ -159,9 +208,7 @@ class RobotModel:
             sensor.update(perception)
 
     def generate_action(self) -> Action:
-        """
-        Generate a set of actions from all available actuators.
-        """
+        """Generate a set of actions from all available actuators."""
 
         action = Action()
 
@@ -173,8 +220,12 @@ class RobotModel:
 
     @classmethod
     def from_description(cls, desc: PRobotDescription) -> RobotModel:
-        """
-        Construct a new robot model from the given description.
+        """Construct a new robot model from the given description.
+
+        Parameter
+        ---------
+        desc : PRobotDescription
+            The robot description from which to create a new robot model instance.
         """
 
         sensors: list[Sensor] = []
@@ -199,8 +250,21 @@ class RobotModel:
 
     @classmethod
     def _create_body(cls, body: BodyDescription, robot: PRobotDescription, sensors: list[Sensor], actuators: list[Actuator]) -> BodyPart:
-        """
-        Create a body part representation for the given description.
+        """Create a body part representation for the given description.
+
+        Parameter
+        ---------
+        body : BodyDescription
+            The description of the body to create.
+
+        robot : PRobotDescription
+            The robot description.
+
+        sensors : list[Sensor]
+            The central sensor list to which to add new sensors attached to the body.
+
+        actuators : list[Actuator]
+            The central actuators list to which to add new actuators attached to the body.
         """
 
         # create child body parts
@@ -220,8 +284,18 @@ class RobotModel:
 
     @classmethod
     def _create_joint(cls, desc: JointDescription | None, sensors: list[Sensor], actuators: list[Actuator]) -> Joint | None:
-        """
-        Create a joint representation for the given description.
+        """Create a joint representation for the given description.
+
+        Parameter
+        ---------
+        body : JointDescription | None
+            The description of the joint to create (if existing).
+
+        sensors : list[Sensor]
+            The central sensor list to which to add new sensors attached to the body.
+
+        actuators : list[Actuator]
+            The central actuators list to which to add new actuators attached to the body.
         """
 
         joint: Joint | None = None
@@ -251,12 +325,16 @@ class RobotModel:
 
     @classmethod
     def _create_sensor(cls, desc: SensorDescription) -> Sensor | None:
-        """
-        Create a sensor representation for the given description.
+        """Create a sensor representation for the given description.
+
+        Parameter
+        ---------
+        desc : SensorDescription
+            The description for which to create a sensor instance.
         """
 
         if desc.sensor_type == SensorType.GYRO.value:
-            return Gyroskope(desc.name, desc.frame_id, desc.perceptor_name)
+            return Gyroscope(desc.name, desc.frame_id, desc.perceptor_name)
 
         if desc.sensor_type == SensorType.ACCELEROMETER.value:
             return Accelerometer(desc.name, desc.frame_id, desc.perceptor_name)
@@ -279,8 +357,12 @@ class RobotModel:
 
     @classmethod
     def _create_actuator(cls, desc: ActuatorDescription) -> Actuator | None:
-        """
-        Create an actuator representation for the given description.
+        """Create an actuator representation for the given description.
+
+        Parameter
+        ---------
+        desc : ActuatorDescription
+            The description for which to create a actuator instance.
         """
 
         if desc.actuator_type == ActuatorType.OMNI_SPEED.value:

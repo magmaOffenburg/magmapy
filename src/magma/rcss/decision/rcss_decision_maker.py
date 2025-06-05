@@ -10,13 +10,18 @@ if TYPE_CHECKING:
 
 
 class RCSSDecisionMaker(SoccerDecisionMaker):
-    """
-    Decision maker for playing soccer.
-    """
+    """Decision maker for playing soccer."""
 
     def __init__(self, model: PSoccerAgentModel, behaviors: dict[str, PBehavior]) -> None:
-        """
-        Construct a new soccer decision maker.
+        """Construct a new soccer decision maker.
+
+        Parameter
+        ---------
+        model : PSoccerAgentModel
+            The soccer agent model.
+
+        behaviors : dict[str, PBehavior]
+            The map of known behaviors.
         """
 
         super().__init__(model, behaviors)
