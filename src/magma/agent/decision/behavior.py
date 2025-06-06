@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import TYPE_CHECKING, Final, Protocol
+from typing import TYPE_CHECKING, Final, Protocol, runtime_checkable
 
 if TYPE_CHECKING:
     from collections.abc import Mapping, Sequence
@@ -17,7 +17,11 @@ class BehaviorID(Enum):
     INIT = 'init'
     """The init behavior used to initialize a robot."""
 
+    MOVE = 'move'
+    """The move behavior used to move a robot."""
 
+
+@runtime_checkable
 class PBehavior(Protocol):
     """Base protocol for behaviors."""
 
@@ -59,6 +63,14 @@ class PBehavior(Protocol):
         new_behavior : PBehavior
             The new behavior, which will replace this behavior.
         """
+
+
+@runtime_checkable
+class PComplexBehavior(Protocol, PBehavior):
+    """Base protocol for complex behaviors."""
+
+    def get_current_behavior(self) -> PBehavior:
+        """Return the currently active behavior."""
 
 
 class Behavior(ABC):
@@ -299,19 +311,3 @@ def get_behavior_chain(reference: PBehavior) -> Sequence[PBehavior]:
         chain.append(ref)
 
     return chain
-
-
-class NoneBehavior(Behavior):
-    """A behavior that does nothing."""
-
-    def __init__(self) -> None:
-        """Construct a new none-behavior."""
-
-        super().__init__(BehaviorID.NONE.value)
-
-    def perform(self) -> None:
-        # does intentionally nothing
-        pass
-
-    def is_finished(self) -> bool:
-        return True

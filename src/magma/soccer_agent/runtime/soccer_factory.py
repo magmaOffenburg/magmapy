@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
 
 from magma.agent.communication.channel_manager import PChannelManager
-from magma.agent.decision.behavior import NoneBehavior, PBehavior
+from magma.agent.decision.behavior import PBehavior
+from magma.agent.decision.behaviors import NoneBehavior
 from magma.agent.decision.decision_maker import PDecisionMaker
 from magma.agent.model.robot.robot_description import PRobotDescription
 from magma.agent.model.robot.robot_model import PMutableRobotModel, RobotModel
