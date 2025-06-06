@@ -71,7 +71,7 @@ class RCSSSMJAgentFactory(SoccerAgentFactory):
         behaviors: dict[str, PBehavior] = super()._create_behaviors(model)
 
         def add_behavior(behavior: PBehavior) -> None:
-            behaviors[behavior.get_name()] = behavior
+            behaviors[behavior.name] = behavior
 
         add_behavior(InitBehavior(model))
 

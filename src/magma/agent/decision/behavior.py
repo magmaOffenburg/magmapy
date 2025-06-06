@@ -2,7 +2,10 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import Protocol
+from typing import TYPE_CHECKING, Final, Protocol
+
+if TYPE_CHECKING:
+    from collections.abc import Mapping, Sequence
 
 
 class BehaviorID(Enum):
@@ -18,8 +21,9 @@ class BehaviorID(Enum):
 class PBehavior(Protocol):
     """Base protocol for behaviors."""
 
-    def get_name(self) -> str:
-        """Retrieve the unique name of the behavior."""
+    @property
+    def name(self) -> str:
+        """The unique name of the behavior."""
 
     def perform(self) -> None:
         """Perform the next step of this behavior."""
@@ -27,13 +31,33 @@ class PBehavior(Protocol):
     def is_finished(self) -> bool:
         """Check if the behavior is finished."""
 
-    def switch_to(self, behavior: PBehavior) -> PBehavior:
-        """Try switching to the given behavior.
+    def init(self) -> None:
+        """(Re-)initialize the state machine of the behavior (if existing)."""
+
+    def abort(self) -> None:
+        """Abort this behavior (hard stop)."""
+
+    def switch_from(self, actual_behavior: PBehavior) -> PBehavior:
+        """Try switching from the currently active behavior to this behavior.
 
         Parameter
         ---------
+        actual_behavior : PBehavior
+            The currently active behavior.
+
+        Returns
+        -------
         behavior : PBehavior
-            The target behavior (intended to replace this behavior).
+            Self, if it is possible to switch to this behavior, otherwise the currently active behavior is returned.
+        """
+
+    def on_leaving_behavior(self, new_behavior: PBehavior) -> None:
+        """Notify this behavior that it is no longer performed and replaced by the new behavior.
+
+        Parameter
+        ---------
+        new_behavior : PBehavior
+            The new behavior, which will replace this behavior.
         """
 
 
@@ -41,14 +65,16 @@ class Behavior(ABC):
     """The behavior class for representing agent action threads."""
 
     def __init__(self, name: str) -> None:
-        """Construct a new behavior."""
+        """Construct a new behavior.
 
-        self._name = name
+        Parameter
+        ---------
+        name : str
+            The unique name of the behavior.
+        """
 
-    def get_name(self) -> str:
-        """Retrieve the unique name of the behavior."""
-
-        return self._name
+        self.name: Final[str] = name
+        """The unique name of the behavior."""
 
     @abstractmethod
     def perform(self) -> None:
@@ -58,16 +84,221 @@ class Behavior(ABC):
     def is_finished(self) -> bool:
         """Check if the behavior is finished."""
 
-    def switch_to(self, behavior: PBehavior) -> PBehavior:
-        """Try switching to the given behavior.
+    def init(self) -> None:
+        """(Re-)initialize the state machine of the behavior (if existing)."""
+
+    def abort(self) -> None:
+        """Abort this behavior (hard stop)."""
+
+        self.init()
+
+    def switch_from(self, actual_behavior: PBehavior) -> PBehavior:
+        """Try switching from the currently active behavior to this behavior.
 
         Parameter
         ---------
+        actual_behavior : PBehavior
+            The currently active behavior.
+
+        Returns
+        -------
         behavior : PBehavior
-            The target behavior (intended to replace this behavior).
+            Self, if it is possible to switch to this behavior, otherwise the currently active behavior is returned.
         """
 
-        return behavior if self.is_finished() else self
+        if actual_behavior.is_finished():
+            actual_behavior.on_leaving_behavior(self)
+            return self
+
+        return actual_behavior
+
+    def on_leaving_behavior(self, new_behavior: PBehavior) -> None:
+        """Notify this behavior that it is no longer performed and replaced by the new behavior.
+
+        Parameter
+        ---------
+        new_behavior : PBehavior
+            The new behavior, which will replace this behavior.
+        """
+
+        if new_behavior != self:
+            self.init()
+
+
+class ComplexBehavior(Behavior):
+    """Base class for complex behaviors."""
+
+    def __init__(self, name: str, behaviors: Mapping[str, PBehavior]) -> None:
+        """Construct a new complex behavior.
+
+        Parameter
+        ---------
+        name : str
+            The unique name of the behavior.
+
+        behaviors : dict[str, PBehavior]
+            The map of known behaviors.
+        """
+
+        super().__init__(name)
+
+        self._behaviors: Mapping[str, PBehavior] = behaviors
+        """The map of known behaviors."""
+
+        self._current_behavior: PBehavior = behaviors[BehaviorID.NONE.value]
+        """The currently active sub behavior."""
+
+    def get_current_behavior(self) -> PBehavior:
+        """Return the currently active behavior."""
+
+        return self._current_behavior
+
+    @abstractmethod
+    def _decide(self) -> Sequence[PBehavior]:
+        """Decide for a list of possible sub behaviors, sorted from the most to the least preferred behavior."""
+
+    def perform(self) -> None:
+        # decide which sub behavior(s) to perform next
+        desired_behaviors = self._decide()
+        next_behavior = self._current_behavior
+
+        for behavior in desired_behaviors:
+            # check if desired behavior is already active
+            if behavior == self._current_behavior:
+                next_behavior = self._current_behavior
+                break
+
+            # try to switch to the desired behavior
+            next_behavior = behavior.switch_from(self._current_behavior)
+            if next_behavior == behavior:
+                # behavior switch was successful
+                break
+
+        # check for behavior switch
+        if next_behavior != self._current_behavior:
+            self._current_behavior = next_behavior
+
+        # forward call to current behavior
+        self._current_behavior.perform()
+
+    def is_finished(self) -> bool:
+        return self._current_behavior.is_finished()
+
+    def init(self) -> None:
+        super().init()
+
+        # We have to reset the current behavior.
+        # Otherwise, on the next invocation of this complex behavior, the old "current behavior" will be asked if is is finished, which doesn't make much sense.
+        self._current_behavior = self._behaviors[BehaviorID.NONE.value]
+
+    def abort(self) -> None:
+        self._current_behavior.abort()
+        super().abort()
+
+    def switch_from(self, actual_behavior: PBehavior) -> PBehavior:
+        # decide which sub behavior(s) to perform next
+        desired_behaviors = self._decide()
+
+        for behavior in desired_behaviors:
+            # if the desired behavior is already in execution, directly switch to this behavior
+            if is_behavior_in_execution(behavior, actual_behavior):
+                if actual_behavior != behavior:
+                    actual_behavior.on_leaving_behavior(behavior)
+
+                # initialize this complex behavior
+                self._current_behavior = behavior
+                return self
+
+            # if the desired behavior is not already in execution, try to switch to it
+            if behavior == behavior.switch_from(actual_behavior):
+                self._current_behavior = behavior
+                return self
+
+        return actual_behavior
+
+    def on_leaving_behavior(self, new_behavior: PBehavior) -> None:
+        if new_behavior == self:
+            return
+
+        if self._current_behavior != new_behavior:
+            self._current_behavior.on_leaving_behavior(new_behavior)
+
+        super().on_leaving_behavior(new_behavior)
+
+
+class SingleComplexBehavior(ComplexBehavior):
+    """Base class for complex behaviors that decide for a single sub behavior."""
+
+    def __init__(self, name: str, behaviors: Mapping[str, PBehavior]) -> None:
+        """Construct a new complex behavior.
+
+        Parameter
+        ---------
+        name : str
+            The unique name of the behavior.
+
+        behaviors : dict[str, PBehavior]
+            The map of known behaviors.
+        """
+
+        super().__init__(name, behaviors)
+
+    def _decide(self) -> Sequence[PBehavior]:
+        """Decide for a list of possible sub behaviors, sorted from the most to the least preferred behavior."""
+
+        return (self._decide_next(),)
+
+    @abstractmethod
+    def _decide_next(self) -> PBehavior:
+        """Decide for the next sub behavior to perform."""
+
+
+def is_behavior_in_execution(testee: PBehavior, reference: PBehavior) -> bool:
+    """Check if the testee behavior is in execution by the reference behavior.
+
+    Parameter
+    ---------
+    testee : PBehavior
+        The behavior we are looking for.
+
+    reference : PBehavior
+        The reference behavior in which to search for the testee
+    """
+
+    ref = reference
+
+    while ref is not None and isinstance(ref, ComplexBehavior):
+        if testee == ref:
+            return True
+
+        ref = ref.get_current_behavior()
+
+    return testee == ref
+
+
+def get_behavior_chain(reference: PBehavior) -> Sequence[PBehavior]:
+    """Collect the chain of behaviors in execution by the given reference behavior.
+
+    Parameter
+    ---------
+    reference : PBehavior
+        The top-level behavior to expand.
+    """
+
+    chain: list[PBehavior] = []
+    ref = reference
+
+    # traverse down the chain of complex behaviors
+    while ref is not None and isinstance(ref, ComplexBehavior):
+        chain.append(ref)
+
+        ref = ref.get_current_behavior()
+
+    # append the final basic behavior
+    if ref is not None:
+        chain.append(ref)
+
+    return chain
 
 
 class NoneBehavior(Behavior):

@@ -116,7 +116,7 @@ class SoccerAgentFactory(ABC):
         behaviors: dict[str, PBehavior] = {}
 
         def add_behavior(behavior: PBehavior) -> None:
-            behaviors[behavior.get_name()] = behavior
+            behaviors[behavior.name] = behavior
 
         add_behavior(NoneBehavior())
 

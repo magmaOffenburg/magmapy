@@ -105,7 +105,7 @@ class DecisionMakerBase(Generic[MT], ABC):
 
         # try switching to the requested behavior
         if self._desired_behavior != self._current_behavior:
-            self._current_behavior = self._current_behavior.switch_to(self._desired_behavior)
+            self._current_behavior = self._desired_behavior.switch_from(self._current_behavior)
 
         # perform current behavior
         # print(f'Performing {self._decision_counter}: {self._current_behavior.get_name()}')
