@@ -17,6 +17,9 @@ class BehaviorID(Enum):
     INIT = 'init'
     """The init behavior used to initialize a robot."""
 
+    GET_READY = 'get_ready'
+    """The get-ready behavior used bring the robot into a predefined save ready state / posture."""
+
     MOVE = 'move'
     """The move behavior used to move a robot."""
 
