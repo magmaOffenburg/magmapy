@@ -154,7 +154,7 @@ class ComplexBehavior(Behavior):
 
         super().__init__(name)
 
-        self._behaviors: Mapping[str, PBehavior] = behaviors
+        self.behaviors: Final[Mapping[str, PBehavior]] = behaviors
         """The map of known behaviors."""
 
         self._current_behavior: PBehavior = behaviors[BehaviorID.NONE.value]
@@ -201,7 +201,7 @@ class ComplexBehavior(Behavior):
 
         # We have to reset the current behavior.
         # Otherwise, on the next invocation of this complex behavior, the old "current behavior" will be asked if is is finished, which doesn't make much sense.
-        self._current_behavior = self._behaviors[BehaviorID.NONE.value]
+        self._current_behavior = self.behaviors[BehaviorID.NONE.value]
 
     def abort(self) -> None:
         self._current_behavior.abort()
@@ -210,6 +210,10 @@ class ComplexBehavior(Behavior):
     def switch_from(self, actual_behavior: PBehavior) -> PBehavior:
         # decide which sub behavior(s) to perform next
         desired_behaviors = self._decide()
+
+        if not desired_behaviors:
+            # if no explicit decision is made default to the NONE behavior
+            desired_behaviors = (self.behaviors[BehaviorID.NONE.value],)
 
         for behavior in desired_behaviors:
             # if the desired behavior is already in execution, directly switch to this behavior
@@ -258,10 +262,12 @@ class SingleComplexBehavior(ComplexBehavior):
     def _decide(self) -> Sequence[PBehavior]:
         """Decide for a list of possible sub behaviors, sorted from the most to the least preferred behavior."""
 
-        return (self._decide_next(),)
+        desired_behavior = self._decide_next()
+
+        return (self.behaviors[BehaviorID.NONE.value],) if desired_behavior is None else (desired_behavior,)
 
     @abstractmethod
-    def _decide_next(self) -> PBehavior:
+    def _decide_next(self) -> PBehavior | None:
         """Decide for the next sub behavior to perform."""
 
 
