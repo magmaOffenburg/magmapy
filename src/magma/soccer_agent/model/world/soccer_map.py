@@ -147,8 +147,8 @@ class SoccerMap(FeatureMap):
             desc.get_middle_circle_radius(),
             desc.get_penalty_spot_distance(),
         )
-        s_map.set_point_features(tuple(PointFeature(f.get_name(), f.get_type(), f.get_known_position()) for f in desc.get_point_features()))
-        s_map.set_line_features(tuple(LineFeature(f.get_name(), f.get_type(), f.get_known_position1(), f.get_known_position2()) for f in desc.get_line_features()))
+        s_map.set_point_features(tuple(PointFeature(f.name, f.get_type(), f.get_known_position()) for f in desc.get_point_features()))
+        s_map.set_line_features(tuple(LineFeature(f.name, f.get_type(), f.get_known_position1(), f.get_known_position2()) for f in desc.get_line_features()))
 
         return s_map
 

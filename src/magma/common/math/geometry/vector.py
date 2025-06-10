@@ -45,6 +45,20 @@ class Vector2D:
 
         return self.__mul__(scalar)
 
+    def __truediv__(self, scalar: float) -> Vector2D:
+        """
+        Element-wise division with scalar.
+        """
+
+        return Vector2D(self.x / scalar, self.y / scalar)
+
+    def __floordiv__(self, scalar: float) -> Vector2D:
+        """
+        Element-wise integer division (floor division).
+        """
+
+        return Vector2D(self.x // scalar, self.y // scalar)
+
     def __neg__(self) -> Vector2D:
         """
         Element-wise negation.
@@ -232,6 +246,20 @@ class Vector3D:
         """
 
         return self.__mul__(scalar)
+
+    def __truediv__(self, scalar: float) -> Vector3D:
+        """
+        Element-wise division with scalar.
+        """
+
+        return Vector3D(self.x / scalar, self.y / scalar, self.z / scalar)
+
+    def __floordiv__(self, scalar: float) -> Vector3D:
+        """
+        Element-wise integer division (floor division).
+        """
+
+        return Vector3D(self.x // scalar, self.y // scalar, self.z // scalar)
 
     def __neg__(self) -> Vector3D:
         """

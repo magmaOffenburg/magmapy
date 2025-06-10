@@ -80,8 +80,8 @@ class SoccerWorld:
         self._time: float = 0.0
 
         # world objects
-        self._point_landmarks: tuple[PointLandmark, ...] = tuple(PointLandmark(f.get_name(), f.get_type(), f.get_known_position()) for f in field_desc.get_point_features())
-        self._line_landmarks: tuple[LineLandmark, ...] = tuple(LineLandmark(f.get_name(), f.get_type(), f.get_known_position1(), f.get_known_position2()) for f in field_desc.get_line_features())
+        self._point_landmarks: tuple[PointLandmark, ...] = tuple(PointLandmark(f.name, f.get_type(), f.get_known_position()) for f in field_desc.get_point_features())
+        self._line_landmarks: tuple[LineLandmark, ...] = tuple(LineLandmark(f.name, f.get_type(), f.get_known_position1(), f.get_known_position2()) for f in field_desc.get_line_features())
         self._ball: SoccerBall = SoccerBall(ball_radius)
         self._this_player: ThisSoccerPlayer = ThisSoccerPlayer(team_name, player_no)
         self._players: tuple[SoccerPlayer, ...] = ()

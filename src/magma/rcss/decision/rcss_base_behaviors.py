@@ -18,21 +18,19 @@ class InitBehavior(Behavior):
         Parameter
         ---------
         model : PSoccerAgentModel
-            The agent
+            The agent mode instance.
         """
 
         super().__init__(BehaviorID.INIT.value)
 
         self._model = model
+        """The soccer agent model."""
 
         self._create_actuator: CreateActuator | None = self._model.get_robot().get_actuator('create', CreateActuator)
+        """The create actuator in case a create action has to be performed."""
+
         self._init_actuator: InitActuator | None = self._model.get_robot().get_actuator('init', InitActuator)
-
-        if self._create_actuator is None:
-            print('WARNING: Robot model has no create actuator with the name "create"!')  # noqa: T201
-
-        if self._init_actuator is None:
-            print('WARNING: Robot model has no initialization actuator with the name "init"!')  # noqa: T201
+        """The init actuator in case an init action has to be performed."""
 
     def perform(self) -> None:
         if self._create_actuator is not None:
@@ -41,7 +39,7 @@ class InitBehavior(Behavior):
 
         elif self._init_actuator is not None:
             this_player = self._model.get_world().get_this_player()
-            self._init_actuator.set(this_player.get_team(), this_player.get_player_no())
+            self._init_actuator.set(this_player.team_name, this_player.player_no)
             self._init_actuator = None
 
     def is_finished(self) -> bool:

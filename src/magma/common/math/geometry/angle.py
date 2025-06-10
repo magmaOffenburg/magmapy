@@ -66,6 +66,9 @@ class Angle2D:
 
         return Angle2D(-self.angle)
 
+    def __abs__(self) -> Angle2D:
+        return Angle2D(abs(self.angle))
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Angle2D):
             return self.angle == other.angle
@@ -202,6 +205,14 @@ def angle_to(point: Vector2D) -> Angle2D:
     """
 
     return Angle2D(atan2(point.y, point.x))
+
+
+def angle_to_xy(x: float, y: float) -> Angle2D:
+    """
+    Construct a new Angle2D from the angle to the given point.
+    """
+
+    return Angle2D(atan2(y, x))
 
 
 ANGLE_ZERO: Final[Angle2D] = Angle2D(0)

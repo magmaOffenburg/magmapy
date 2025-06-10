@@ -1,30 +1,35 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Protocol
+from typing import TYPE_CHECKING, Final, Protocol
 
-from magma.agent.model.world.objects import MovableObject
+from magma.agent.model.world.objects import MovableObject, PMovableObject
 
 if TYPE_CHECKING:
+    from magma.common.math.geometry.rotation import Rotation3D
     from magma.common.math.geometry.vector import Vector3D
 
 
-class PSoccerBall(Protocol):
+class PSoccerBall(PMovableObject, Protocol):
     """Protocol for a soccer ball object."""
 
-    def get_radius(self) -> float:
-        """Retrieve the radius of the ball."""
+    @property
+    def radius(self) -> float:
+        """The radius of the ball."""
 
 
-class PSoccerPlayer(Protocol):
+class PSoccerPlayer(PMovableObject, Protocol):
     """Protocol for soccer players."""
 
-    def get_team(self) -> str:
-        """Retrieve the team name of the player."""
+    @property
+    def team_name(self) -> str:
+        """The name of the team the player belongs to."""
 
-    def get_player_no(self) -> int:
-        """Retrieve the player number of the player."""
+    @property
+    def player_no(self) -> int:
+        """The player number of the player."""
 
-    def is_own_team(self) -> bool:
+    @property
+    def own_team(self) -> bool:
         """Flag representing if the player is our teammate."""
 
 
@@ -39,7 +44,7 @@ class SoccerBall(MovableObject):
         self,
         radius: float,
         position: Vector3D | None = None,
-        velocity: Vector3D | None = None,
+        orientation: Rotation3D | None = None,
     ) -> None:
         """Construct a new soccer ball object.
 
@@ -49,21 +54,18 @@ class SoccerBall(MovableObject):
             The radius of the ball.
 
         position : Vector3D | None, default=None
-            The initial position of the ball.
+            The initial position of the soccer ball.
+            If ``None``, the global position is initialized to zero.
 
-        velocity : Vector3D | None, default=None
-            The initial velocity of the ball.
+        orientation : Rotation3D | None, default=None
+            The initial global orientation of the soccer ball.
+            If ``None``, the global orientation is initialized to the identity.
         """
 
-        super().__init__('ball', position, velocity)
+        super().__init__('ball', position, orientation)
 
-        self._radius = radius
+        self.radius: Final[float] = radius
         """The radius of the ball."""
-
-    def get_radius(self) -> float:
-        """Retrieve the radius of the ball."""
-
-        return self._radius
 
 
 class SoccerPlayer(MovableObject):
@@ -76,7 +78,7 @@ class SoccerPlayer(MovableObject):
         *,
         own_team: bool,
         position: Vector3D | None = None,
-        velocity: Vector3D | None = None,
+        orientation: Rotation3D | None = None,
     ) -> None:
         """Construct a new soccer player object.
 
@@ -93,48 +95,29 @@ class SoccerPlayer(MovableObject):
 
         position : Vector3D | None, default=None
             The initial position of the player.
+            If ``None``, the global position is initialized to zero.
 
-        velocity : Vector3D | None, default=None
-            The initial velocity of the player.
+        orientation : Rotation3D | None, default=None
+            The initial global orientation of the player.
+            If ``None``, the global orientation is initialized to the identity.
         """
 
-        super().__init__(f'{team_name}{player_no}', position, velocity)
+        super().__init__(f'{team_name}{player_no}', position, orientation)
 
-        self._team_name: str = team_name
+        self.team_name: Final[str] = team_name
         """The name of the team this player belongs to."""
 
-        self._player_no: int = player_no
+        self.player_no: Final[int] = player_no
         """The player number."""
 
-        self._own_team: bool = own_team
+        self.own_team: Final[bool] = own_team
         """Flag indicating if the player is in our team or not."""
-
-    def get_team(self) -> str:
-        """Retrieve the team name of the player."""
-
-        return self._team_name
-
-    def get_player_no(self) -> int:
-        """Retrieve the player number of the player."""
-
-        return self._player_no
-
-    def is_own_team(self) -> bool:
-        """Flag representing if the player is our team mate."""
-
-        return self._own_team
 
 
 class ThisSoccerPlayer(SoccerPlayer):
     """Default this-soccer-player implementation."""
 
-    def __init__(
-        self,
-        team_name: str,
-        player_no: int,
-        position: Vector3D | None = None,
-        velocity: Vector3D | None = None,
-    ) -> None:
+    def __init__(self, team_name: str, player_no: int) -> None:
         """Construct a new this-soccer-player.
 
         Parameter
@@ -144,12 +127,6 @@ class ThisSoccerPlayer(SoccerPlayer):
 
         player_no: int,
             Our player number.
-
-        position : Vector3D | None, default=None
-            The initial position of ourself.
-
-        velocity : Vector3D | None, default=None
-            The initial velocity of ourself.
         """
 
-        super().__init__(team_name, player_no, own_team=True, position=position, velocity=velocity)
+        super().__init__(team_name, player_no, own_team=True)
