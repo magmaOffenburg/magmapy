@@ -1,23 +1,7 @@
-from typing import Protocol, runtime_checkable
-
-from magma.agent.decision.behavior import Behavior, BehaviorID, PBehavior
+from magma.agent.decision.behavior import Behavior, BehaviorID
 from magma.agent.model.agent_model import PAgentModel
 from magma.agent.model.robot.actuators import OmniSpeedActuator
 from magma.common.math.geometry.vector import Vector3D
-
-
-@runtime_checkable
-class PMoveBehavior(Protocol, PBehavior):
-    """Protocol for move behaviors."""
-
-    def set(self, desired_speed: Vector3D) -> None:
-        """Set the desired movement speed.
-
-        Parameter
-        ---------
-        desired_speed : Vector3D
-            The desired movement speed vector (x, y, theta).
-        """
 
 
 class NoneBehavior(Behavior):

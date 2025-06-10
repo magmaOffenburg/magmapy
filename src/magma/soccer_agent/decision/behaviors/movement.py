@@ -1,8 +1,7 @@
 from collections.abc import Mapping
 from typing import Final
 
-from magma.agent.decision.behavior import BehaviorID, PBehavior, SingleComplexBehavior
-from magma.agent.decision.behaviors import PMoveBehavior
+from magma.agent.decision.behavior import BehaviorID, PBehavior, PMoveBehavior, SingleComplexBehavior
 from magma.common.math.geometry.angle import angle_to
 from magma.common.math.geometry.pose import Pose2D
 from magma.common.math.geometry.vector import V3D_ZERO, Vector3D

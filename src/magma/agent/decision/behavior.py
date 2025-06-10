@@ -7,6 +7,8 @@ from typing import TYPE_CHECKING, Final, Protocol, runtime_checkable
 if TYPE_CHECKING:
     from collections.abc import Mapping, Sequence
 
+    from magma.common.math.geometry.vector import Vector3D
+
 
 class BehaviorID(Enum):
     """Enum specifying behavior names."""
@@ -74,6 +76,20 @@ class PComplexBehavior(Protocol, PBehavior):
 
     def get_current_behavior(self) -> PBehavior:
         """Return the currently active behavior."""
+
+
+@runtime_checkable
+class PMoveBehavior(Protocol, PBehavior):
+    """Protocol for move behaviors."""
+
+    def set(self, desired_speed: Vector3D) -> None:
+        """Set the desired movement speed.
+
+        Parameter
+        ---------
+        desired_speed : Vector3D
+            The desired movement speed vector (x, y, theta).
+        """
 
 
 class Behavior(ABC):
