@@ -31,6 +31,24 @@ class PVisibleObject(Protocol):
     def get_pose_2d(self) -> Pose2D:
         """Return the 2D projected pose of the object."""
 
+    def distance_to(self, other: PVisibleObject) -> float:
+        """Calculate the 3D distance to the other object.
+
+        Parameter
+        ---------
+        other : PVisibleObject
+            The object to which to calculate the distance.
+        """
+
+    def distance_to_2d(self, other: PVisibleObject) -> float:
+        """Calculate the 2D distance to the other object.
+
+        Parameter
+        ---------
+        other : PVisibleObject
+            The object to which to calculate the distance.
+        """
+
 
 class PMovableObject(PVisibleObject, Protocol):
     """Protocol for movable objects in the world."""
@@ -111,6 +129,28 @@ class VisibleObject:
         """Return the 2D projected pose of the object."""
 
         return Pose2D(self._position.as_2d(), self.get_horizontal_angle())
+
+    def distance_to(self, other: PVisibleObject) -> float:
+        """Calculate the 3D distance to the other object.
+
+        Parameter
+        ---------
+        other : PVisibleObject
+            The object to which to calculate the distance.
+        """
+
+        return (self._position - other.get_position()).norm()
+
+    def distance_to_2d(self, other: PVisibleObject) -> float:
+        """Calculate the 2D distance to the other object.
+
+        Parameter
+        ---------
+        other : PVisibleObject
+            The object to which to calculate the distance.
+        """
+
+        return (self._position.as_2d() - other.get_position().as_2d()).norm()
 
 
 class MovableObject(VisibleObject):
