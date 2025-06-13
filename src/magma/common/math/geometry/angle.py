@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from math import atan2, cos, degrees, pi, radians, sin
+from math import atan2, cos, degrees, pi, radians, sin, tan
 from typing import Final
 
 import magma.common.math.geometry.pose as p2d
@@ -44,6 +44,27 @@ class Angle2D:
         """
 
         return degrees(self.angle)
+
+    def sin(self) -> float:
+        """
+        Retrieve the sine value of the angle.
+        """
+
+        return sin(self.angle)
+
+    def cos(self) -> float:
+        """
+        Retrieve the cosine value of the angle.
+        """
+
+        return cos(self.angle)
+
+    def tan(self) -> float:
+        """
+        Retrieve the tangent value of the angle.
+        """
+
+        return tan(self.angle)
 
     def __add__(self, value: float | Angle2D) -> Angle2D:
         """
