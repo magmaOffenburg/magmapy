@@ -71,7 +71,7 @@ class PBehavior(Protocol):
 
 
 @runtime_checkable
-class PComplexBehavior(Protocol, PBehavior):
+class PComplexBehavior(PBehavior, Protocol):
     """Base protocol for complex behaviors."""
 
     def get_current_behavior(self) -> PBehavior:
@@ -79,7 +79,7 @@ class PComplexBehavior(Protocol, PBehavior):
 
 
 @runtime_checkable
-class PMoveBehavior(Protocol, PBehavior):
+class PMoveBehavior(PBehavior, Protocol):
     """Protocol for move behaviors."""
 
     def set(self, desired_speed: Vector3D) -> None:
