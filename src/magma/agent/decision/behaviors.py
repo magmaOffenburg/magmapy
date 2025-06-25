@@ -1,7 +1,7 @@
 from magma.agent.decision.behavior import Behavior, BehaviorID
 from magma.agent.model.agent_model import PAgentModel
 from magma.agent.model.robot.actuators import OmniSpeedActuator
-from magma.common.math.geometry.vector import Vector3D
+from magma.common.math.geometry.vector import V3D_ZERO, Vector3D
 
 
 class NoneBehavior(Behavior):
@@ -18,7 +18,7 @@ class NoneBehavior(Behavior):
 
         super().__init__(name)
 
-    def perform(self) -> None:
+    def perform(self, *, stop: bool = False) -> None:
         # does intentionally nothing
         pass
 
@@ -29,7 +29,7 @@ class NoneBehavior(Behavior):
 class MoveBehavior(Behavior):
     """Behavior for moving the robot."""
 
-    def __init__(self, model: PAgentModel, actuator_name: str = 'move'):
+    def __init__(self, model: PAgentModel, name: str = BehaviorID.MOVE.value, actuator_name: str = 'move'):
         """Create a new move behavior.
 
         Parameter
@@ -41,9 +41,9 @@ class MoveBehavior(Behavior):
             The name of the omni-speed actuator to use for commanding the requested movement speeds.
         """
 
-        super().__init__(BehaviorID.MOVE.value)
+        super().__init__(name)
 
-        self._desired_movement_speed: Vector3D = Vector3D(0, 0, 0)
+        self._desired_movement_speed: Vector3D = V3D_ZERO
         """The desired movement speed (x, y, theta)."""
 
         self._omni_speed_actuator: OmniSpeedActuator | None = model.get_robot().get_actuator(actuator_name, OmniSpeedActuator)
@@ -63,8 +63,11 @@ class MoveBehavior(Behavior):
 
         self._desired_movement_speed = desired_speed
 
-    def perform(self) -> None:
+    def perform(self, *, stop: bool = False) -> None:
         if self._omni_speed_actuator is not None:
+            if stop:
+                self._desired_movement_speed = V3D_ZERO
+
             self._omni_speed_actuator.set(self._desired_movement_speed)
 
     def is_finished(self) -> bool:

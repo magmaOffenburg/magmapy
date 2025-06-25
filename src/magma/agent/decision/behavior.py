@@ -34,8 +34,14 @@ class PBehavior(Protocol):
     def name(self) -> str:
         """The unique name of the behavior."""
 
-    def perform(self) -> None:
-        """Perform the next step of this behavior."""
+    def perform(self, *, stop: bool = False) -> None:
+        """Perform the next step of this behavior.
+
+        Parameter
+        ---------
+        stop : bool, default=False
+            Flag indicating that the behavior execution is intended to stop (required for cyclic behaviors like walk, etc.).
+        """
 
     def is_finished(self) -> bool:
         """Check if the behavior is finished."""
@@ -108,8 +114,14 @@ class Behavior(ABC):
         """The unique name of the behavior."""
 
     @abstractmethod
-    def perform(self) -> None:
-        """Perform the next step of this behavior."""
+    def perform(self, *, stop: bool = False) -> None:
+        """Perform the next step of this behavior.
+
+        Parameter
+        ---------
+        stop : bool, default=False
+            Flag indicating that the behavior execution is intended to stop (required for cyclic behaviors like walk, etc.).
+        """
 
     @abstractmethod
     def is_finished(self) -> bool:
@@ -188,29 +200,34 @@ class ComplexBehavior(Behavior):
     def _decide(self) -> Sequence[PBehavior]:
         """Decide for a list of possible sub behaviors, sorted from the most to the least preferred behavior."""
 
-    def perform(self) -> None:
-        # decide which sub behavior(s) to perform next
-        desired_behaviors = self._decide()
-        next_behavior = self._current_behavior
+    def perform(self, *, stop: bool = False) -> None:
+        if not stop:
+            # decide which sub behavior(s) to perform next
+            desired_behaviors = self._decide()
 
-        for behavior in desired_behaviors:
-            # check if desired behavior is already active
-            if behavior == self._current_behavior:
-                next_behavior = self._current_behavior
-                break
+            if not desired_behaviors:
+                # if no explicit decision is made default to the NONE behavior
+                desired_behaviors = (self.behaviors[BehaviorID.NONE.value],)
 
-            # try to switch to the desired behavior
-            next_behavior = behavior.switch_from(self._current_behavior)
-            if next_behavior == behavior:
-                # behavior switch was successful
-                break
+            for behavior in desired_behaviors:
+                # check if desired behavior is already active
+                if behavior == self._current_behavior:
+                    stop = False
+                    break
 
-        # check for behavior switch
-        if next_behavior != self._current_behavior:
-            self._current_behavior = next_behavior
+                # try to switch to the desired behavior
+                next_behavior = behavior.switch_from(self._current_behavior)
+                if next_behavior != self._current_behavior:
+                    # behavior switch was successful
+                    self._current_behavior = next_behavior
+                    stop = False
+                    break
+
+                # signal switch intention
+                stop = True
 
         # forward call to current behavior
-        self._current_behavior.perform()
+        self._current_behavior.perform(stop=stop)
 
     def is_finished(self) -> bool:
         return self._current_behavior.is_finished()

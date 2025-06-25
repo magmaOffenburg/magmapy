@@ -109,7 +109,7 @@ class DecisionMakerBase(Generic[MT], ABC):
 
         # perform current behavior
         # print(f'Performing {self._decision_counter}: {self._current_behavior.get_name()}')
-        self._current_behavior.perform()
+        self._current_behavior.perform(stop=self._desired_behavior != self._current_behavior)
 
         # increment decision counter
         self._decision_counter += 1

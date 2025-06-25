@@ -32,7 +32,7 @@ class InitBehavior(Behavior):
         self._init_actuator: InitActuator | None = self._model.get_robot().get_actuator('init', InitActuator)
         """The init actuator in case an init action has to be performed."""
 
-    def perform(self) -> None:
+    def perform(self, *, stop: bool = False) -> None:
         if self._create_actuator is not None:
             self._create_actuator.set()
             self._create_actuator = None
