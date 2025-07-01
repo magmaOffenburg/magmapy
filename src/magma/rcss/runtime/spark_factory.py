@@ -8,11 +8,12 @@ from magma.rcss.communication.rcss_msg_parser import RCSSMessageParser
 from magma.rcss.communication.spark_msg_encoder import SimSparkMessageEncoder
 from magma.rcss.decision.rcss_base_behaviors import InitBehavior
 from magma.rcss.decision.rcss_decision_maker import RCSSDecisionMaker
+from magma.rcss.model.rcss_agent import RCSSAgentModel
 from magma.rcss.model.rcss_rules import RCSSRules
 from magma.rcss.model.robot.rcss_robot_model import RCSSRobotModel
 from magma.rcss.model.robot.spark_robot_description import SimSparkRobots
 from magma.rcss.model.world.rcss_field_description import RCSSFieldVersion
-from magma.soccer_agent.model.soccer_agent import PSoccerAgentModel
+from magma.soccer_agent.model.soccer_agent import PMutableSoccerAgentModel, PSoccerAgentModel
 from magma.soccer_agent.model.soccer_rules import SoccerRules
 from magma.soccer_agent.model.world.soccer_field_description import PSoccerFieldDescription
 from magma.soccer_agent.model.world.soccer_world import PMutableSoccerWorld, SoccerWorld
@@ -52,29 +53,32 @@ class SimSparkAgentFactory(SoccerAgentFactory):
         return manager
 
     def _create_robot_description(self) -> PRobotDescription:
-        model_id = self._get_default_robot_model_id() if self._robot_model_id == 'default' else self._robot_model_id
+        model_id = self._get_default_robot_model_id() if self.robot_model_id == 'default' else self.robot_model_id
 
         return SimSparkRobots.create_description_for(model_id)
 
     def _get_default_robot_model_id(self) -> str:
-        if self._player_no in (2, 5):
+        if self.player_no in (2, 5):
             return SimSparkRobots.NAO0.value
-        if self._player_no in (4, 6):
+        if self.player_no in (4, 6):
             return SimSparkRobots.NAO2.value
 
         return SimSparkRobots.NAO_TOE.value
 
     def _create_field_description(self) -> PSoccerFieldDescription:
-        return RCSSFieldVersion.create_description_for(self._field_version)
+        return RCSSFieldVersion.create_description_for(self.field_version)
 
     def _create_robot(self, desc: PRobotDescription) -> PMutableRobotModel:
         return RCSSRobotModel.from_description(desc)
 
     def _create_world(self, desc: PSoccerFieldDescription) -> PMutableSoccerWorld:
-        return SoccerWorld(self._team_name, self._player_no, desc, 0.042)
+        return SoccerWorld(self.team_name, self.player_no, desc, 0.042)
 
     def _create_rule_book(self) -> SoccerRules:
         return RCSSRules()
+
+    def _create_model(self, robot: PMutableRobotModel, world: PMutableSoccerWorld, rules: SoccerRules) -> PMutableSoccerAgentModel:
+        return RCSSAgentModel(robot, world, rules)
 
     def _create_behaviors(self, model: PSoccerAgentModel) -> dict[str, PBehavior]:
         behaviors: dict[str, PBehavior] = super()._create_behaviors(model)

@@ -1,13 +1,15 @@
 from __future__ import annotations
 
+from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Protocol, runtime_checkable
 
 from magma.agent.model.agent_model import AgentModel, PAgentModel, PMutableAgentModel
+from magma.soccer_agent.model.game_state import SoccerGameState
 
 if TYPE_CHECKING:
     from magma.agent.communication.perception import Perception
     from magma.agent.model.robot.robot_model import PMutableRobotModel
-    from magma.soccer_agent.model.game_state import PMutableSoccerGameState, PSoccerGameState
+    from magma.soccer_agent.model.game_state import PSoccerGameState
     from magma.soccer_agent.model.soccer_rules import SoccerRules
     from magma.soccer_agent.model.world.soccer_world import PMutableSoccerWorld, PSoccerWorld
 
@@ -31,14 +33,13 @@ class PMutableSoccerAgentModel(PSoccerAgentModel, PMutableAgentModel, Protocol):
     """Base protocol for mutable soccer agent models."""
 
 
-class SoccerAgentModel(AgentModel):
+class SoccerAgentModel(AgentModel, ABC):
     """The soccer agent model."""
 
     def __init__(
         self,
         robot: PMutableRobotModel,
         world: PMutableSoccerWorld,
-        game_state: PMutableSoccerGameState,
         rules: SoccerRules,
     ) -> None:
         """Construct a new soccer agent model.
@@ -51,9 +52,6 @@ class SoccerAgentModel(AgentModel):
         world : PMutableSoccerWorld
             The soccer world model.
 
-        game_state : PMutableSoccerGameState
-            The soccer game state.
-
         rules : SoccerRules
             The soccer rule book.
         """
@@ -63,7 +61,7 @@ class SoccerAgentModel(AgentModel):
         self._world: PMutableSoccerWorld = world
         """The soccer world representation."""
 
-        self._game_state: PMutableSoccerGameState = game_state
+        self._game_state: SoccerGameState = SoccerGameState(world.get_this_player().team_name)
         """The soccer game state."""
 
         self._game_rules: SoccerRules = rules
@@ -109,6 +107,7 @@ class SoccerAgentModel(AgentModel):
         # 5: update state of beliefs
         self._update_beliefs()
 
+    @abstractmethod
     def _update_game_state(self, perception: Perception) -> None:
         """Update the game state model from the given perception.
 
@@ -117,13 +116,6 @@ class SoccerAgentModel(AgentModel):
         perception : Perception
             The collection of perceived sensor information.
         """
-
-        self._game_state.update(perception)
-
-        # check if a side switch occurred
-        if self._game_state.get_play_side_time() == self._game_state.get_time():
-            # TODO: mirror landmarks / world
-            pass
 
     def _update_world(self, perception: Perception) -> None:
         """Update the world state from the given perception.

@@ -12,6 +12,29 @@ if TYPE_CHECKING:
 
 
 @dataclass(frozen=True)
+class RCSSGameStatePerceptor(Perceptor):
+    """Perceptor representing game state information used in RoboCup Soccer Simulation."""
+
+    play_time: float
+    """The current play time."""
+
+    play_side: str
+    """The current play side."""
+
+    play_mode: str
+    """The current play mode."""
+
+    player_no: int
+    """The player number."""
+
+    score_left: int
+    """The left team score."""
+
+    score_right: int
+    """The right team score."""
+
+
+@dataclass(frozen=True)
 class RCSSAgentStatePerceptor(Perceptor):
     """Perceptor representing general agent state information used in RoboCup Soccer Simulation."""
 

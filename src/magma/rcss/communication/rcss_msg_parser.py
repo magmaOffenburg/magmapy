@@ -16,13 +16,13 @@ from magma.common.math.geometry.vector import V3D_ZERO, Vector3D
 from magma.rcss.communication.rcss_perception import (
     ForceResistancePerceptor,
     RCSSAgentStatePerceptor,
+    RCSSGameStatePerceptor,
     RCSSHearPerceptor,
     RCSSLineDetection,
     RCSSObjectDetection,
     RCSSPlayerDetection,
     RCSSVisionPerceptor,
 )
-from magma.soccer_agent.communication.soccer_perception import SoccerGameStatePerceptor
 
 
 class RCSSMessageParser:
@@ -158,7 +158,7 @@ class RCSSMessageParser:
 
         return TimePerceptor(self._as_str(now_node[0]), self._as_float(now_node[1]))
 
-    def _parse_game_state(self, node: SExpression) -> SoccerGameStatePerceptor:
+    def _parse_game_state(self, node: SExpression) -> RCSSGameStatePerceptor:
         """Parse a game state expression.
 
         Definition: (GS (sl <sl>) (sr <sr>) (t <play_time>) (pm <play_mode>))
@@ -190,7 +190,7 @@ class RCSSMessageParser:
             else:
                 pass
 
-        return SoccerGameStatePerceptor('game_state', play_time, play_side, play_mode, player_no, score_left, score_right)
+        return RCSSGameStatePerceptor('game_state', play_time, play_side, play_mode, player_no, score_left, score_right)
 
     def _parse_agent_state(self, node: SExpression) -> RCSSAgentStatePerceptor:
         """Parse a agent state expression.

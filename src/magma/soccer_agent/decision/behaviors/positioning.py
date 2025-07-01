@@ -7,7 +7,7 @@ from magma.common.math.geometry.angle import ANGLE_ZERO, Angle2D, angle_deg
 from magma.common.math.geometry.pose import Pose2D
 from magma.common.math.geometry.vector import V2D_ZERO, Vector2D
 from magma.soccer_agent.decision.soccer_behaviors import PMoveToBehavior, SoccerBehaviorID
-from magma.soccer_agent.model.game_state import SoccerGameMode
+from magma.soccer_agent.model.game_state import PlayMode
 from magma.soccer_agent.model.soccer_agent import PSoccerAgentModel
 from magma.soccer_agent.model.soccer_beliefs import AmIAtPosition, AmIFacingDirection
 
@@ -127,7 +127,7 @@ class KickOffPositioningBehavior(PositioningBehavior):
         self.opponent_kick_off_pose: Pose2D = Pose2D(Vector2D(-self.model.get_world().get_map().get_middle_circle_radius() - 0.5, 0), ANGLE_ZERO)
 
     def _get_target_pose(self) -> Pose2D:
-        return self.own_kick_off_pose if self.model.get_game_state().get_game_mode() == SoccerGameMode.OWN_KICK_OFF else self.opponent_kick_off_pose
+        return self.own_kick_off_pose if self.model.get_game_state().play_mode == PlayMode.OWN_KICK_OFF else self.opponent_kick_off_pose
 
 
 class PenaltyPositioningBehavior(PositioningBehavior):
