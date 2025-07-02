@@ -1,11 +1,7 @@
-from dataclasses import dataclass
 from enum import Enum
 from typing import Protocol, runtime_checkable
 
 from magma.agent.decision.behavior import PBehavior
-from magma.common.math.geometry.angle import Angle2D
-from magma.common.math.geometry.bounding_box import AABB2D
-from magma.common.math.geometry.interval import Interval
 from magma.common.math.geometry.pose import Pose2D
 from magma.common.math.geometry.vector import Vector2D
 
@@ -60,50 +56,9 @@ class PMoveAlongBehavior(PBehavior, Protocol):
         """
 
 
-@dataclass(frozen=True)
-class KickParameter:
-    """Class representing a parameter set for a kick behavior.
-
-    Most kick parameter are specified in a coordinate system with the ball as its origin facing the intended kick direction.
-    """
-
-    direction: Angle2D
-    """The kick direction relative to the base body."""
-
-    distance_interval: Interval
-    """The kick distance interval (minimum and maximum kick distance) this kick is able to perform."""
-
-    opponent_interval: Interval
-    """
-    The distance interval (minimum and maximum distance) the closest opponent has to be within for this kick to be applicable.
-    If the closes opponent is closer than the minimum distance or farther away than the maximum distance, this kick will not be applicable.
-    """
-
-    base_priority: float
-    """The base priority of the kick."""
-
-    relative_move_to_pose: Pose2D
-    """The target pose to move to when preparing for the kick."""
-
-    relative_support_foot_pose: Pose2D
-    """The optimal pose of the supporting foot for performing the kick."""
-
-    kickable_area: AABB2D
-    """The kickable area."""
-
-    theta_range: Angle2D
-    """The maximum allowed angular deviation from the desired kick direction this kick is able to handle."""
-
-    tolerance_factor: float
-    """Factor used to parameterize hysteresis functions (e.g. the factor by which the kickable area is extended to check if it has been left again)."""
-
-
 @runtime_checkable
 class PKickBehavior(PBehavior, Protocol):
     """Protocol for kick behaviors."""
-
-    def get_params(self) -> KickParameter:
-        """Return the kick parameter set."""
 
     def set(self, target_position: Vector2D, *, is_goal_kick: bool = False) -> None:
         """Set the desired target position to kick.
@@ -115,4 +70,27 @@ class PKickBehavior(PBehavior, Protocol):
 
         is_goal_kick : bool, default=False
             Flag indicating if the intended kick is a goal kick.
+        """
+
+    def get_relative_move_to_pose(self) -> Pose2D:
+        """Return the move-to pose relative to the ball and intended kick direction in order to perform this kick."""
+
+    def get_applicability(self) -> float:
+        """Return the applicability of the kick.
+
+        Returns
+        -------
+        utility : float
+            **Negative values** indicate that the kick is not applicable in the current game situation.
+            A **positive value** indicates that the kick in general is applicable in the current game situation and represent a measurement of how well it fits the requested kick.
+        """
+
+    def get_executability(self) -> float:
+        """Return the executability of the kick.
+
+        Returns
+        -------
+        utility : float
+            **Negative values** indicate that performing the kick is expected to **not hit the ball** and should therefore not be performed.
+            A **positive value** indicates that the kick **should be able to hit the ball** and represents a measurement of how well it fits the kick (0 = worst; 1 = optimal).
         """

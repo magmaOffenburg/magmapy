@@ -63,9 +63,8 @@ class MoveToBehavior(SingleComplexBehavior):
         if target_distance > self.omni_movement_distance:
             # turn and move straight towards the target position
             target_angle = angle_to(rel_target_pose.pos)
-            abs_target_angle = abs(target_angle)
 
-            if abs_target_angle.deg() > 20:  # noqa: PLR2004
+            if abs(target_angle.deg()) > 20:
                 # more than 20 degrees deviation from the direction to the target position --> only turning towards target
                 forwards = 0.0
                 sidewards = 0.0
