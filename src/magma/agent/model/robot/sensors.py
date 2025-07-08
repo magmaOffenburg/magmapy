@@ -12,6 +12,10 @@ from magma.agent.communication.perception import (
     Loc2DPerceptor,
     Loc3DPerceptor,
     Perception,
+    Pos2DPerceptor,
+    Pos3DPerceptor,
+    Rot2DPerceptor,
+    Rot3DPerceptor,
 )
 from magma.common.math.geometry.pose import P2D_ZERO, P3D_ZERO, Pose2D, Pose3D
 from magma.common.math.geometry.rotation import R3D_IDENTITY, Rotation3D
@@ -473,11 +477,29 @@ class Loc2DSensor(Sensor):
         return self._pose
 
     def update(self, perception: Perception) -> None:
+        # try updating using location perceptor
         perceptor = perception.get_perceptor(self.perceptor_name, Loc2DPerceptor)
 
         if perceptor is not None:
             self._time = perception.get_time()
             self._pose = perceptor.loc
+            return
+
+        # try updating using individual position and orientation perceptors
+        pos_perceptor = perception.get_perceptor(self.perceptor_name + '_pos', Pos2DPerceptor)
+        rot_perceptor = perception.get_perceptor(self.perceptor_name + '_theta', Rot2DPerceptor)
+
+        if pos_perceptor is not None and rot_perceptor is not None:
+            self._time = perception.get_time()
+            self._pose = Pose2D(pos_perceptor.pos, rot_perceptor.theta)
+
+        elif pos_perceptor is not None:
+            self._time = perception.get_time()
+            self._pose = Pose2D(pos_perceptor.pos, self._pose.theta)
+
+        elif rot_perceptor is not None:
+            self._time = perception.get_time()
+            self._pose = Pose2D(self._pose.pos, rot_perceptor.theta)
 
 
 class Loc3DSensor(Sensor):
@@ -508,8 +530,26 @@ class Loc3DSensor(Sensor):
         return self._pose
 
     def update(self, perception: Perception) -> None:
-        perceptor = perception.get_perceptor(self.perceptor_name, Loc3DPerceptor)
+        # try updating using location perceptor
+        loc_perceptor = perception.get_perceptor(self.perceptor_name, Loc3DPerceptor)
 
-        if perceptor is not None:
+        if loc_perceptor is not None:
             self._time = perception.get_time()
-            self._pose = perceptor.loc
+            self._pose = loc_perceptor.loc
+            return
+
+        # try updating using individual position and orientation perceptors
+        pos_perceptor = perception.get_perceptor(self.perceptor_name + '_pos', Pos3DPerceptor)
+        rot_perceptor = perception.get_perceptor(self.perceptor_name + '_quat', Rot3DPerceptor)
+
+        if pos_perceptor is not None and rot_perceptor is not None:
+            self._time = perception.get_time()
+            self._pose = Pose3D(pos_perceptor.pos, rot_perceptor.rot)
+
+        elif pos_perceptor is not None:
+            self._time = perception.get_time()
+            self._pose = Pose3D(pos_perceptor.pos, self._pose.rot)
+
+        elif rot_perceptor is not None:
+            self._time = perception.get_time()
+            self._pose = Pose3D(self._pose.pos, rot_perceptor.rot)

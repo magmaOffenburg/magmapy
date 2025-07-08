@@ -5,9 +5,10 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING, Protocol, TypeVar, overload
 
 if TYPE_CHECKING:
+    from magma.common.math.geometry.angle import Angle2D
     from magma.common.math.geometry.pose import Pose2D, Pose3D
     from magma.common.math.geometry.rotation import Rotation3D
-    from magma.common.math.geometry.vector import Vector3D
+    from magma.common.math.geometry.vector import Vector2D, Vector3D
 
 
 class PPerceptor(Protocol):
@@ -125,11 +126,43 @@ class Loc2DPerceptor(Perceptor):
 
 
 @dataclass(frozen=True)
+class Pos2DPerceptor(Perceptor):
+    """Perceptor representing a 2D position perception."""
+
+    pos: Vector2D
+    """The perceived 2D position."""
+
+
+@dataclass(frozen=True)
+class Rot2DPerceptor(Perceptor):
+    """Perceptor representing a 2D rotation / orientation perception."""
+
+    theta: Angle2D
+    """The perceived 2D rotation / orientation."""
+
+
+@dataclass(frozen=True)
 class Loc3DPerceptor(Perceptor):
     """Perceptor representing a 3D location perception."""
 
     loc: Pose3D
     """The perceived 3D location."""
+
+
+@dataclass(frozen=True)
+class Pos3DPerceptor(Perceptor):
+    """Perceptor representing a 3D position perception."""
+
+    pos: Vector3D
+    """The perceived 3D position."""
+
+
+@dataclass(frozen=True)
+class Rot3DPerceptor(Perceptor):
+    """Perceptor representing a 3D rotation / orientation perception."""
+
+    rot: Rotation3D
+    """The perceived 3D rotation / orientation."""
 
 
 class Perception(Mapping[str, PPerceptor]):
