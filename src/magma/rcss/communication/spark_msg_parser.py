@@ -25,11 +25,11 @@ from magma.rcss.communication.rcss_perception import (
 )
 
 
-class RCSSMessageParser:
-    """Parser for RoboCup Soccer Simulation perception messages."""
+class SimSparkMessageParser:
+    """Parser for SimSpark Soccer Simulation perception messages."""
 
     def __init__(self) -> None:
-        """Construct a new RoboCup Soccer Simulation message parser."""
+        """Construct a new SimSpark Soccer Simulation message parser."""
 
         self._sexp_parser = SExpParser()
 
@@ -230,7 +230,7 @@ class RCSSMessageParser:
             if child[0] == 'n':
                 name = self._as_str(child[1])
             elif child[0] == 'ax':
-                ax = self._as_float(child[1])
+                ax = radians(self._as_float(child[1]))
             else:
                 pass
 
@@ -252,7 +252,7 @@ class RCSSMessageParser:
             if child[0] == 'n':
                 name = self._as_str(child[1])
             elif child[0] == 'rt':
-                rot = Vector3D(self._as_float(child[1]), self._as_float(child[2]), self._as_float(child[3]))
+                rot = Vector3D(radians(self._as_float(child[1])), radians(self._as_float(child[2])), radians(self._as_float(child[3])))
             else:
                 pass
 

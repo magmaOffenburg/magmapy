@@ -4,8 +4,8 @@ from magma.agent.decision.behavior import PBehavior
 from magma.agent.decision.decision_maker import PDecisionMaker
 from magma.agent.model.robot.robot_description import PRobotDescription
 from magma.agent.model.robot.robot_model import PMutableRobotModel
-from magma.rcss.communication.rcss_msg_parser import RCSSMessageParser
 from magma.rcss.communication.rcsssmj_msg_encoder import RCSSSMJMessageEncoder
+from magma.rcss.communication.rcsssmj_msg_parser import RCSSSMJMessageParser
 from magma.rcss.decision.rcss_base_behaviors import InitBehavior
 from magma.rcss.decision.rcss_decision_maker import RCSSDecisionMaker
 from magma.rcss.model.rcss_agent import RCSSAgentModel
@@ -44,7 +44,7 @@ class RCSSSMJAgentFactory(SoccerAgentFactory):
         manager = DefaultChannelManager()
 
         # register channels
-        manager.register_channel(TCPLPMChannel('RCSSSMJChannel', self._server_ip, self._server_port, RCSSMessageParser(), RCSSSMJMessageEncoder(), 4))
+        manager.register_channel(TCPLPMChannel('RCSSSMJChannel', self._server_ip, self._server_port, RCSSSMJMessageParser(), RCSSSMJMessageEncoder(), 4))
 
         return manager
 
