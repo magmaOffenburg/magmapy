@@ -31,6 +31,38 @@ class Rotation3D:
         self.m32: Final[float] = m32
         self.m33: Final[float] = m33
 
+    @staticmethod
+    def from_quat(qw: float, qx: float, qy: float, qz: float) -> Rotation3D:
+        """
+        Construct a new 3D rotation from the given quaternion.
+        """
+
+        xx = qx * qx
+        xy = qx * qy
+        xz = qx * qz
+        xw = qx * qw
+
+        yy = qy * qy
+        yz = qy * qz
+        yw = qy * qw
+
+        zz = qz * qz
+        zw = qz * qw
+
+        m00 = 1.0 - (2.0 * (yy + zz))
+        m01 = 2.0 * (xy - zw)
+        m02 = 2.0 * (xz + yw)
+
+        m10 = 2.0 * (xy + zw)
+        m11 = 1.0 - (2.0 * (xx + zz))
+        m12 = 2.0 * (yz - xw)
+
+        m20 = 2.0 * (xz - yw)
+        m21 = 2.0 * (yz + xw)
+        m22 = 1.0 - (2.0 * (xx + yy))
+
+        return Rotation3D(m00, m01, m02, m10, m11, m12, m20, m21, m22)
+
     def tf_vec(self, v: Vector3D) -> Vector3D:
         """
         Transform the given vector by this rotation.
