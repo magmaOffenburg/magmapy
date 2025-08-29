@@ -1,11 +1,12 @@
 from __future__ import annotations
 
-from math import cos, radians, sin
+from math import radians
 
 from magma.agent.communication.perception import (
     AccelerometerPerceptor,
     GyroRatePerceptor,
     JointStatePerceptor,
+    ObjectDetection,
     Perception,
     Pos3DPerceptor,
     PPerceptor,
@@ -18,7 +19,6 @@ from magma.common.math.geometry.vector import V3D_ZERO, Vector3D
 from magma.rcss.communication.rcss_perception import (
     RCSSGameStatePerceptor,
     RCSSLineDetection,
-    RCSSObjectDetection,
     RCSSPlayerDetection,
     RCSSVisionPerceptor,
 )
@@ -260,7 +260,7 @@ class RCSSSMJMessageParser:
                          +(L (pol <distance> <angle1> <angle2>) (pol <distance> <angle1> <angle2>)))
         """
 
-        objects: list[RCSSObjectDetection] = []
+        objects: list[ObjectDetection] = []
         lines: list[RCSSLineDetection] = []
         players: list[RCSSPlayerDetection] = []
 
@@ -277,10 +277,10 @@ class RCSSSMJMessageParser:
 
         return RCSSVisionPerceptor(self._as_str(node[0]), objects, lines, players)
 
-    def _parse_point_object(self, node: SExpression) -> RCSSObjectDetection:
+    def _parse_point_object(self, node: SExpression) -> ObjectDetection:
         """Parse a visible object expression.
 
-        Definition: (<name> (pol <distance> <angle1> <angle2>))
+        Definition: (<name> (pol <angle1> <angle2> <distance>))
         """
 
         name = self._as_str(node[0])
@@ -290,7 +290,7 @@ class RCSSSMJMessageParser:
             msg = f'Expected "pol" expression atom: {pol_node}!'
             raise TypeError(msg)
 
-        return RCSSObjectDetection(name, self._parse_pol(pol_node))
+        return ObjectDetection(name, '', radians(self._as_float(pol_node[1])), radians(self._as_float(pol_node[2])), self._as_float(pol_node[3]))
 
     def _parse_line_object(self, node: SExpression) -> RCSSLineDetection:
         """Parse a line expression.
@@ -340,16 +340,7 @@ class RCSSSMJMessageParser:
         Definition: (pol <azimuth> <inclination> <distance>)
         """
 
-        alpha: float = radians(self._as_float(node[1]))
-        delta: float = radians(self._as_float(node[2]))
-        distance: float = self._as_float(node[3])
-
-        cos_delta = cos(delta)
-        x = distance * cos(alpha) * cos_delta
-        y = distance * sin(alpha) * cos_delta
-        z = distance * sin(delta)
-
-        return Vector3D(x, y, z)
+        return Vector3D.from_pol(radians(self._as_float(node[1])), radians(self._as_float(node[2])), self._as_float(node[3]))
 
     def _parse_pos(self, node: SExpression) -> Pos3DPerceptor:
         """Parse a position expression.

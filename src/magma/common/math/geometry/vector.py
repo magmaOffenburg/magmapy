@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from math import isfinite, isinf, isnan, sqrt
+from math import cos, isfinite, isinf, isnan, sin, sqrt
 from typing import Final
 
 
@@ -211,6 +211,17 @@ class Vector3D:
         self.x: Final[float] = x
         self.y: Final[float] = y
         self.z: Final[float] = z
+
+    @staticmethod
+    def from_pol(alpha: float, delta: float, distance: float) -> Vector3D:
+        """Construct a new 3D vector from polar / spherical coordinates."""
+
+        cos_delta = cos(delta)
+        x = distance * cos(alpha) * cos_delta
+        y = distance * sin(alpha) * cos_delta
+        z = distance * sin(delta)
+
+        return Vector3D(x, y, z)
 
     def as_2d(self) -> Vector2D:
         """

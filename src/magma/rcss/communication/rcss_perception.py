@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from magma.agent.communication.perception import Perceptor
+from magma.agent.communication.perception import Perceptor, VisionPerceptor
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
@@ -74,17 +74,6 @@ class RCSSHearPerceptor(Perceptor):
 
 
 @dataclass(frozen=True)
-class RCSSObjectDetection:
-    """An object detection."""
-
-    name: str
-    """The name of the object."""
-
-    position: Vector3D
-    """The object position in the camera local frame."""
-
-
-@dataclass(frozen=True)
 class RCSSLineDetection:
     """A line object detection."""
 
@@ -110,11 +99,8 @@ class RCSSPlayerDetection:
 
 
 @dataclass(frozen=True)
-class RCSSVisionPerceptor(Perceptor):
+class RCSSVisionPerceptor(VisionPerceptor):
     """Perceptor representing a vision detection in the RoboCup Soccer Simulation."""
-
-    objects: Sequence[RCSSObjectDetection]
-    """The collection of (point) object detections."""
 
     lines: Sequence[RCSSLineDetection]
     """The collection of line detections."""

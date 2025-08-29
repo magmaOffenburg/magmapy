@@ -1,12 +1,13 @@
 from __future__ import annotations
 
-from math import cos, radians, sin
+from math import radians
 
 from magma.agent.communication.perception import (
     AccelerometerPerceptor,
     BumperPerceptor,
     GyroRatePerceptor,
     JointStatePerceptor,
+    ObjectDetection,
     Perception,
     PPerceptor,
     TimePerceptor,
@@ -19,7 +20,6 @@ from magma.rcss.communication.rcss_perception import (
     RCSSGameStatePerceptor,
     RCSSHearPerceptor,
     RCSSLineDetection,
-    RCSSObjectDetection,
     RCSSPlayerDetection,
     RCSSVisionPerceptor,
 )
@@ -321,7 +321,7 @@ class SimSparkMessageParser:
                          +(L (pol <distance> <angle1> <angle2>) (pol <distance> <angle1> <angle2>)))
         """
 
-        objects: list[RCSSObjectDetection] = []
+        objects: list[ObjectDetection] = []
         lines: list[RCSSLineDetection] = []
         players: list[RCSSPlayerDetection] = []
 
@@ -338,7 +338,7 @@ class SimSparkMessageParser:
 
         return RCSSVisionPerceptor(self._as_str(node[0]), objects, lines, players)
 
-    def _parse_point_object(self, node: SExpression) -> RCSSObjectDetection:
+    def _parse_point_object(self, node: SExpression) -> ObjectDetection:
         """Parse a visible object expression.
 
         Definition: (<name> (pol <distance> <angle1> <angle2>))
@@ -351,7 +351,7 @@ class SimSparkMessageParser:
             msg = f'Expected "pol" expression atom: {pol_node}!'
             raise TypeError(msg)
 
-        return RCSSObjectDetection(name, self._parse_pol(pol_node))
+        return ObjectDetection(name, '', radians(self._as_float(node[2])), radians(self._as_float(node[3])), self._as_float(node[1]))
 
     def _parse_line_object(self, node: SExpression) -> RCSSLineDetection:
         """Parse a line expression.
@@ -401,16 +401,7 @@ class SimSparkMessageParser:
         Definition: (pol <distance> <angle1> <angle2>)
         """
 
-        distance: float = self._as_float(node[1])
-        alpha: float = radians(self._as_float(node[2]))
-        delta: float = radians(self._as_float(node[3]))
-
-        cos_delta = cos(delta)
-        x = distance * cos(alpha) * cos_delta
-        y = distance * sin(alpha) * cos_delta
-        z = distance * sin(delta)
-
-        return Vector3D(x, y, z)
+        return Vector3D.from_pol(radians(self._as_float(node[2])), radians(self._as_float(node[3])), self._as_float(node[1]))
 
     def _parse_hear(self, node: SExpression) -> RCSSHearPerceptor:
         """Parse a head expression.

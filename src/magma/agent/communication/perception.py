@@ -4,11 +4,13 @@ from collections.abc import ItemsView, Iterator, KeysView, Mapping, Sequence, Va
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Protocol, TypeVar, overload
 
+from magma.common.math.geometry.vector import Vector3D
+
 if TYPE_CHECKING:
     from magma.common.math.geometry.angle import Angle2D
     from magma.common.math.geometry.pose import Pose2D, Pose3D
     from magma.common.math.geometry.rotation import Rotation3D
-    from magma.common.math.geometry.vector import Vector2D, Vector3D
+    from magma.common.math.geometry.vector import Vector2D
 
 
 class PPerceptor(Protocol):
@@ -163,6 +165,59 @@ class Rot3DPerceptor(Perceptor):
 
     rot: Rotation3D
     """The perceived 3D rotation / orientation."""
+
+
+@dataclass(frozen=True)
+class ObjectDetection:
+    """An object detection."""
+
+    name: str
+    """The unique name of the object (if known)."""
+
+    class_id: str
+    """The object class (if known)."""
+
+    azimuth: float
+    """The azimuth (horizontal) angle to the detected point (in radian)."""
+
+    inclination: float
+    """The elevation (vertical) angle to the detected point (in radian)."""
+
+    distance: float
+    """The distance to the detected point (in meter)."""
+
+    position: Vector3D
+    """The 3D position of the object (only valid with depth information)."""
+
+    def __init__(
+        self,
+        name: str,
+        class_id: str,
+        azimuth: float,
+        inclination: float,
+        distance: float,
+    ) -> None:
+        """Construct a new object detection."""
+
+        object.__setattr__(self, 'name', name)
+        object.__setattr__(self, 'class_id', class_id)
+        object.__setattr__(self, 'azimuth', azimuth)
+        object.__setattr__(self, 'inclination', inclination)
+        object.__setattr__(self, 'distance', distance)
+        object.__setattr__(self, 'position', Vector3D.from_pol(azimuth, inclination, distance))
+
+    def has_depth(self) -> bool:
+        """Check if this object detection contains depth information."""
+
+        return self.distance > 0
+
+
+@dataclass(frozen=True)
+class VisionPerceptor(Perceptor):
+    """Perceptor representing a vision detection."""
+
+    objects: Sequence[ObjectDetection]
+    """The collection of (point) object detections."""
 
 
 class Perception(Mapping[str, PPerceptor]):
