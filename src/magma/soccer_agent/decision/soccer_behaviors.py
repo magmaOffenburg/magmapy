@@ -30,6 +30,9 @@ class SoccerBehaviorID(Enum):
     DRIBBLE = 'dribble'
     """The dribble behavior used to walk straight with the ball."""
 
+    FOCUS_BALL = 'focus_ball'
+    """The focus-ball behavior."""
+
 
 @runtime_checkable
 class PMoveToBehavior(PBehavior, Protocol):

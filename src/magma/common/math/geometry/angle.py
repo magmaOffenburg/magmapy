@@ -4,7 +4,7 @@ from math import atan2, cos, degrees, pi, radians, sin, tan
 from typing import Final
 
 import magma.common.math.geometry.pose as p2d
-from magma.common.math.geometry.vector import Vector2D
+from magma.common.math.geometry.vector import Vector2D, Vector3D
 
 
 class Angle2D:
@@ -220,9 +220,9 @@ def angle_deg(deg: float) -> Angle2D:
     return Angle2D(radians(deg))
 
 
-def angle_to(point: Vector2D) -> Angle2D:
+def angle_to(point: Vector2D | Vector3D) -> Angle2D:
     """
-    Construct a new Angle2D from the angle to the given point.
+    Construct a new Angle2D from the angle to the given point in xy-plane, with x-axis facing forward.
     """
 
     return Angle2D(atan2(point.y, point.x))
