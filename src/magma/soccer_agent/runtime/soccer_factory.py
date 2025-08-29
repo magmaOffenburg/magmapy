@@ -7,6 +7,7 @@ from magma.agent.decision.behaviors import NoneBehavior
 from magma.agent.decision.decision_maker import PDecisionMaker
 from magma.agent.model.robot.robot_description import PRobotDescription
 from magma.agent.model.robot.robot_model import PMutableRobotModel, RobotModel
+from magma.soccer_agent.decision.soccer_decision_maker import SoccerDecisionMaker
 from magma.soccer_agent.model.soccer_agent import PMutableSoccerAgentModel, PSoccerAgentModel
 from magma.soccer_agent.model.soccer_rules import SoccerRules
 from magma.soccer_agent.model.world.soccer_field_description import PSoccerFieldDescription
@@ -118,8 +119,9 @@ class SoccerAgentFactory(ABC):
 
         return behaviors
 
-    @abstractmethod
     def _create_decision_maker(self, model: PSoccerAgentModel, behaviors: dict[str, PBehavior]) -> PDecisionMaker:
         """
         Create the decision maker component.
         """
+
+        return SoccerDecisionMaker(model, behaviors)

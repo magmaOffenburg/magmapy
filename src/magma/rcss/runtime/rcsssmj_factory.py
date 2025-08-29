@@ -1,13 +1,11 @@
 from magma.agent.communication.channel_manager import DefaultChannelManager, PChannelManager
 from magma.agent.communication.tcp_lpm_channel import TCPLPMChannel
 from magma.agent.decision.behavior import PBehavior
-from magma.agent.decision.decision_maker import PDecisionMaker
 from magma.agent.model.robot.robot_description import PRobotDescription
 from magma.agent.model.robot.robot_model import PMutableRobotModel
 from magma.rcss.communication.rcsssmj_msg_encoder import RCSSSMJMessageEncoder
 from magma.rcss.communication.rcsssmj_msg_parser import RCSSSMJMessageParser
 from magma.rcss.decision.rcss_base_behaviors import InitBehavior
-from magma.rcss.decision.rcss_decision_maker import RCSSDecisionMaker
 from magma.rcss.model.rcss_agent import RCSSAgentModel
 from magma.rcss.model.rcss_rules import RCSSRules
 from magma.rcss.model.robot.rcss_robot_model import RCSSRobotModel
@@ -80,6 +78,3 @@ class RCSSSMJAgentFactory(SoccerAgentFactory):
         add_behavior(InitBehavior(model))
 
         return behaviors
-
-    def _create_decision_maker(self, model: PSoccerAgentModel, behaviors: dict[str, PBehavior]) -> PDecisionMaker:
-        return RCSSDecisionMaker(model, behaviors)
