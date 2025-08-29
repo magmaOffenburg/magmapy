@@ -46,10 +46,6 @@ class RCSSPlayModes(Enum):
 
     NONE = 'NONE'
 
-    PASS_LEFT = 'pass_left'  # noqa: S105 - Prevent ruff hardcoded-passwort-assignment warning
-
-    PASS_RIGHT = 'pass_right'  # noqa: S105 - Prevent ruff hardcoded-passwort-assignment warning
-
     PENALTY_KICK_LEFT = 'penalty_kick_left'
 
     PENALTY_KICK_RIGHT = 'penalty_kick_right'
@@ -132,12 +128,6 @@ def decode_rcss_play_mode(play_mode: str, play_side: PlaySide) -> tuple[PlayMode
 
     if play_mode == RCSSPlayModes.NONE.value:
         return PlayMode.NONE, PlayModePhase.RUNNING
-
-    # if play_mode == RCSSPlayModes.PASS_LEFT.value:
-    #     return SoccerGameMode.OWN_PASS if left_side else SoccerGameMode.OPPONENT_PASS, SoccerGamePhase.RUNNING
-
-    # if play_mode == RCSSPlayModes.PASS_RIGHT.value:
-    #     return SoccerGameMode.OPPONENT_PASS if left_side else SoccerGameMode.OWN_PASS, SoccerGamePhase.RUNNING
 
     if play_mode == RCSSPlayModes.PENALTY_KICK_LEFT.value:
         return PlayMode.OWN_PENALTY_KICK if left_side else PlayMode.OPPONENT_PENALTY_KICK, PlayModePhase.RUNNING

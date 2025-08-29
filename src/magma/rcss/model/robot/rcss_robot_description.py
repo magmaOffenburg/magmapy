@@ -9,18 +9,12 @@ from magma.agent.model.robot.robot_description import ActuatorDescription, Senso
 class RCSSSensorType(Enum):
     """Specific sensor types used in RoboCup Soccer Simulation."""
 
-    FORCE_RESISTANCE = 'force_resistance'
-    """A force sensor, receiving force information."""
-
     VISION = 'soccer_vision'
     """A virtual vision pipeline sensor, receiving various state information about visible objects, lines and players in the environment."""
 
 
 class RCSSActuatorType(Enum):
     """Specific actuator types used in RoboCup Soccer Simulation."""
-
-    SCENE = 'scene'
-    """A scene actuator for spawning a robot."""
 
     INIT = 'init'
     """A init actuator for initializing a robot."""
@@ -30,17 +24,6 @@ class RCSSActuatorType(Enum):
 
     BEAM = 'beam'
     """A beam actuator."""
-
-    PASS_MODE = 'pass_mode'  # noqa: S105 - prevent ruff hardcoded-password-assignment warning
-    """A pass mode actuator."""
-
-
-@dataclass(frozen=True)
-class ForceResistanceDescription(SensorDescription):
-    """Default force resistance sensor description."""
-
-    def __init__(self, name: str, frame_id: str, perceptor_name: str):
-        super().__init__(name, frame_id, perceptor_name, RCSSSensorType.FORCE_RESISTANCE.value)
 
 
 @dataclass(frozen=True)
@@ -68,30 +51,13 @@ class RCSSVisionDescription(SensorDescription):
 
 
 @dataclass(frozen=True)
-class SceneDescription(ActuatorDescription):
-    """Default scene actuator description."""
-
-    scene: str
-    """The scene path."""
-
-    model_type: int
-    """The model type id."""
-
-    def __init__(self, name: str, effector_name: str, scene: str, model_type: int):
-        super().__init__(name, effector_name, RCSSActuatorType.SCENE.value)
-
-        object.__setattr__(self, 'scene', scene)
-        object.__setattr__(self, 'model_type', model_type)
-
-
-@dataclass(frozen=True)
 class InitDescription(ActuatorDescription):
     """Default init actuator description."""
 
     model_name: str
     """The name of the robot model."""
 
-    def __init__(self, name: str, effector_name: str, model_name: str = ''):
+    def __init__(self, name: str, effector_name: str, model_name: str):
         super().__init__(name, effector_name, RCSSActuatorType.INIT.value)
 
         object.__setattr__(self, 'model_name', model_name)
@@ -116,11 +82,3 @@ class BeamDescription(ActuatorDescription):
 
     def __init__(self, name: str, effector_name: str):
         super().__init__(name, effector_name, RCSSActuatorType.BEAM.value)
-
-
-@dataclass(frozen=True)
-class PassModeDescription(ActuatorDescription):
-    """Default pass mode actuator description."""
-
-    def __init__(self, name: str, effector_name: str):
-        super().__init__(name, effector_name, RCSSActuatorType.PASS_MODE.value)

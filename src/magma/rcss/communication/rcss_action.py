@@ -10,17 +10,6 @@ if TYPE_CHECKING:
 
 
 @dataclass(frozen=True)
-class CreateEffector(Effector):
-    """Effector for creating an robot scene instance within the simulation."""
-
-    scene: str
-    """The target scene."""
-
-    model_type: int
-    """The model type."""
-
-
-@dataclass(frozen=True)
 class InitEffector(Effector):
     """Effector for initializing a player instance within the simulation."""
 
@@ -48,16 +37,3 @@ class BeamEffector(Effector):
 
     beam_pose: Pose2D
     """The beam target pose."""
-
-
-@dataclass(frozen=True)
-class SayEffector(Effector):
-    """Effector for audio output within the simulation."""
-
-    message: str
-    """The message to say."""
-
-
-@dataclass(frozen=True)
-class PassModeEffector(Effector):
-    """Effector for requesting a pass mode for our team within the simulation."""

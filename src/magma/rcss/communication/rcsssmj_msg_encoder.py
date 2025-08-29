@@ -1,7 +1,7 @@
 from math import ceil
 
 from magma.agent.communication.action import Action, MotorEffector
-from magma.rcss.communication.rcss_action import BeamEffector, InitEffector, SayEffector, SyncEffector
+from magma.rcss.communication.rcss_action import BeamEffector, InitEffector, SyncEffector
 
 
 class RCSSSMJMessageEncoder:
@@ -34,9 +34,6 @@ class RCSSSMJMessageEncoder:
 
             elif isinstance(effector, MotorEffector):
                 msgs.append(f'({effector.name} {round3(effector.position)} {round3(effector.velocity)} {round3(effector.kp)} {round3(effector.kd)} {round3(effector.tau)})')
-
-            elif isinstance(effector, SayEffector):
-                msgs.append(f'({effector.name} {effector.message})')
 
             elif isinstance(effector, SyncEffector):
                 msgs.append(f'({effector.name})')

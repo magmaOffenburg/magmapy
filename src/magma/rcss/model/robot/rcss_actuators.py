@@ -3,42 +3,11 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Final, Protocol, runtime_checkable
 
 from magma.agent.model.robot.actuators import Actuator, PActuator
-from magma.rcss.communication.rcss_action import (
-    BeamEffector,
-    CreateEffector,
-    InitEffector,
-    PassModeEffector,
-    SyncEffector,
-)
+from magma.rcss.communication.rcss_action import BeamEffector, InitEffector, SyncEffector
 
 if TYPE_CHECKING:
     from magma.agent.communication.action import Action
     from magma.common.math.geometry.pose import Pose2D
-
-
-@runtime_checkable
-class PCreateActuator(Protocol):
-    """Protocol for create actuators."""
-
-    def set(self, *, active: bool) -> None:
-        """Set the create action.
-
-        Parameter
-        ---------
-        active : bool
-            Enable / disable create actuator.
-        """
-
-    @property
-    def scene(self) -> str:
-        """The scene path."""
-
-    @property
-    def model_type(self) -> int:
-        """Retrieve the model type number."""
-
-    def is_active(self) -> bool:
-        """Check if the create actuator is active."""
 
 
 @runtime_checkable
@@ -99,85 +68,6 @@ class PScotty(PActuator, Protocol):
 
     def get_beam_pose(self) -> Pose2D | None:
         """Retrieve the current beam pose."""
-
-
-@runtime_checkable
-class PPassModeActuator(PActuator, Protocol):
-    """Protocol for pass mode actuators."""
-
-    def set(self, *, request_pass_mode: bool) -> None:
-        """Set the pass mode action.
-
-        Parameter
-        ---------
-        request_pass_mode : bool
-            Enable / disable pass mode.
-        """
-
-    def is_pass_mode_requested(self) -> bool:
-        """Retrieve the current pass mode request."""
-
-
-class CreateActuator(Actuator):
-    """Default create actuator implementation."""
-
-    def __init__(
-        self,
-        name: str,
-        effector_name: str,
-        scene: str,
-        model_type: int,
-    ) -> None:
-        """Create a new create actuator.
-
-        Parameter
-        ---------
-        name : str
-            The unique actuator name.
-
-        effector_name : str
-            The name of the effector associated with this actuator.
-
-        scene : str
-            The robot model scene path.
-
-        model_type : int
-            The model type variant.
-        """
-
-        super().__init__(name, effector_name)
-
-        self.scene: Final[str] = scene
-        """The robot model scene path."""
-
-        self.model_type: Final[int] = model_type
-        """The model type variant."""
-
-        self._active: bool = False
-        """Flag indicating if this actuator is active or not."""
-
-    def set(self, *, active: bool = True) -> None:
-        """Set the scene action.
-
-        Parameter
-        ---------
-        active : bool
-            Enable / disable create actuator.
-        """
-
-        self._active = active
-
-    def is_active(self) -> bool:
-        """Check if the scene actuator is active."""
-
-        return self._active
-
-    def commit(self, action: Action) -> None:
-        if self._active:
-            action.put(CreateEffector(self.effector_name, self.scene, self.model_type))
-
-        # reset actuator
-        self._active = False
 
 
 class InitActuator(Actuator):
@@ -354,47 +244,3 @@ class Scotty(Actuator):
 
         # reset actuator
         self._beam_pose = None
-
-
-class PassModeActuator(Actuator):
-    """Default pass mode actuator implementation."""
-
-    def __init__(self, name: str, effector_name: str) -> None:
-        """Create a new pass mode actuator.
-
-        Parameter
-        ---------
-        name : str
-            The unique actuator name.
-
-        effector_name : str
-            The name of the effector associated with this actuator.
-        """
-
-        super().__init__(name, effector_name)
-
-        self._request_pass_mode: bool = False
-        """Flag indicating if pass-mode should be requested."""
-
-    def set(self, *, request_pass_mode: bool = True) -> None:
-        """Set the pass mode action.
-
-        Parameter
-        ---------
-        request_pass_mode : bool
-            Enable / disable pass mode.
-        """
-
-        self._request_pass_mode = request_pass_mode
-
-    def is_pass_mode_requested(self) -> bool:
-        """Retrieve the current pass mode request."""
-
-        return self._request_pass_mode
-
-    def commit(self, action: Action) -> None:
-        if self._request_pass_mode:
-            action.put(PassModeEffector(self.effector_name))
-
-        # reset actuator
-        self._request_pass_mode = False

@@ -1,8 +1,7 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Final, Protocol, runtime_checkable
+from typing import TYPE_CHECKING, Final
 
-from magma.agent.model.agent_model import PAgentModel, PMutableAgentModel
 from magma.rchl.communication.rchl_perception import RCHLGameStatePerceptor
 from magma.rchl.model.rchl_game_state import decode_rchl_game_state
 from magma.soccer_agent.model.game_state import PlaySide
@@ -14,16 +13,6 @@ if TYPE_CHECKING:
     from magma.soccer_agent.model.soccer_rules import SoccerRules
     from magma.soccer_agent.model.strategy.role_manager import PMutableRoleManager
     from magma.soccer_agent.model.world.soccer_world import PMutableSoccerWorld
-
-
-@runtime_checkable
-class PRCHLAgentModel(PAgentModel, Protocol):
-    """Protocol for RocoCup Soccer Humanoid League agent models."""
-
-
-@runtime_checkable
-class PMutableRCSSAgentModel(PRCHLAgentModel, PMutableAgentModel, Protocol):
-    """Protocol for mutable RoboCup Soccer Humanoid League agent models."""
 
 
 class RCHLAgentModel(SoccerAgentModel):

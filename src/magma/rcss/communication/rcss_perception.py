@@ -12,31 +12,8 @@ if TYPE_CHECKING:
 
 
 @dataclass(frozen=True)
-class SimSparkGameStatePerceptor(Perceptor):
-    """Perceptor representing game state information used in RoboCup Soccer Simulation."""
-
-    play_time: float
-    """The current play time."""
-
-    play_side: str
-    """The current play side."""
-
-    play_mode: str
-    """The current play mode."""
-
-    player_no: int
-    """The player number."""
-
-    score_left: int
-    """The left team score."""
-
-    score_right: int
-    """The right team score."""
-
-
-@dataclass(frozen=True)
 class RCSSSMJGameStatePerceptor(Perceptor):
-    """Perceptor representing game state information used in RoboCup Soccer Simulation MuJoCo."""
+    """Perceptor representing game state information used in RoboCup Soccer Simulation (MuJoCo)."""
 
     play_time: float
     """The current play time."""
@@ -55,45 +32,6 @@ class RCSSSMJGameStatePerceptor(Perceptor):
 
     score_right: int
     """The right team score."""
-
-
-@dataclass(frozen=True)
-class RCSSAgentStatePerceptor(Perceptor):
-    """Perceptor representing general agent state information used in RoboCup Soccer Simulation."""
-
-    temperature: int
-    """The perceived temperature."""
-
-    battery: int
-    """The current battery level."""
-
-
-@dataclass(frozen=True)
-class ForceResistancePerceptor(Perceptor):
-    """Perceptor representing an external force sensor in RoboCup Soccer Simulation."""
-
-    origin: Vector3D
-    """The force origin (where on the body is the force is applied)"""
-
-    force: Vector3D
-    """The force vector acting at the origin."""
-
-
-@dataclass(frozen=True)
-class RCSSHearPerceptor(Perceptor):
-    """Perceptor representing a hear message."""
-
-    time: float
-    """The time of the hear perception."""
-
-    team: str
-    """The team of the player that sad the perceived message."""
-
-    direction: str
-    """The horizontal direction (or "self") of the sound source."""
-
-    message: str
-    """The perceived message."""
 
 
 @dataclass(frozen=True)
