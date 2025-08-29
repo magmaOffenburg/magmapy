@@ -103,13 +103,6 @@ class Vector2D:
 
         return isnan(self.x) or isnan(self.y)
 
-    def vector_to(self, other: Vector2D) -> Vector2D:
-        """
-        Return the vector from this vector to the other vector.
-        """
-
-        return other - self
-
     def direction_to(self, other: Vector2D) -> Vector2D:
         """
         Return the unit vector pointing from this vector the the given vector.
@@ -118,8 +111,17 @@ class Vector2D:
         x = other.x - self.x
         y = other.y - self.y
         length = sqrt(x**2 + y**2)
+        # TODO: Check if length is zero, which would result in NaN values!
 
         return Vector2D(x / length, y / length)
+
+    def normalize(self) -> Vector2D:
+        """
+        Return the normalized vector (unit length).
+        """
+
+        # TODO: Check if norm is zero, which would result in NaN values!
+        return self / self.norm()
 
     def norm(self) -> float:
         """
@@ -329,12 +331,26 @@ class Vector3D:
 
         return isnan(self.x) or isnan(self.y) or isnan(self.z)
 
-    def vector_to(self, other: Vector3D) -> Vector3D:
+    def direction_to(self, other: Vector3D) -> Vector3D:
         """
-        Return the vector from this vector to the other vector.
+        Return the unit vector pointing from this vector the the given vector.
         """
 
-        return other - self
+        x = other.x - self.x
+        y = other.y - self.y
+        z = other.z - self.z
+        length = sqrt(x**2 + y**2 + z**2)
+        # TODO: Check if length is zero, which would result in NaN values!
+
+        return Vector3D(x / length, y / length, z / length)
+
+    def normalize(self) -> Vector3D:
+        """
+        Return the normalized vector (unit length).
+        """
+
+        # TODO: Check if norm is zero, which would result in NaN values!
+        return self / self.norm()
 
     def norm(self) -> float:
         """
