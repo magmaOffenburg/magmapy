@@ -5,13 +5,14 @@ from enum import Enum
 from magma.agent.model.robot.robot_description import (
     AccelerometerDescription,
     BodyDescription,
-    CameraDescription,
     FixedJointDescription,
     GyroDescription,
     HingeJointDescription,
     InertiaDescription,
+    Loc3DDescription,
     MotorDescription,
     RobotDescription,
+    VisionDescription,
     VisualDescription,
 )
 from magma.common.math.geometry.vector import V3D_UNIT_X, V3D_UNIT_Y, V3D_UNIT_Z
@@ -151,5 +152,8 @@ class T1Description(RobotDescription):
         # accelerometer
         self._add_sensor(AccelerometerDescription('torso_acc', 'torso', 'torso_acc'))
 
-        # camera
-        self._add_sensor(CameraDescription('camera', 'camera', 'See', 120, 120))
+        # camera / vision system
+        self._add_sensor(VisionDescription('vision', 'camera', 'See', 120, 120))
+
+        # gps
+        self._add_sensor(Loc3DDescription('torso_loc', 'torso', 'torso'))
