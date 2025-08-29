@@ -2,7 +2,6 @@ from collections.abc import Sequence
 from typing import Protocol
 
 from magma.agent.communication.perception import Loc3DPerceptor, Perception, Pos3DPerceptor, Rot3DPerceptor
-from magma.agent.model.base import PMutableModel
 from magma.agent.model.world.objects import LineLandmark, PointLandmark
 from magma.soccer_agent.model.world.soccer_field_description import PSoccerFieldDescription
 from magma.soccer_agent.model.world.soccer_map import PSoccerMap, SoccerMap
@@ -44,8 +43,17 @@ class PSoccerWorld(Protocol):
         """Retrieve the soccer map."""
 
 
-class PMutableSoccerWorld(PSoccerWorld, PMutableModel, Protocol):
+class PMutableSoccerWorld(PSoccerWorld, Protocol):
     """Soccer domain specific robot model."""
+
+    def update(self, perception: Perception) -> None:
+        """Update the state of the model from the given perceptions.
+
+        Parameter
+        ---------
+        perception : Perception
+            The collection of perceived sensor information.
+        """
 
 
 class SoccerWorld:

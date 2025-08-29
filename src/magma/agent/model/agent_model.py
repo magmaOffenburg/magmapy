@@ -2,8 +2,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Final, Protocol, runtime_checkable
 
-from magma.agent.model.base import PMutableModel
-
 if TYPE_CHECKING:
     from magma.agent.communication.action import Action
     from magma.agent.communication.perception import Perception
@@ -32,8 +30,17 @@ class PAgentModel(Protocol):
 
 
 @runtime_checkable
-class PMutableAgentModel(PAgentModel, PMutableModel, Protocol):
+class PMutableAgentModel(PAgentModel, Protocol):
     """Protocol for mutable agent models."""
+
+    def update(self, perception: Perception) -> None:
+        """Update the state of the agent model from the given perceptions.
+
+        Parameter
+        ---------
+        perception : Perception
+            The collection of perceived sensor information.
+        """
 
     def get_robot(self) -> PMutableRobotModel:
         """Retrieve the robot model."""

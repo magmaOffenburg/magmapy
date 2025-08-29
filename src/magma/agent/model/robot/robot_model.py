@@ -3,7 +3,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Protocol, TypeVar
 
 from magma.agent.communication.action import Action
-from magma.agent.model.base import PMutableModel
 from magma.agent.model.robot.actuators import Actuator, Motor, OmniSpeedActuator
 from magma.agent.model.robot.robot_description import (
     ActuatorDescription,
@@ -96,8 +95,17 @@ class PRobotModel(Protocol):
         """Retrieve the robot tree."""
 
 
-class PMutableRobotModel(PRobotModel, PMutableModel, Protocol):
+class PMutableRobotModel(PRobotModel, Protocol):
     """Protocol for mutable robot models."""
+
+    def update(self, perception: Perception) -> None:
+        """Update the sensor states of the robot model from the given perceptions.
+
+        Parameter
+        ---------
+        perception : Perception
+            The collection of perceived sensor information.
+        """
 
     def generate_action(self) -> Action:
         """Generate a set of actions from all available actuators."""
