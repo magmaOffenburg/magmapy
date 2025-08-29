@@ -12,6 +12,7 @@ if TYPE_CHECKING:
     from magma.agent.communication.perception import Perception
     from magma.agent.model.robot.robot_model import PMutableRobotModel
     from magma.soccer_agent.model.soccer_rules import SoccerRules
+    from magma.soccer_agent.model.strategy.role_manager import PMutableRoleManager
     from magma.soccer_agent.model.world.soccer_world import PMutableSoccerWorld
 
 
@@ -33,6 +34,7 @@ class SimSparkAgentModel(SoccerAgentModel):
         robot: PMutableRobotModel,
         world: PMutableSoccerWorld,
         rules: SoccerRules,
+        role_manager: PMutableRoleManager,
     ) -> None:
         """Construct a new soccer agent model.
 
@@ -46,9 +48,12 @@ class SimSparkAgentModel(SoccerAgentModel):
 
         rules : SoccerRules
             The soccer rule book.
+
+        role_manager : PRoleManager
+            The role manager instance.
         """
 
-        super().__init__(robot, world, rules)
+        super().__init__(robot, world, rules, role_manager)
 
     def _update_game_state(self, perception: Perception) -> None:
         # fetch game state perceptor

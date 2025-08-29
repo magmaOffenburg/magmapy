@@ -12,6 +12,7 @@ if TYPE_CHECKING:
     from magma.agent.communication.perception import Perception
     from magma.agent.model.robot.robot_model import PMutableRobotModel
     from magma.soccer_agent.model.soccer_rules import SoccerRules
+    from magma.soccer_agent.model.strategy.role_manager import PMutableRoleManager
     from magma.soccer_agent.model.world.soccer_world import PMutableSoccerWorld
 
 
@@ -33,6 +34,7 @@ class RCHLAgentModel(SoccerAgentModel):
         robot: PMutableRobotModel,
         world: PMutableSoccerWorld,
         rules: SoccerRules,
+        role_manager: PMutableRoleManager,
         team_id: int,
     ) -> None:
         """Construct a new soccer agent model.
@@ -48,11 +50,14 @@ class RCHLAgentModel(SoccerAgentModel):
         rules : SoccerRules
             The soccer rule book.
 
+        role_manager : PRoleManager
+            The role manager instance.
+
         team_id : int
             Our Humanoid League team id.
         """
 
-        super().__init__(robot, world, rules)
+        super().__init__(robot, world, rules, role_manager)
 
         self.team_id: Final[int] = team_id
         """The id of our team in the Humanoid League."""

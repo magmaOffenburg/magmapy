@@ -11,6 +11,7 @@ if TYPE_CHECKING:
     from magma.agent.model.robot.robot_model import PMutableRobotModel
     from magma.soccer_agent.model.game_state import PSoccerGameState
     from magma.soccer_agent.model.soccer_rules import SoccerRules
+    from magma.soccer_agent.model.strategy.role_manager import PMutableRoleManager, PRoleManager
     from magma.soccer_agent.model.world.soccer_world import PMutableSoccerWorld, PSoccerWorld
 
 
@@ -27,6 +28,9 @@ class PSoccerAgentModel(PAgentModel, Protocol):
     def get_game_rules(self) -> SoccerRules:
         """Retrieve the soccer game rule book."""
 
+    def get_role_manager(self) -> PRoleManager:
+        """Retrieve the role manager."""
+
 
 @runtime_checkable
 class PMutableSoccerAgentModel(PSoccerAgentModel, PMutableAgentModel, Protocol):
@@ -41,6 +45,7 @@ class SoccerAgentModel(AgentModel, ABC):
         robot: PMutableRobotModel,
         world: PMutableSoccerWorld,
         rules: SoccerRules,
+        role_manager: PMutableRoleManager,
     ) -> None:
         """Construct a new soccer agent model.
 
@@ -54,6 +59,9 @@ class SoccerAgentModel(AgentModel, ABC):
 
         rules : SoccerRules
             The soccer rule book.
+
+        role_manager : PRoleManager
+            The role manager instance.
         """
 
         super().__init__(robot)
@@ -66,6 +74,9 @@ class SoccerAgentModel(AgentModel, ABC):
 
         self._game_rules: SoccerRules = rules
         """The soccer rule book."""
+
+        self._role_manager: PMutableRoleManager = role_manager
+        """The role manager encapsulating the team strategy."""
 
     def get_world(self) -> PSoccerWorld:
         """Retrieve the current world state."""
@@ -81,6 +92,11 @@ class SoccerAgentModel(AgentModel, ABC):
         """Retrieve the soccer game rule book."""
 
         return self._game_rules
+
+    def get_role_manager(self) -> PRoleManager:
+        """Retrieve the role manager."""
+
+        return self._role_manager
 
     def update(self, perception: Perception) -> None:
         """Update the state of the agent model from the given perceptions.
@@ -107,6 +123,9 @@ class SoccerAgentModel(AgentModel, ABC):
         # 5: update state of beliefs
         self._update_beliefs()
 
+        # 6. update role manager state
+        self._update_role_manager()
+
     @abstractmethod
     def _update_game_state(self, perception: Perception) -> None:
         """Update the game state model from the given perception.
@@ -127,3 +146,8 @@ class SoccerAgentModel(AgentModel, ABC):
         """
 
         self._world.update(perception, self._robot, self._game_state)
+
+    def _update_role_manager(self) -> None:
+        """Update the role manager state."""
+
+        self._role_manager.update(self._world, self._game_state)

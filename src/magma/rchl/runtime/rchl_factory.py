@@ -7,6 +7,7 @@ from magma.rchl.model.rchl_rules import RCHLRules
 from magma.rchl.model.world.rchl_field_description import RCHLFieldVersion
 from magma.soccer_agent.model.soccer_agent import PMutableSoccerAgentModel
 from magma.soccer_agent.model.soccer_rules import SoccerRules
+from magma.soccer_agent.model.strategy.role_manager import PMutableRoleManager
 from magma.soccer_agent.model.world.soccer_field_description import PSoccerFieldDescription
 from magma.soccer_agent.model.world.soccer_world import PMutableSoccerWorld, SoccerWorld
 from magma.soccer_agent.runtime.soccer_factory import SoccerAgentFactory
@@ -53,5 +54,11 @@ class RCHLAgentFactory(SoccerAgentFactory, ABC):
     def _create_rule_book(self) -> SoccerRules:
         return RCHLRules()
 
-    def _create_model(self, robot: PMutableRobotModel, world: PMutableSoccerWorld, rules: SoccerRules) -> PMutableSoccerAgentModel:
-        return RCHLAgentModel(robot, world, rules, self.team_id)
+    def _create_model(
+        self,
+        robot: PMutableRobotModel,
+        world: PMutableSoccerWorld,
+        rules: SoccerRules,
+        role_manager: PMutableRoleManager,
+    ) -> PMutableSoccerAgentModel:
+        return RCHLAgentModel(robot, world, rules, role_manager, self.team_id)

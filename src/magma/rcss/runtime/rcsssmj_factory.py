@@ -14,6 +14,7 @@ from magma.rcss.model.world.rcsssmj_field_description import RCSSSMJFieldVersion
 from magma.rcss.model.world.rcsssmj_soccer_world import RCSSSMJSoccerWorld
 from magma.soccer_agent.model.soccer_agent import PMutableSoccerAgentModel, PSoccerAgentModel
 from magma.soccer_agent.model.soccer_rules import SoccerRules
+from magma.soccer_agent.model.strategy.role_manager import PMutableRoleManager
 from magma.soccer_agent.model.world.soccer_field_description import PSoccerFieldDescription
 from magma.soccer_agent.model.world.soccer_world import PMutableSoccerWorld
 from magma.soccer_agent.runtime.soccer_factory import SoccerAgentFactory
@@ -67,8 +68,14 @@ class RCSSSMJAgentFactory(SoccerAgentFactory):
     def _create_rule_book(self) -> SoccerRules:
         return RCSSRules()
 
-    def _create_model(self, robot: PMutableRobotModel, world: PMutableSoccerWorld, rules: SoccerRules) -> PMutableSoccerAgentModel:
-        return RCSSSMJAgentModel(robot, world, rules)
+    def _create_model(
+        self,
+        robot: PMutableRobotModel,
+        world: PMutableSoccerWorld,
+        rules: SoccerRules,
+        role_manager: PMutableRoleManager,
+    ) -> PMutableSoccerAgentModel:
+        return RCSSSMJAgentModel(robot, world, rules, role_manager)
 
     def _create_behaviors(self, model: PSoccerAgentModel) -> dict[str, PBehavior]:
         behaviors: dict[str, PBehavior] = super()._create_behaviors(model)
