@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 
 
 @dataclass(frozen=True)
-class RCSSSMJGameStatePerceptor(Perceptor):
+class RCSSGameStatePerceptor(Perceptor):
     """Perceptor representing game state information used in RoboCup Soccer Simulation (MuJoCo)."""
 
     play_time: float

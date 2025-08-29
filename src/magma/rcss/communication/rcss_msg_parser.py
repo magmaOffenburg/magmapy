@@ -16,15 +16,10 @@ from magma.agent.communication.perception import (
 from magma.common.communication.sexpression import SExpParser, SExpression
 from magma.common.math.geometry.rotation import R3D_IDENTITY, Rotation3D
 from magma.common.math.geometry.vector import V3D_ZERO, Vector3D
-from magma.rcss.communication.rcss_perception import (
-    RCSSLineDetection,
-    RCSSPlayerDetection,
-    RCSSSMJGameStatePerceptor,
-    RCSSVisionPerceptor,
-)
+from magma.rcss.communication.rcss_perception import RCSSGameStatePerceptor, RCSSLineDetection, RCSSPlayerDetection, RCSSVisionPerceptor
 
 
-class RCSSSMJMessageParser:
+class RCSSMessageParser:
     """Parser for MuJoCo Soccer Simulation perception messages."""
 
     def __init__(self) -> None:
@@ -149,7 +144,7 @@ class RCSSSMJMessageParser:
 
         return TimePerceptor(self._as_str(now_node[0]), self._as_float(now_node[1]))
 
-    def _parse_game_state(self, node: SExpression) -> RCSSSMJGameStatePerceptor:
+    def _parse_game_state(self, node: SExpression) -> RCSSGameStatePerceptor:
         """Parse a game state expression.
 
         Definition: (GS (t <play_time>) (pm <play_mode>) (lt <left_team>) (rt <right_team>) (sl <sl>) (sr <sr>))
@@ -181,7 +176,7 @@ class RCSSSMJMessageParser:
             else:
                 pass
 
-        return RCSSSMJGameStatePerceptor('game_state', play_time, play_mode, left_team_name, right_team_name, score_left, score_right)
+        return RCSSGameStatePerceptor('game_state', play_time, play_mode, left_team_name, right_team_name, score_left, score_right)
 
     def _parse_hinge_joint(self, node: SExpression) -> JointStatePerceptor:
         """Parse a hinge joint expression.

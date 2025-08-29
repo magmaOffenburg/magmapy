@@ -4,8 +4,8 @@ from magma.agent.communication.action import Action, MotorEffector
 from magma.rcss.communication.rcss_action import BeamEffector, InitEffector, SyncEffector
 
 
-class RCSSSMJMessageEncoder:
-    """Encoder for RCSSSMJ action messages."""
+class RCSSMessageEncoder:
+    """Encoder for RoboCup Soccer Simulation (MuJoCo) action messages."""
 
     def encode(self, action: Action) -> bytes | bytearray:
         """Encode the given action commands into a message.

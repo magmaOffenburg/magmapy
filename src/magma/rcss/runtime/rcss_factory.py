@@ -3,15 +3,15 @@ from magma.agent.communication.tcp_lpm_channel import TCPLPMChannel
 from magma.agent.decision.behavior import PBehavior
 from magma.agent.model.robot.robot_description import PRobotDescription
 from magma.agent.model.robot.robot_model import PMutableRobotModel
-from magma.rcss.communication.rcsssmj_msg_encoder import RCSSSMJMessageEncoder
-from magma.rcss.communication.rcsssmj_msg_parser import RCSSSMJMessageParser
+from magma.rcss.communication.rcss_msg_encoder import RCSSMessageEncoder
+from magma.rcss.communication.rcss_msg_parser import RCSSMessageParser
 from magma.rcss.decision.rcss_base_behaviors import InitBehavior
+from magma.rcss.model.rcss_agent import RCSSAgentModel
 from magma.rcss.model.rcss_rules import RCSSRules
-from magma.rcss.model.rcsssmj_agent import RCSSSMJAgentModel
 from magma.rcss.model.robot.rcss_robot_model import RCSSRobotModel
-from magma.rcss.model.robot.rcsssmj_robot_description import RCSSSMJRobots
-from magma.rcss.model.world.rcsssmj_field_description import RCSSSMJFieldVersion
-from magma.rcss.model.world.rcsssmj_soccer_world import RCSSSMJSoccerWorld
+from magma.rcss.model.robot.rcss_robots import RCSSRobots
+from magma.rcss.model.world.rcss_field_description import RCSSFieldVersion
+from magma.rcss.model.world.rcss_soccer_world import RCSSSoccerWorld
 from magma.soccer_agent.model.soccer_agent import PMutableSoccerAgentModel, PSoccerAgentModel
 from magma.soccer_agent.model.soccer_rules import SoccerRules
 from magma.soccer_agent.model.strategy.role_manager import PMutableRoleManager
@@ -20,8 +20,8 @@ from magma.soccer_agent.model.world.soccer_world import PMutableSoccerWorld
 from magma.soccer_agent.runtime.soccer_factory import SoccerAgentFactory
 
 
-class RCSSSMJAgentFactory(SoccerAgentFactory):
-    """Factory for RCSSSMJ soccer simulation agent components."""
+class RCSSAgentFactory(SoccerAgentFactory):
+    """Factory for RoboCup Soccer Simulation (MuJoCo) agent components."""
 
     def __init__(
         self,
@@ -33,7 +33,7 @@ class RCSSSMJAgentFactory(SoccerAgentFactory):
         field_version: str,
         decision_maker_id: str,
     ) -> None:
-        """Construct a new RCSSSMJ soccer simulation agent component factory."""
+        """Construct a new RoboCup Soccer Simulation agent component factory."""
 
         super().__init__(team_name, player_no, robot_model_id, field_version, decision_maker_id)
 
@@ -44,26 +44,26 @@ class RCSSSMJAgentFactory(SoccerAgentFactory):
         manager = DefaultChannelManager()
 
         # register channels
-        manager.register_channel(TCPLPMChannel('RCSSSMJChannel', self._server_ip, self._server_port, RCSSSMJMessageParser(), RCSSSMJMessageEncoder(), 4))
+        manager.register_channel(TCPLPMChannel('RCSSSMJChannel', self._server_ip, self._server_port, RCSSMessageParser(), RCSSMessageEncoder(), 4))
 
         return manager
 
     def _create_robot_description(self) -> PRobotDescription:
         model_id = self._get_default_robot_model_id() if self.robot_model_id == 'default' else self.robot_model_id
 
-        return RCSSSMJRobots.create_description_for(model_id)
+        return RCSSRobots.create_description_for(model_id)
 
     def _get_default_robot_model_id(self) -> str:
-        return RCSSSMJRobots.T1.value
+        return RCSSRobots.T1.value
 
     def _create_field_description(self) -> PSoccerFieldDescription:
-        return RCSSSMJFieldVersion.create_description_for(self.field_version)
+        return RCSSFieldVersion.create_description_for(self.field_version)
 
     def _create_robot(self, desc: PRobotDescription) -> PMutableRobotModel:
         return RCSSRobotModel.from_description(desc)
 
     def _create_world(self, desc: PSoccerFieldDescription) -> PMutableSoccerWorld:
-        return RCSSSMJSoccerWorld(self.team_name, self.player_no, desc, 0.11)
+        return RCSSSoccerWorld(self.team_name, self.player_no, desc, 0.11)
 
     def _create_rule_book(self) -> SoccerRules:
         return RCSSRules()
@@ -75,7 +75,7 @@ class RCSSSMJAgentFactory(SoccerAgentFactory):
         rules: SoccerRules,
         role_manager: PMutableRoleManager,
     ) -> PMutableSoccerAgentModel:
-        return RCSSSMJAgentModel(robot, world, rules, role_manager)
+        return RCSSAgentModel(robot, world, rules, role_manager)
 
     def _create_behaviors(self, model: PSoccerAgentModel) -> dict[str, PBehavior]:
         behaviors: dict[str, PBehavior] = super()._create_behaviors(model)

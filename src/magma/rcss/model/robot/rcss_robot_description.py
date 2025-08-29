@@ -7,14 +7,14 @@ from magma.agent.model.robot.robot_description import ActuatorDescription, Senso
 
 
 class RCSSSensorType(Enum):
-    """Specific sensor types used in RoboCup Soccer Simulation."""
+    """Specific sensor types used in RoboCup Soccer Simulation (MuJoCo)."""
 
     VISION = 'soccer_vision'
     """A virtual vision pipeline sensor, receiving various state information about visible objects, lines and players in the environment."""
 
 
 class RCSSActuatorType(Enum):
-    """Specific actuator types used in RoboCup Soccer Simulation."""
+    """Specific actuator types used in RoboCup Soccer Simulation (MuJoCo)."""
 
     INIT = 'init'
     """A init actuator for initializing a robot."""

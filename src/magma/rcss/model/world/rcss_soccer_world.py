@@ -17,8 +17,8 @@ PLAYER_REMEMBRANCE_TIME: Final[float] = 10.0
 """The time (in seconds) how long we remember a player detection."""
 
 
-class RCSSSMJSoccerWorld(SoccerWorld):
-    """Model representing a RoboCup Soccer Simulation MuJoCo soccer world."""
+class RCSSSoccerWorld(SoccerWorld):
+    """Model representing a RoboCup Soccer Simulation (MuJoCo) soccer world."""
 
     def __init__(
         self,

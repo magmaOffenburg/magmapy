@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 
 
 class RCSSRobotModel(RobotModel):
-    """Robot model implementation for RoboCup Soccer Simulation."""
+    """Robot model implementation for RoboCup Soccer Simulation (MuJoCo)."""
 
     def __init__(self, sensors: list[Sensor], actuators: list[Actuator], root_body: BodyPart) -> None:
         """Construct a new RoboCup Soccer Simulation robot model.

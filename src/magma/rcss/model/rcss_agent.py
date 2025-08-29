@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from magma.rcss.communication.rcss_perception import RCSSSMJGameStatePerceptor
+from magma.rcss.communication.rcss_perception import RCSSGameStatePerceptor
 from magma.rcss.model.world.rcss_game_state import decode_rcss_play_mode
 from magma.soccer_agent.model.game_state import PlaySide
 from magma.soccer_agent.model.soccer_agent import SoccerAgentModel
@@ -15,8 +15,8 @@ if TYPE_CHECKING:
     from magma.soccer_agent.model.world.soccer_world import PMutableSoccerWorld
 
 
-class RCSSSMJAgentModel(SoccerAgentModel):
-    """The RoboCup Soccer Simulation MuJoCo specific agent model."""
+class RCSSAgentModel(SoccerAgentModel):
+    """The RoboCup Soccer Simulation (MuJoCo) specific agent model."""
 
     def __init__(
         self,
@@ -46,7 +46,7 @@ class RCSSSMJAgentModel(SoccerAgentModel):
 
     def _update_game_state(self, perception: Perception) -> None:
         # fetch game state perceptor
-        perceptor = perception.get_perceptor('game_state', RCSSSMJGameStatePerceptor)
+        perceptor = perception.get_perceptor('game_state', RCSSGameStatePerceptor)
         if perceptor is None:
             return
 

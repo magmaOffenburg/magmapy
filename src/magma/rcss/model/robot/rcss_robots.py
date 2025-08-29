@@ -18,8 +18,8 @@ from magma.common.math.geometry.vector import V3D_UNIT_X, V3D_UNIT_Y, V3D_UNIT_Z
 from magma.rcss.model.robot.rcss_robot_description import BeamDescription, InitDescription, RCSSVisionDescription, SyncDescription
 
 
-class RCSSSMJRobots(Enum):
-    """Enum specifying the available robot models within the RCSSSMJ simulator."""
+class RCSSRobots(Enum):
+    """Enum specifying the available robot models within the RoboCup Soccer Simulation (MuJoCo)."""
 
     UNKNOWN = 'unknown'
     """Unknown robot model."""
@@ -28,7 +28,7 @@ class RCSSSMJRobots(Enum):
     """The T1 robot."""
 
     @staticmethod
-    def from_value(name: str) -> RCSSSMJRobots:
+    def from_value(name: str) -> RCSSRobots:
         """Fetch the enum entry corresponding to the given name value.
 
         Parameter
@@ -37,13 +37,13 @@ class RCSSSMJRobots(Enum):
             The name of the robot model.
         """
 
-        for v in RCSSSMJRobots:
+        for v in RCSSRobots:
             if v.value == name:
                 return v
 
         print(f'WARNING: Unknown RCSSMJ robot model: "{name}"!')  # noqa: T201
 
-        return RCSSSMJRobots.UNKNOWN
+        return RCSSRobots.UNKNOWN
 
     @staticmethod
     def create_description_for(name: str) -> RobotDescription:
@@ -55,9 +55,9 @@ class RCSSSMJRobots(Enum):
             The name of the robot model.
         """
 
-        robot_id = RCSSSMJRobots.from_value(name)
+        robot_id = RCSSRobots.from_value(name)
 
-        if robot_id == RCSSSMJRobots.T1:
+        if robot_id == RCSSRobots.T1:
             return T1Description()
 
         # cases: T1 and UNKNOWN
@@ -65,12 +65,12 @@ class RCSSSMJRobots(Enum):
 
 
 class T1Description(RobotDescription):
-    """Description for the T1 model used in the RCSSMJ soccer simulation."""
+    """Description for the T1 model used in the RoboCup Soccer Simulation (MuJoCo)."""
 
     def __init__(self) -> None:
         """Construct a new T1 model."""
 
-        super().__init__(RCSSSMJRobots.T1.value)
+        super().__init__(RCSSRobots.T1.value)
 
         # fmt: off
         # bodies                              name,                    ( origin), mass ,                   (       origin), (    dimensions)

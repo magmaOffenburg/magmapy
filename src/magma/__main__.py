@@ -5,9 +5,9 @@ import signal
 from typing import TYPE_CHECKING
 
 from magma.agent.runtime.agent_runtime import AgentRuntime
-from magma.rcss.model.robot.rcsssmj_robot_description import RCSSSMJRobots
-from magma.rcss.model.world.rcsssmj_field_description import RCSSSMJFieldVersion
-from magma.rcss.runtime.rcsssmj_factory import RCSSSMJAgentFactory
+from magma.rcss.model.robot.rcss_robots import RCSSRobots
+from magma.rcss.model.world.rcss_field_description import RCSSFieldVersion
+from magma.rcss.runtime.rcss_factory import RCSSAgentFactory
 
 if TYPE_CHECKING:
     from types import FrameType
@@ -24,8 +24,8 @@ def rcss_agent() -> None:
     """Main function for running a magma RCSSSMJ agent."""
 
     # fetch argument options
-    field_versions: list[str] = [str(version.value) for version in RCSSSMJFieldVersion if version != RCSSSMJFieldVersion.UNKNOWN]
-    robot_models: list[str] = ['default'] + [str(robot.value) for robot in RCSSSMJRobots if robot != RCSSSMJRobots.UNKNOWN]
+    field_versions: list[str] = [str(version.value) for version in RCSSFieldVersion if version != RCSSFieldVersion.UNKNOWN]
+    robot_models: list[str] = ['default'] + [str(robot.value) for robot in RCSSRobots if robot != RCSSRobots.UNKNOWN]
     decision_maker_ids: list[str] = ['default', 'Soccer']
 
     # parse arguments
@@ -44,7 +44,7 @@ def rcss_agent() -> None:
     args = parser.parse_args()
 
     # create agent runtime
-    factory = RCSSSMJAgentFactory(args.teamname, args.playerno, args.robot, args.server, args.port, args.field, args.decisionmaker)
+    factory = RCSSAgentFactory(args.teamname, args.playerno, args.robot, args.server, args.port, args.field, args.decisionmaker)
     agent: AgentRuntime = AgentRuntime(factory)
 
     # register SIGINT handler

@@ -6,7 +6,7 @@ from magma.common.math.geometry.vector import V2D_ZERO, Vector2D, Vector3D
 from magma.soccer_agent.model.world.soccer_field_description import SoccerFieldDescription
 
 
-class RCSSSMJFieldVersion(Enum):
+class RCSSFieldVersion(Enum):
     """Enum specifying the available RoboCup Humanoid Soccer league field versions."""
 
     UNKNOWN = 'unknown'
@@ -22,33 +22,33 @@ class RCSSSMJFieldVersion(Enum):
     """2020 version of the Adult Size soccer field."""
 
     @staticmethod
-    def from_value(version: str) -> RCSSSMJFieldVersion:
+    def from_value(version: str) -> RCSSFieldVersion:
         """Fetch the enum entry corresponding to the given version value."""
 
-        for v in RCSSSMJFieldVersion:
+        for v in RCSSFieldVersion:
             if v.value == version:
                 return v
 
         print(f'WARNING: Unknown HL field version: "{version}"!')  # noqa: T201
 
-        return RCSSSMJFieldVersion.UNKNOWN
+        return RCSSFieldVersion.UNKNOWN
 
     @staticmethod
     def create_description_for(version: str) -> SoccerFieldDescription:
         """Create a field description for the given field version."""
 
-        version_id = RCSSSMJFieldVersion.from_value(version)
+        version_id = RCSSFieldVersion.from_value(version)
 
-        if version_id == RCSSSMJFieldVersion.ADULT_2014:
-            return RCSSSMJField2014()
-        if version_id == RCSSSMJFieldVersion.ADULT_2019:
-            return RCSSSMJField2019()
+        if version_id == RCSSFieldVersion.ADULT_2014:
+            return RCSSField2014()
+        if version_id == RCSSFieldVersion.ADULT_2019:
+            return RCSSField2019()
 
         # cases: ADULT_2020 and UNKNOWN
-        return RCSSSMJField2020()
+        return RCSSField2020()
 
 
-class RCSSSMJField2014(SoccerFieldDescription):
+class RCSSField2014(SoccerFieldDescription):
     """Class representing the soccer field used by the RoboCup Humanoid Adult Size in 2014 to 2018."""
 
     def __init__(
@@ -128,7 +128,7 @@ class RCSSSMJField2014(SoccerFieldDescription):
         # fmt: on
 
 
-class RCSSSMJField2019(RCSSSMJField2014):
+class RCSSField2019(RCSSField2014):
     """Class representing the soccer field used by the RoboCup Humanoid Adult Size in 2019."""
 
     def __init__(
@@ -152,7 +152,7 @@ class RCSSSMJField2019(RCSSSMJField2014):
         )
 
 
-class RCSSSMJField2020(RCSSSMJField2019):
+class RCSSField2020(RCSSField2019):
     """Class representing the soccer field used by the RoboCup Humanoid Adult Size since 2020 until now."""
 
     def __init__(
