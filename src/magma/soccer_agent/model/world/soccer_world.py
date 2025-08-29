@@ -106,7 +106,8 @@ class SoccerWorld:
         self._line_landmarks: tuple[LineLandmark, ...] = tuple(LineLandmark(f.name, f.get_type(), f.get_known_position1(), f.get_known_position2()) for f in field_desc.get_line_features())
         self._ball: SoccerBall = SoccerBall(ball_radius)
         self._this_player: ThisSoccerPlayer = ThisSoccerPlayer(team_name, player_no)
-        self._players: tuple[SoccerPlayer, ...] = ()
+        self._known_players: dict[str, SoccerPlayer] = {}
+        self._players: list[SoccerPlayer] = []
 
         # map
         self._map_version: str = field_desc.__class__.__name__
@@ -176,10 +177,11 @@ class SoccerWorld:
 
         self._localize(robot, game_state)
 
-        self._update_ball(robot)
-        # self._update_players(perception)
+        self._update_ball(robot, game_state)
 
-        self._ifo.update(self._players, self._ball, self._this_player)
+        self._update_players(robot, game_state)
+
+        self._update_ifo()
 
     def _localize(self, robot: PRobotModel, game_state: PSoccerGameState) -> bool:
         """Localize robot."""
@@ -193,7 +195,7 @@ class SoccerWorld:
 
         return False
 
-    def _update_ball(self, robot: PRobotModel) -> bool:
+    def _update_ball(self, robot: PRobotModel, game_state: PSoccerGameState) -> bool:
         """Update the ball information."""
 
         # fetch vision sensor
@@ -221,3 +223,13 @@ class SoccerWorld:
         self._ball.update(cam.get_time(), InformationSource.VISION, global_pos, R3D_IDENTITY, V3D_ZERO)
 
         return True
+
+    def _update_players(self, robot: PRobotModel, game_state: PSoccerGameState) -> bool:
+        """Update the player information."""
+
+        return False
+
+    def _update_ifo(self) -> None:
+        """Update the soccer IFOs."""
+
+        self._ifo.update(self._players, self._ball, self._this_player)
