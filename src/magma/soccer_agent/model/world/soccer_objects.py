@@ -32,6 +32,12 @@ class PSoccerPlayer(PMovableObject, Protocol):
     def own_team(self) -> bool:
         """Flag representing if the player is our teammate."""
 
+    def is_goalie(self) -> bool:
+        """Check if the player is the goalie."""
+
+    def incapable(self) -> bool:
+        """Check if the player in incapable."""
+
 
 class PThisSoccerPlayer(PSoccerPlayer, Protocol):
     """Protocol for the soccer player representing this agent."""
@@ -77,6 +83,7 @@ class SoccerPlayer(MovableObject):
         player_no: int,
         *,
         own_team: bool,
+        is_goalie: bool | None = None,
         position: Vector3D | None = None,
         orientation: Rotation3D | None = None,
     ) -> None:
@@ -112,6 +119,19 @@ class SoccerPlayer(MovableObject):
 
         self.own_team: Final[bool] = own_team
         """Flag indicating if the player is in our team or not."""
+
+        self._is_goalie: bool = player_no == 1 if is_goalie is None else is_goalie
+        """Flag representing if the player is the goalie."""
+
+    def is_goalie(self) -> bool:
+        """Check if the player is the goalie."""
+
+        return self._is_goalie
+
+    def incapable(self) -> bool:
+        """Check if the player in incapable."""
+
+        return False
 
 
 class ThisSoccerPlayer(SoccerPlayer):

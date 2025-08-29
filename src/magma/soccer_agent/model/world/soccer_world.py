@@ -9,6 +9,7 @@ from magma.common.math.geometry.pose import P3D_ZERO
 from magma.common.math.geometry.rotation import R3D_IDENTITY
 from magma.common.math.geometry.vector import V3D_ZERO
 from magma.soccer_agent.model.game_state import PSoccerGameState
+from magma.soccer_agent.model.world.ifo import PSoccerIFO, SoccerIFO
 from magma.soccer_agent.model.world.soccer_field_description import PSoccerFieldDescription
 from magma.soccer_agent.model.world.soccer_map import PSoccerMap, SoccerMap
 from magma.soccer_agent.model.world.soccer_objects import (
@@ -47,6 +48,9 @@ class PSoccerWorld(Protocol):
 
     def get_map(self) -> PSoccerMap:
         """Retrieve the soccer map."""
+
+    def ifo(self) -> PSoccerIFO:
+        """Return the collection of soccer IFOs."""
 
 
 class PMutableSoccerWorld(PSoccerWorld, Protocol):
@@ -117,6 +121,9 @@ class SoccerWorld:
             self._line_landmarks,
         )
 
+        self._ifo: SoccerIFO = SoccerIFO()
+        """The collection of soccer IFOs."""
+
     def get_time(self) -> float:
         """Retrieve the time of the last update."""
 
@@ -157,6 +164,11 @@ class SoccerWorld:
 
         return self._map
 
+    def ifo(self) -> PSoccerIFO:
+        """Return the collection of soccer IFOs."""
+
+        return self._ifo
+
     def update(self, perception: Perception, robot: PRobotModel, game_state: PSoccerGameState) -> None:
         """Update the state of the world model from the given perceptions."""
 
@@ -165,6 +177,9 @@ class SoccerWorld:
         self._localize(robot, game_state)
 
         self._update_ball(robot)
+        # self._update_players(perception)
+
+        self._ifo.update(self._players, self._ball, self._this_player)
 
     def _localize(self, robot: PRobotModel, game_state: PSoccerGameState) -> bool:
         """Localize robot."""
