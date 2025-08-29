@@ -10,7 +10,7 @@ from magma.rcss.model.rcss_agent import RCSSAgentModel
 from magma.rcss.model.rcss_rules import RCSSRules
 from magma.rcss.model.robot.rcss_robot_model import RCSSRobotModel
 from magma.rcss.model.robot.rcsssmj_robot_description import RCSSSMJRobots
-from magma.rcss.model.world.rcss_field_description import RCSSFieldVersion
+from magma.rcss.model.world.rcsssmj_field_description import RCSSSMJFieldVersion
 from magma.soccer_agent.model.soccer_agent import PMutableSoccerAgentModel, PSoccerAgentModel
 from magma.soccer_agent.model.soccer_rules import SoccerRules
 from magma.soccer_agent.model.world.soccer_field_description import PSoccerFieldDescription
@@ -55,7 +55,7 @@ class RCSSSMJAgentFactory(SoccerAgentFactory):
         return RCSSSMJRobots.T1.value
 
     def _create_field_description(self) -> PSoccerFieldDescription:
-        return RCSSFieldVersion.create_description_for(self.field_version)
+        return RCSSSMJFieldVersion.create_description_for(self.field_version)
 
     def _create_robot(self, desc: PRobotDescription) -> PMutableRobotModel:
         return RCSSRobotModel.from_description(desc)

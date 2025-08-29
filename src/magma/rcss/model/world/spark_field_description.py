@@ -8,8 +8,8 @@ from magma.common.math.geometry.vector import V2D_ZERO, Vector2D, Vector3D
 from magma.soccer_agent.model.world.soccer_field_description import SoccerFieldDescription
 
 
-class RCSSFieldVersion(Enum):
-    """Enum specifying the available RoboCup Soccer Simulation league field versions."""
+class SimSparkFieldVersion(Enum):
+    """Enum specifying the available SimSpark field versions."""
 
     UNKNOWN = 0
     """Unknown field version."""
@@ -27,7 +27,7 @@ class RCSSFieldVersion(Enum):
     """Version 66 of the soccer field."""
 
     @staticmethod
-    def from_value(version: int | str) -> RCSSFieldVersion:
+    def from_value(version: int | str) -> SimSparkFieldVersion:
         """Fetch the enum entry corresponding to the given version value.
 
         Parameter
@@ -38,13 +38,13 @@ class RCSSFieldVersion(Enum):
 
         version = version if type(version) == 'int' else int(version)
 
-        for v in RCSSFieldVersion:
+        for v in SimSparkFieldVersion:
             if v.value == version:
                 return v
 
-        print(f'WARNING: Unknown RCSS field version: "{version}"!')  # noqa: T201
+        print(f'WARNING: Unknown SimSpark field version: "{version}"!')  # noqa: T201
 
-        return RCSSFieldVersion.UNKNOWN
+        return SimSparkFieldVersion.UNKNOWN
 
     @staticmethod
     def create_description_for(version: int | str) -> SoccerFieldDescription:
@@ -56,21 +56,21 @@ class RCSSFieldVersion(Enum):
             The field version number.
         """
 
-        version_id = RCSSFieldVersion.from_value(version)
+        version_id = SimSparkFieldVersion.from_value(version)
 
-        if version_id == RCSSFieldVersion.V62:
-            return RCSSFieldV62()
-        if version_id == RCSSFieldVersion.V63:
-            return RCSSFieldV63()
-        if version_id == RCSSFieldVersion.V64:
-            return RCSSFieldV64()
+        if version_id == SimSparkFieldVersion.V62:
+            return SimSparkFieldV62()
+        if version_id == SimSparkFieldVersion.V63:
+            return SimSparkFieldV63()
+        if version_id == SimSparkFieldVersion.V64:
+            return SimSparkFieldV64()
 
         # cases: V66 and UNKNOWN
-        return RCSSFieldV66()
+        return SimSparkFieldV66()
 
 
-class RCSSFieldV62(SoccerFieldDescription):
-    """Class representing the soccer field used by the RoboCup Soccer Simulation version 62."""
+class SimSparkFieldV62(SoccerFieldDescription):
+    """Class representing the soccer field used by the SimSpark Soccer Simulation version 62."""
 
     def __init__(
         self,
@@ -112,8 +112,8 @@ class RCSSFieldV62(SoccerFieldDescription):
         # fmt: on
 
 
-class RCSSFieldV63(RCSSFieldV62):
-    """Class representing the soccer field used by the RoboCup Soccer Simulation version 63."""
+class SimSparkFieldV63(SimSparkFieldV62):
+    """Class representing the soccer field used by the SimSpark Soccer Simulation version 63."""
 
     def __init__(
         self,
@@ -136,8 +136,8 @@ class RCSSFieldV63(RCSSFieldV62):
         )
 
 
-class RCSSFieldV64(RCSSFieldV63):
-    """Class representing the soccer field used by the RoboCup Soccer Simulation version 64."""
+class SimSparkFieldV64(SimSparkFieldV63):
+    """Class representing the soccer field used by the SimSpark Soccer Simulation version 64."""
 
     def __init__(
         self,
@@ -215,8 +215,8 @@ class RCSSFieldV64(RCSSFieldV63):
             self._add_line(f'MC_{i}-{deg_steps[i]}', l_type, mc_points[i], mc_points[i + 1])
 
 
-class RCSSFieldV66(RCSSFieldV64):
-    """Class representing the soccer field used by the RoboCup Soccer Simulation version 66."""
+class SimSparkFieldV66(SimSparkFieldV64):
+    """Class representing the soccer field used by the SimSpark Soccer Simulation version 66."""
 
     def __init__(
         self,

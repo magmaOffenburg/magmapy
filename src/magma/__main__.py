@@ -7,7 +7,8 @@ from typing import TYPE_CHECKING
 from magma.agent.runtime.agent_runtime import AgentRuntime
 from magma.rcss.model.robot.rcsssmj_robot_description import RCSSSMJRobots
 from magma.rcss.model.robot.spark_robot_description import SimSparkRobots
-from magma.rcss.model.world.rcss_field_description import RCSSFieldVersion
+from magma.rcss.model.world.rcsssmj_field_description import RCSSSMJFieldVersion
+from magma.rcss.model.world.spark_field_description import SimSparkFieldVersion
 from magma.rcss.runtime.rcsssmj_factory import RCSSSMJAgentFactory
 from magma.rcss.runtime.spark_factory import SimSparkAgentFactory
 
@@ -26,7 +27,7 @@ def rcss_agent() -> None:
     """Main function for running a magma RCSS agent."""
 
     # fetch argument options
-    field_versions: list[str] = [str(version.value) for version in RCSSFieldVersion if version != RCSSFieldVersion.UNKNOWN]
+    field_versions: list[str] = [str(version.value) for version in SimSparkFieldVersion if version != SimSparkFieldVersion.UNKNOWN]
     robot_models: list[str] = ['default'] + [str(robot.value) for robot in SimSparkRobots if robot != SimSparkRobots.UNKNOWN]
     decision_maker_ids: list[str] = ['default', 'Soccer']
 
@@ -64,7 +65,7 @@ def rcsssmj_agent() -> None:
     """Main function for running a magma RCSSSMJ agent."""
 
     # fetch argument options
-    field_versions: list[str] = [str(version.value) for version in RCSSFieldVersion if version != RCSSFieldVersion.UNKNOWN]
+    field_versions: list[str] = [str(version.value) for version in RCSSSMJFieldVersion if version != RCSSSMJFieldVersion.UNKNOWN]
     robot_models: list[str] = ['default'] + [str(robot.value) for robot in RCSSSMJRobots if robot != RCSSSMJRobots.UNKNOWN]
     decision_maker_ids: list[str] = ['default', 'Soccer']
 
