@@ -124,7 +124,7 @@ class KickOffPositioningBehavior(PositioningBehavior):
         )
 
         self.own_kick_off_pose: Pose2D = Pose2D(Vector2D(-0.5, 0), ANGLE_ZERO)
-        self.opponent_kick_off_pose: Pose2D = Pose2D(Vector2D(-self.model.get_world().get_map().get_middle_circle_radius() - 0.5, 0), ANGLE_ZERO)
+        self.opponent_kick_off_pose: Pose2D = Pose2D(Vector2D(-self.model.get_world().get_map().get_middle_circle_radius() - 0.5, 1), ANGLE_ZERO)
 
     def _get_target_pose(self) -> Pose2D:
         return self.own_kick_off_pose if self.model.get_game_state().play_mode == PlayMode.OWN_KICK_OFF else self.opponent_kick_off_pose
@@ -159,3 +159,38 @@ class PenaltyPositioningBehavior(PositioningBehavior):
         goal_rel_pose = Pose2D(Vector2D(-4, 1.3), angle_deg(-20))
 
         return Pose2D(self.model.get_world().get_map().get_opponent_goal_position().as_2d() - goal_rel_pose.pos, goal_rel_pose.theta)
+
+
+class RolePositioningBehavior(PositioningBehavior):
+    """Role-specific positioning behavior."""
+
+    def __init__(self, model: PSoccerAgentModel, behaviors: Mapping[str, PBehavior]) -> None:
+        """Construct a new role-specific positioning behavior.
+
+        Parameter
+        ---------
+        model : PSoccerAgentModel
+            The soccer agent model.
+
+        behaviors : Mapping[str, PBehavior]
+            The map of known behaviors.
+        """
+
+        super().__init__(
+            SoccerBehaviorID.ROLE_POSITIONING.value,
+            model,
+            behaviors,
+            0.1,
+            0.3,
+            angle_deg(10),
+            angle_deg(20),
+        )
+
+    def _get_target_pose(self) -> Pose2D:
+        role = self.model.get_role_manager().get_role()
+
+        if role is None:
+            # no role --> stay where we are
+            return self.model.get_world().get_this_player().get_pose_2d()
+
+        return role.get_target_pose()

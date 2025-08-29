@@ -24,6 +24,9 @@ class SoccerBehaviorID(Enum):
     KICK_OFF_POSITIONING = 'kick_off_positioning'
     """The kick-off-positioning behavior used to move the agent in an appropriate position for kick-off."""
 
+    ROLE_POSITIONING = 'role_positioning'
+    """The role-positioning behavior used to move the agent towards the desired position of its role."""
+
     ATTACK = 'attack'
     """The attack behavior used to approach the ball and kicking it somewhere."""
 
