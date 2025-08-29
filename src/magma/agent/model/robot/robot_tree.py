@@ -416,3 +416,28 @@ class BodyPart:
             return self._parent.get_pose()
 
         return self._parent.get_pose().tf_pose(self.joint.get_transform())
+
+    def get_body(self, name: str) -> BodyPart | None:
+        """Return the body with the given name."""
+
+        # check this body part
+        if self.name == name:
+            return self
+
+        # check child bodies
+        for child in self.children:
+            body = child.get_body(name)
+            if body is not None:
+                return body
+
+        return None
+
+    def count_bodies(self) -> int:
+        """Recursively count the number of bodies (including this body part)."""
+
+        n_bodies = 1
+
+        for child in self.children:
+            n_bodies += child.count_bodies()
+
+        return n_bodies

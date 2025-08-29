@@ -92,6 +92,9 @@ class PRobotModel(Protocol):
     def get_tree(self) -> PBodyPart:
         """Retrieve the robot tree."""
 
+    def get_body(self, name: str) -> PBodyPart | None:
+        """Retrieve the robot tree."""
+
 
 class PMutableRobotModel(PRobotModel, PMutableModel, Protocol):
     """Protocol for mutable robot models."""
@@ -191,6 +194,11 @@ class RobotModel:
         """Retrieve the robot tree."""
 
         return self._root_body
+
+    def get_body(self, name: str) -> PBodyPart | None:
+        """Retrieve the robot tree."""
+
+        return self._root_body.get_body(name)
 
     def update(self, perception: Perception) -> None:
         """Update the state of the robot model from the given perceptions.
