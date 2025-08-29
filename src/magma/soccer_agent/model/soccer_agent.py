@@ -126,4 +126,4 @@ class SoccerAgentModel(AgentModel, ABC):
             The collection of perceived sensor information.
         """
 
-        self._world.update(perception)
+        self._world.update(perception, self._robot)

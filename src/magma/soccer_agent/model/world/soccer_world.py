@@ -1,8 +1,13 @@
 from collections.abc import Sequence
 from typing import Protocol
 
-from magma.agent.communication.perception import Loc3DPerceptor, Perception, Pos3DPerceptor, Rot3DPerceptor
-from magma.agent.model.world.objects import LineLandmark, PointLandmark
+from magma.agent.communication.perception import Perception
+from magma.agent.model.robot.robot_model import PRobotModel
+from magma.agent.model.robot.sensors import Loc3DSensor, VisionSensor
+from magma.agent.model.world.objects import InformationSource, LineLandmark, PointLandmark
+from magma.common.math.geometry.pose import P3D_ZERO
+from magma.common.math.geometry.rotation import R3D_IDENTITY
+from magma.common.math.geometry.vector import V3D_ZERO
 from magma.soccer_agent.model.world.soccer_field_description import PSoccerFieldDescription
 from magma.soccer_agent.model.world.soccer_map import PSoccerMap, SoccerMap
 from magma.soccer_agent.model.world.soccer_objects import (
@@ -46,13 +51,16 @@ class PSoccerWorld(Protocol):
 class PMutableSoccerWorld(PSoccerWorld, Protocol):
     """Soccer domain specific robot model."""
 
-    def update(self, perception: Perception) -> None:
+    def update(self, perception: Perception, robot: PRobotModel) -> None:
         """Update the state of the model from the given perceptions.
 
         Parameter
         ---------
         perception : Perception
             The collection of perceived sensor information.
+
+        robot : PRobotModel
+            The robot model.
         """
 
 
@@ -82,8 +90,6 @@ class SoccerWorld:
         ball_radius : float
             The radius of the soccer ball.
         """
-
-        # self._field_desc: PSoccerFieldDescription = field_desc
 
         self._time: float = 0.0
 
@@ -147,23 +153,52 @@ class SoccerWorld:
 
         return self._map
 
-    def update(self, perception: Perception) -> None:
+    def update(self, perception: Perception, robot: PRobotModel) -> None:
         """Update the state of the world model from the given perceptions."""
 
         self._time = perception.get_time()
 
-        # try updating robot location
-        loc_perceptor = perception.get_perceptor('torso_loc', Loc3DPerceptor)
-        pos_perceptor = perception.get_perceptor('torso_pos', Pos3DPerceptor)
-        rot_perceptor = perception.get_perceptor('torso_quat', Rot3DPerceptor)
+        self._localize(robot)
 
-        if loc_perceptor is not None:
-            self._this_player.update_location(self._time, loc_perceptor.loc.pos, loc_perceptor.loc.rot)
-        elif pos_perceptor is not None and rot_perceptor is not None:
-            self._this_player.update_location(self._time, pos_perceptor.pos, rot_perceptor.rot)
-        elif pos_perceptor is not None:
-            self._this_player.update_location(self._time, pos_perceptor.pos, self._this_player.get_orientation())
-        elif rot_perceptor is not None:
-            self._this_player.update_location(self._time, self._this_player.get_position(), rot_perceptor.rot)
+        self._update_ball(robot)
 
-        # TODO: update objects
+    def _localize(self, robot: PRobotModel) -> bool:
+        """Localize robot."""
+
+        # try localizing via global positioning system (external localizer)
+        gps = robot.get_sensor('torso_loc', Loc3DSensor)
+        if gps is not None and gps.received_update():
+            loc = gps.get_location()
+            self._this_player.update_location(gps.get_time(), loc.pos, loc.rot)
+            return True
+
+        return False
+
+    def _update_ball(self, robot: PRobotModel) -> bool:
+        """Update the ball information."""
+
+        # fetch vision sensor
+        cam = robot.get_sensor('vision', VisionSensor)
+        if cam is None or not cam.received_update():
+            return False
+
+        # reset visibility of ball
+        self._ball.reset_visibility()
+
+        # fetch ball detections
+        ball_detections = [obj for obj in cam.get_object_detections() if obj.name == 'B']
+        if not ball_detections:
+            return False
+
+        # fetch camera pose
+        cam_body = robot.get_body(cam.frame_id)
+        cam_pose = P3D_ZERO if cam_body is None else cam_body.get_pose()
+
+        # filter ball position and update ball object
+        seen_pos = ball_detections[0].position
+        local_pos = cam_pose.tf_vec(seen_pos)
+        global_pos = self._this_player.get_pose().tf_vec(local_pos)
+        # TODO: filter global ball position
+        self._ball.update(cam.get_time(), InformationSource.VISION, global_pos, R3D_IDENTITY, V3D_ZERO)
+
+        return True
