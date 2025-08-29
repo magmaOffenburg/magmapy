@@ -1,4 +1,6 @@
-from magma.agent.decision.behavior import Behavior, BehaviorID
+from collections.abc import Mapping
+
+from magma.agent.decision.behavior import Behavior, BehaviorID, PBehavior, PMoveBehavior, SingleComplexBehavior
 from magma.agent.model.agent_model import PAgentModel
 from magma.agent.model.robot.actuators import OmniSpeedActuator
 from magma.common.math.geometry.vector import V3D_ZERO, Vector3D
@@ -72,3 +74,38 @@ class MoveBehavior(Behavior):
 
     def is_finished(self) -> bool:
         return True
+
+
+class MoveReadyBehavior(SingleComplexBehavior):
+    """Complex get-ready behavior based on the move behavior."""
+
+    def __init__(
+        self,
+        behaviors: Mapping[str, PBehavior],
+        name: str = BehaviorID.GET_READY.value,
+    ):
+        """Create a new get-ready behavior.
+
+        Parameter
+        ---------
+        behaviors : Mapping[str, PBehavior]
+            The map of known behaviors.
+
+        name : str
+            The unique name of the behavior.
+        """
+
+        super().__init__(name, behaviors)
+
+        move_behavior = behaviors[BehaviorID.MOVE.value]
+        self._move_behavior: PMoveBehavior | None = move_behavior if isinstance(move_behavior, PMoveBehavior) else None
+        """The move-to behavior used to move to the desired pose."""
+
+    def _decide_next(self) -> PBehavior | None:
+        if self._move_behavior is None:
+            # no move behavior available --> can't do anything
+            return None
+
+        # move zero
+        self._move_behavior.set(V3D_ZERO)
+        return self._move_behavior
