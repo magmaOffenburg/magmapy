@@ -120,10 +120,7 @@ class SoccerAgentModel(AgentModel, ABC):
         # 4: update world state
         self._update_world(perception)
 
-        # 5: update state of beliefs
-        self._update_beliefs()
-
-        # 6. update role manager state
+        # 5. update role manager state
         self._update_role_manager()
 
     @abstractmethod
