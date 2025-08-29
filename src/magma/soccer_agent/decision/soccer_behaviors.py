@@ -27,6 +27,9 @@ class SoccerBehaviorID(Enum):
     ATTACK = 'attack'
     """The attack behavior used to approach the ball and kicking it somewhere."""
 
+    DRIBBLE = 'dribble'
+    """The dribble behavior used to walk straight with the ball."""
+
 
 @runtime_checkable
 class PMoveToBehavior(PBehavior, Protocol):

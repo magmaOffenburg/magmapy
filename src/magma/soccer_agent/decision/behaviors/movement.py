@@ -58,7 +58,7 @@ class MoveToBehavior(SingleComplexBehavior):
 
         own_pose = self.model.get_world().get_this_player().get_pose_2d()
         rel_target_pose = own_pose.inv_tf_pose(self._target_pose)
-        target_distance = own_pose.pos.norm()
+        target_distance = rel_target_pose.pos.norm()
 
         if target_distance > self.omni_movement_distance:
             # turn and move straight towards the target position
@@ -68,18 +68,18 @@ class MoveToBehavior(SingleComplexBehavior):
                 # more than 20 degrees deviation from the direction to the target position --> only turning towards target
                 forwards = 0.0
                 sidewards = 0.0
-                turn = target_angle.deg()
+                turn = target_angle.rad()
             else:
                 # facing the target position --> move towards the target and correct remaining directional deviation while moving forward
                 forwards = rel_target_pose.x()
                 sidewards = 0.0
-                turn = target_angle.deg() * 0.25
+                turn = target_angle.rad() * 0.25
 
         else:
             # omni-directional movement towards the target pose
             forwards = rel_target_pose.x()
             sidewards = rel_target_pose.y()
-            turn = rel_target_pose.theta.deg()
+            turn = rel_target_pose.theta.rad()
 
         # forward new velocity parameter to move behavior
         self.move_behavior.set(Vector3D(forwards, sidewards, turn))
@@ -142,7 +142,7 @@ class MoveAlongBehavior(SingleComplexBehavior):
         # omni-directional movement towards the next target pose
         forwards = rel_target_pose.x()
         sidewards = rel_target_pose.y()
-        turn = rel_target_pose.theta.deg()
+        turn = rel_target_pose.theta.rad()
 
         # forward new velocity parameter to move behavior
         self.move_behavior.set(Vector3D(forwards, sidewards, turn))
