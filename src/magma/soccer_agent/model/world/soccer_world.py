@@ -186,7 +186,7 @@ class SoccerWorld:
         self._ball.reset_visibility()
 
         # fetch ball detections
-        ball_detections = [obj for obj in cam.get_object_detections() if obj.name == 'B']
+        ball_detections = [obj for obj in cam.get_object_detections() if obj.name == 'B' or obj.class_id == 'Ball']
         if not ball_detections:
             return False
 
