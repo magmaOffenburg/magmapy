@@ -2,6 +2,7 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 
 from magma.agent.communication.perception import Perceptor
+from magma.rchl.communication.rchl_mitecom import RCHLTeamMessage
 
 
 @dataclass(frozen=True)
@@ -103,3 +104,11 @@ class RCHLGameStatePerceptor(Perceptor):
 
     teams: Sequence[TeamInfo]
     """Sequence of team information messages."""
+
+
+@dataclass(frozen=True)
+class RCHLTeamComPerceptor(Perceptor):
+    """Perceptor for RCHL team communication."""
+
+    messages: Sequence[RCHLTeamMessage]
+    """The team communication messages."""
