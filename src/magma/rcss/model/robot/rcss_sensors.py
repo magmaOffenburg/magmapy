@@ -30,10 +30,10 @@ class ForceResistance(Sensor):
         self._origin: Vector3D = V3D_ZERO
         """The sensed force origin."""
 
-    def update(self, perception: Perception) -> None:
+    def _update(self, perception: Perception) -> None:
         perceptor = perception.get_perceptor(self.perceptor_name, ForceResistancePerceptor)
 
         if perceptor is not None:
-            self._time = perception.get_time()
+            self.set_time(perception.get_time())
             self._force = perceptor.force
             self._origin = perceptor.origin

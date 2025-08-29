@@ -11,17 +11,21 @@ from magma.agent.communication.perception import (
     JointStatePerceptor,
     Loc2DPerceptor,
     Loc3DPerceptor,
+    ObjectDetection,
     Perception,
     Pos2DPerceptor,
     Pos3DPerceptor,
     Rot2DPerceptor,
     Rot3DPerceptor,
+    VisionPerceptor,
 )
 from magma.common.math.geometry.pose import P2D_ZERO, P3D_ZERO, Pose2D, Pose3D
 from magma.common.math.geometry.rotation import R3D_IDENTITY, Rotation3D
 from magma.common.math.geometry.vector import V3D_ZERO, Vector3D
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+
     from magma.agent.model.robot.robot_tree import FreeJoint, HingeJoint
 
 
@@ -38,6 +42,9 @@ class PSensor(Protocol):
 
     def get_time(self) -> float:
         """Retrieve the time at which this sensor received its last update."""
+
+    def received_update(self) -> bool:
+        """Check if the sensor received new information in this update-cycle."""
 
 
 class PMutableSensor(PSensor, Protocol):
@@ -153,13 +160,46 @@ class Sensor(ABC):
         self._time: float = 0.0
         """The time this sensor received tis last update."""
 
+        self._changed: bool = False
+        """Flag indicating if new sensor information has been received in this update-cycle."""
+
     def get_time(self) -> float:
         """Retrieve the time at which this sensor received its last update."""
 
         return self._time
 
-    @abstractmethod
+    def received_update(self) -> bool:
+        """Check if the sensor received new information in this update-cycle."""
+
+        return self._changed
+
+    def set_time(self, time: float) -> None:
+        """Set the sensor information timestamp and signal the availability of new sensor information.
+
+        Parameter
+        ---------
+        time : float
+            The sensor information time.
+        """
+
+        self._time = time
+        self._changed = True
+
     def update(self, perception: Perception) -> None:
+        """Update the sensor state from the given perception.
+
+        Parameter
+        ---------
+        perception : Perception
+            The collection of perceived sensor information.
+        """
+
+        self._changed = False
+
+        self._update(perception)
+
+    @abstractmethod
+    def _update(self, perception: Perception) -> None:
         """Update the sensor state from the given perception.
 
         Parameter
@@ -197,11 +237,11 @@ class Accelerometer(Sensor):
 
         return self._acc
 
-    def update(self, perception: Perception) -> None:
+    def _update(self, perception: Perception) -> None:
         perceptor = perception.get_perceptor(self.perceptor_name, AccelerometerPerceptor)
 
         if perceptor is not None:
-            self._time = perception.get_time()
+            self.set_time(perception.get_time())
             self._acc = perceptor.acceleration
 
 
@@ -233,11 +273,11 @@ class Gyroscope(Sensor):
 
         return self._rpy
 
-    def update(self, perception: Perception) -> None:
+    def _update(self, perception: Perception) -> None:
         perceptor = perception.get_perceptor(self.perceptor_name, GyroRatePerceptor)
 
         if perceptor is not None:
-            self._time = perception.get_time()
+            self.set_time(perception.get_time())
             self._rpy = perceptor.rpy
 
 
@@ -285,11 +325,11 @@ class IMU(Sensor):
 
         return self._rpy
 
-    def update(self, perception: Perception) -> None:
+    def _update(self, perception: Perception) -> None:
         perceptor = perception.get_perceptor(self.perceptor_name, IMUPerceptor)
 
         if perceptor is not None:
-            self._time = perception.get_time()
+            self.set_time(perception.get_time())
             self._orientation = perceptor.orientation
             self._acc = perceptor.acc
             self._rpy = perceptor.rpy
@@ -351,11 +391,11 @@ class HingeJointSensor(Sensor):
 
         return self._effort
 
-    def update(self, perception: Perception) -> None:
+    def _update(self, perception: Perception) -> None:
         perceptor = perception.get_perceptor(self.perceptor_name, JointStatePerceptor)
 
         if perceptor is not None:
-            self._time = perception.get_time()
+            self.set_time(perception.get_time())
             self._position = perceptor.position
             self._velocity = perceptor.velocity
             self._effort = perceptor.effort
@@ -403,11 +443,11 @@ class FreeJointSensor(Sensor):
 
         return self._pose
 
-    def update(self, perception: Perception) -> None:
+    def _update(self, perception: Perception) -> None:
         perceptor = perception.get_perceptor(self.perceptor_name, FreeJointPerceptor)
 
         if perceptor is not None:
-            self._time = perception.get_time()
+            self.set_time(perception.get_time())
             self._pose = perceptor.pose
 
             self.joint.set(self._pose)
@@ -445,14 +485,62 @@ class Camera(Sensor):
         self.vertical_fov: Final[float] = v_fov
         """The vertical field of view."""
 
-    def update(self, perception: Perception) -> None:
+    def _update(self, perception: Perception) -> None:
         del perception  # signal unused parameter
+
+
+class VisionSensor(Sensor):
+    """Default vision pipeline sensor representation."""
+
+    def __init__(self, name: str, frame_id: str, perceptor_name: str, h_fov: float, v_fov: float) -> None:
+        """Construct a new vision pipeline sensor.
+
+        Parameter
+        ---------
+        name : str
+            The unique name of the sensor.
+
+        frame_id : str
+            The name of the body the sensor is attached to.
+
+        perceptor_name : str
+            The name of the perceptor associated with the sensor.
+
+        h_fov : float
+            The horizontal field of view.
+
+        v_fov : float
+            The vertical field of view.
+        """
+
+        super().__init__(name, frame_id, perceptor_name)
+
+        self.horizontal_fov: Final[float] = h_fov
+        """The horizontal field of view."""
+
+        self.vertical_fov: Final[float] = v_fov
+        """The vertical field of view."""
+
+        self._objects: Sequence[ObjectDetection] = []
+        """The collection of point object detections."""
+
+    def get_object_detections(self) -> Sequence[ObjectDetection]:
+        """Return the collection of most recent object detections."""
+
+        return self._objects
+
+    def _update(self, perception: Perception) -> None:
+        perceptor = perception.get_perceptor(self.perceptor_name, VisionPerceptor)
+
+        if perceptor is not None:
+            self.set_time(perception.get_time())
+            self._objects = perceptor.objects
 
 
 class Loc2DSensor(Sensor):
     """Default 2D location sensor representation."""
 
-    def __init__(self, name: str, frame_id: str, perceptor_name: str) -> None:
+    def __init__(self, name: str, frame_id: str, perceptor_prefix: str) -> None:
         """Construct a new 2D location sensor.
 
         Parameter
@@ -463,11 +551,11 @@ class Loc2DSensor(Sensor):
         frame_id : str
             The name of the body the sensor is attached to.
 
-        perceptor_name : str
-            The name of the perceptor associated with the sensor.
+        perceptor_prefix : str
+            The naming prefix of the perceptor associated with the sensor.
         """
 
-        super().__init__(name, frame_id, perceptor_name)
+        super().__init__(name, frame_id, perceptor_prefix)
 
         self._pose: Pose2D = P2D_ZERO
 
@@ -476,12 +564,12 @@ class Loc2DSensor(Sensor):
 
         return self._pose
 
-    def update(self, perception: Perception) -> None:
+    def _update(self, perception: Perception) -> None:
         # try updating using location perceptor
         perceptor = perception.get_perceptor(self.perceptor_name, Loc2DPerceptor)
 
         if perceptor is not None:
-            self._time = perception.get_time()
+            self.set_time(perception.get_time())
             self._pose = perceptor.loc
             return
 
@@ -490,22 +578,22 @@ class Loc2DSensor(Sensor):
         rot_perceptor = perception.get_perceptor(self.perceptor_name + '_theta', Rot2DPerceptor)
 
         if pos_perceptor is not None and rot_perceptor is not None:
-            self._time = perception.get_time()
+            self.set_time(perception.get_time())
             self._pose = Pose2D(pos_perceptor.pos, rot_perceptor.theta)
 
         elif pos_perceptor is not None:
-            self._time = perception.get_time()
+            self.set_time(perception.get_time())
             self._pose = Pose2D(pos_perceptor.pos, self._pose.theta)
 
         elif rot_perceptor is not None:
-            self._time = perception.get_time()
+            self.set_time(perception.get_time())
             self._pose = Pose2D(self._pose.pos, rot_perceptor.theta)
 
 
 class Loc3DSensor(Sensor):
     """Default 3D location sensor representation."""
 
-    def __init__(self, name: str, frame_id: str, perceptor_name: str) -> None:
+    def __init__(self, name: str, frame_id: str, perceptor_prefix: str) -> None:
         """Construct a new 3D location sensor.
 
         Parameter
@@ -516,25 +604,25 @@ class Loc3DSensor(Sensor):
         frame_id : str
             The name of the body the sensor is attached to.
 
-        perceptor_name : str
-            The name of the perceptor associated with the sensor.
+        perceptor_prefix : str
+            The naming prefix of the perceptor associated with the sensor.
         """
 
-        super().__init__(name, frame_id, perceptor_name)
+        super().__init__(name, frame_id, perceptor_prefix)
 
         self._pose: Pose3D = P3D_ZERO
 
-    def get_loc(self) -> Pose3D:
+    def get_location(self) -> Pose3D:
         """Retrieve the perceived location information."""
 
         return self._pose
 
-    def update(self, perception: Perception) -> None:
+    def _update(self, perception: Perception) -> None:
         # try updating using location perceptor
-        loc_perceptor = perception.get_perceptor(self.perceptor_name, Loc3DPerceptor)
+        loc_perceptor = perception.get_perceptor(self.perceptor_name + '_loc', Loc3DPerceptor)
 
         if loc_perceptor is not None:
-            self._time = perception.get_time()
+            self.set_time(perception.get_time())
             self._pose = loc_perceptor.loc
             return
 
@@ -543,13 +631,13 @@ class Loc3DSensor(Sensor):
         rot_perceptor = perception.get_perceptor(self.perceptor_name + '_quat', Rot3DPerceptor)
 
         if pos_perceptor is not None and rot_perceptor is not None:
-            self._time = perception.get_time()
+            self.set_time(perception.get_time())
             self._pose = Pose3D(pos_perceptor.pos, rot_perceptor.rot)
 
         elif pos_perceptor is not None:
-            self._time = perception.get_time()
+            self.set_time(perception.get_time())
             self._pose = Pose3D(pos_perceptor.pos, self._pose.rot)
 
         elif rot_perceptor is not None:
-            self._time = perception.get_time()
+            self.set_time(perception.get_time())
             self._pose = Pose3D(self._pose.pos, rot_perceptor.rot)

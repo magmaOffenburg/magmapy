@@ -193,6 +193,30 @@ class CameraDescription(SensorDescription):
 
 
 @dataclass(frozen=True)
+class VisionDescription(SensorDescription):
+    """Default vision pipeline sensor description."""
+
+    horizontal_fov: float
+    """The horizontal field of view angle."""
+
+    vertical_fov: float
+    """The vertical field of view angle."""
+
+    def __init__(
+        self,
+        name: str,
+        frame_id: str,
+        perceptor_name: str,
+        horizontal_fov: float,
+        vertical_fov: float,
+    ):
+        super().__init__(name, frame_id, perceptor_name, SensorType.CAMERA.value)
+
+        object.__setattr__(self, 'horizontal_fov', horizontal_fov)
+        object.__setattr__(self, 'vertical_fov', vertical_fov)
+
+
+@dataclass(frozen=True)
 class ActuatorDescription:
     """Base class for actuator descriptions."""
 

@@ -16,6 +16,7 @@ from magma.agent.model.robot.robot_description import (
     PRobotDescription,
     SensorDescription,
     SensorType,
+    VisionDescription,
 )
 from magma.agent.model.robot.robot_tree import ZERO_INERTIA, BodyPart, BodyVisual, FixedJoint, FreeJoint, HingeJoint, Joint, PBodyPart, RigidBodyInertia
 from magma.agent.model.robot.sensors import (
@@ -28,6 +29,7 @@ from magma.agent.model.robot.sensors import (
     Loc2DSensor,
     Loc3DSensor,
     Sensor,
+    VisionSensor,
 )
 
 if TYPE_CHECKING:
@@ -360,6 +362,9 @@ class RobotModel:
 
         if isinstance(desc, CameraDescription):
             return Camera(desc.name, desc.frame_id, desc.perceptor_name, desc.horizontal_fov, desc.vertical_fov)
+
+        if isinstance(desc, VisionDescription):
+            return VisionSensor(desc.name, desc.frame_id, desc.perceptor_name, desc.horizontal_fov, desc.vertical_fov)
 
         if desc.sensor_type == SensorType.LOC2D.value:
             return Loc2DSensor(desc.name, desc.frame_id, desc.perceptor_name)
