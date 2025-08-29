@@ -236,6 +236,14 @@ def angle_to_xy(x: float, y: float) -> Angle2D:
     return Angle2D(atan2(y, x))
 
 
+def angle_from_to(start: Vector2D | Vector3D, end: Vector2D | Vector3D) -> Angle2D:
+    """
+    Construct a new Angle2D representing the angle from the start point to the given end point in xy-plane, with x-axis facing forward.
+    """
+
+    return Angle2D(atan2(end.y - start.y, end.x - start.x))
+
+
 ANGLE_ZERO: Final[Angle2D] = Angle2D(0)
 """
 The zero angle / identity rotation.
