@@ -3,7 +3,7 @@ from __future__ import annotations
 from math import cos, sin
 from typing import TYPE_CHECKING, Final
 
-from magma.common.math.geometry.vector import Vector3D
+from magma.common.math.geometry.vector import V3D_UNIT_NEG_X, V3D_UNIT_NEG_Y, V3D_UNIT_NEG_Z, V3D_UNIT_X, V3D_UNIT_Y, V3D_UNIT_Z, Vector3D
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Mapping
@@ -97,15 +97,15 @@ class Rotation3D:
         # fmt: off
         return Rotation3D(
             self.m11 * r.m11 + self.m12 * r.m21 + self.m13 * r.m31,
-            self.m21 * r.m11 + self.m22 * r.m21 + self.m23 * r.m31,
-            self.m31 * r.m11 + self.m32 * r.m21 + self.m33 * r.m31,
-
             self.m11 * r.m12 + self.m12 * r.m22 + self.m13 * r.m32,
-            self.m21 * r.m12 + self.m22 * r.m22 + self.m23 * r.m32,
-            self.m31 * r.m12 + self.m32 * r.m22 + self.m33 * r.m32,
-
             self.m11 * r.m13 + self.m12 * r.m23 + self.m13 * r.m33,
+
+            self.m21 * r.m11 + self.m22 * r.m21 + self.m23 * r.m31,
+            self.m21 * r.m12 + self.m22 * r.m22 + self.m23 * r.m32,
             self.m21 * r.m13 + self.m22 * r.m23 + self.m23 * r.m33,
+
+            self.m31 * r.m11 + self.m32 * r.m21 + self.m33 * r.m31,
+            self.m31 * r.m12 + self.m32 * r.m22 + self.m33 * r.m32,
             self.m31 * r.m13 + self.m32 * r.m23 + self.m33 * r.m33
         )
         # fmt: on
@@ -118,18 +118,32 @@ class Rotation3D:
         # fmt: off
         return Rotation3D(
             self.m11 * r.m11 + self.m21 * r.m21 + self.m31 * r.m31,
-            self.m12 * r.m11 + self.m22 * r.m21 + self.m32 * r.m31,
-            self.m13 * r.m11 + self.m23 * r.m21 + self.m33 * r.m31,
-
             self.m11 * r.m12 + self.m21 * r.m22 + self.m31 * r.m32,
-            self.m12 * r.m12 + self.m22 * r.m22 + self.m32 * r.m32,
-            self.m13 * r.m12 + self.m23 * r.m22 + self.m33 * r.m32,
-
             self.m11 * r.m13 + self.m21 * r.m23 + self.m31 * r.m33,
+
+            self.m12 * r.m11 + self.m22 * r.m21 + self.m32 * r.m31,
+            self.m12 * r.m12 + self.m22 * r.m22 + self.m32 * r.m32,
             self.m12 * r.m13 + self.m22 * r.m23 + self.m32 * r.m33,
+
+            self.m13 * r.m11 + self.m23 * r.m21 + self.m33 * r.m31,
+            self.m13 * r.m12 + self.m23 * r.m22 + self.m33 * r.m32,
             self.m13 * r.m13 + self.m23 * r.m23 + self.m33 * r.m33
         )
         # fmt: on
+
+    def inverse(self) -> Rotation3D:
+        """Return the inverse rotation."""
+
+        # fmt: off
+        return Rotation3D(
+            self.m11, self.m21, self.m31,
+            self.m12, self.m22, self.m32,
+            self.m13, self.m23, self.m33,
+        )
+        # fmt: on
+
+    def __str__(self) -> str:
+        return f'{self.m11:.3f}, {self.m12:.3f}, {self.m13:.3f}\n{self.m21:.3f}, {self.m22:.3f}, {self.m23:.3f}\n{self.m31:.3f}, {self.m32:.3f}, {self.m33:.3f}\n'
 
 
 def axis_angle(axis: Vector3D, angle_rad: float) -> Rotation3D:
@@ -242,12 +256,12 @@ def inv_rot_z(angle_rad: float) -> Rotation3D:
 
 
 _AAR_MAP: Final[Mapping[Vector3D, Callable[[float], Rotation3D]]] = {
-    Vector3D(1, 0, 0): rot_x,
-    Vector3D(-1, 0, 0): inv_rot_x,
-    Vector3D(0, 1, 0): rot_y,
-    Vector3D(0, -1, 0): inv_rot_y,
-    Vector3D(0, 0, 1): rot_z,
-    Vector3D(0, 0, -1): inv_rot_z,
+    V3D_UNIT_X: rot_x,
+    V3D_UNIT_NEG_X: inv_rot_x,
+    V3D_UNIT_Y: rot_y,
+    V3D_UNIT_NEG_Y: inv_rot_y,
+    V3D_UNIT_Z: rot_z,
+    V3D_UNIT_NEG_Z: inv_rot_z,
 }
 """
 Axis-aligned rotation lookup map (used internally).

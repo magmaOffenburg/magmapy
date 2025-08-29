@@ -184,7 +184,7 @@ class Pose3D:
         return self.rot.inv_tf_rot(r)
 
     def __str__(self) -> str:
-        return f'{self.pos}, {self.rot}'
+        return f'{self.pos}\n{self.rot}'
 
     def __repr__(self) -> str:
         return f'Pose3D({self.pos}, {self.rot})'
