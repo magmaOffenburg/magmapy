@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from enum import Enum
 from typing import Final, Protocol
 
 from magma.common.math.geometry.angle import Angle2D, angle_to_xy
@@ -9,12 +10,31 @@ from magma.common.math.geometry.vector import V3D_ZERO, Vector3D
 from magma.common.util.map.feature.features import PLineFeature, PPointFeature
 
 
+class InformationSource(Enum):
+    """Enum specifying possible pose information sources for world objects."""
+
+    NONE = 'none'
+    """Initial state of the object / unknown information source."""
+
+    VISION = 'vision'
+    """The pose information of the object has been obtained from a visual detection."""
+
+    AUDIO = 'audio'
+    """The pose information of the object has been obtained from an audio detection."""
+
+
 class PVisibleObject(Protocol):
     """Protocol for visible objects in the world."""
 
     @property
     def name(self) -> str:
         """The unique name of the visible object."""
+
+    def get_time(self) -> float:
+        """Return the time of the last (vision or audio) detection of the object."""
+
+    def get_source(self) -> InformationSource:
+        """Return the pose information source."""
 
     def get_position(self) -> Vector3D:
         """Return the estimated position of the visible object."""
@@ -30,6 +50,18 @@ class PVisibleObject(Protocol):
 
     def get_pose_2d(self) -> Pose2D:
         """Return the 2D projected pose of the object."""
+
+    def is_visible(self) -> bool:
+        """Check if the object has been detected in the last vision perception."""
+
+    def get_age(self, time: float) -> float:
+        """Return the delta of the given time and the time of the last (vision or audio) detection of the object.
+
+        Parameter
+        ---------
+        time : float
+            The current time.
+        """
 
     def distance_to(self, other: PVisibleObject) -> float:
         """Calculate the 3D distance to the other object.
@@ -99,11 +131,30 @@ class VisibleObject:
         self.name: Final[str] = name
         """The unique name used to identify the object."""
 
+        self._time: float = 0.0
+        """The time of the last (vision or audio) detection of this object."""
+
+        self._source: InformationSource = InformationSource.NONE
+        """The pose information source."""
+
         self._position: Vector3D = V3D_ZERO if position is None else position
         """The global position of the object."""
 
         self._orientation: Rotation3D = R3D_IDENTITY if orientation is None else orientation
         """The global orientation of the object."""
+
+        self._visible: bool = False
+        """Flag if the object has been detected in the last vision perception."""
+
+    def get_time(self) -> float:
+        """Return the time of the last detection of this object."""
+
+        return self._time
+
+    def get_source(self) -> InformationSource:
+        """Return the pose information source."""
+
+        return self._source
 
     def get_position(self) -> Vector3D:
         """Return the estimated position of the visible object."""
@@ -130,6 +181,22 @@ class VisibleObject:
 
         return Pose2D(self._position.as_2d(), self.get_horizontal_angle())
 
+    def is_visible(self) -> bool:
+        """Check if the object has been detected in the last vision perception."""
+
+        return self._visible
+
+    def get_age(self, time: float) -> float:
+        """Return the delta of the given time and the time of the last (vision or audio) detection of the object.
+
+        Parameter
+        ---------
+        time : float
+            The current time.
+        """
+
+        return time - self._time
+
     def distance_to(self, other: PVisibleObject) -> float:
         """Calculate the 3D distance to the other object.
 
@@ -151,6 +218,42 @@ class VisibleObject:
         """
 
         return (self._position.as_2d() - other.get_position().as_2d()).norm()
+
+    def reset_visibility(self) -> None:
+        """Reset visibility state of the object."""
+
+        self._visible = False
+
+    def update(
+        self,
+        time: float,
+        source: InformationSource,
+        pos: Vector3D,
+        orientation: Rotation3D = R3D_IDENTITY,
+    ) -> None:
+        """Update the state of the visible object.
+
+        Parameter
+        ---------
+        time: float
+            The current time.
+
+        source: InformationSource
+            The source of the pose information.
+
+        pos: Vector3D
+            The new position of the object.
+
+        orientation: Rotation3D, default=R3D_IDENTITY
+            The new orientation of the object.
+        """
+
+        self._time = time
+        self._source = source
+        self._position = pos
+        self._orientation = orientation
+
+        self._visible = source == InformationSource.VISION
 
 
 class MovableObject(VisibleObject):
@@ -187,6 +290,38 @@ class MovableObject(VisibleObject):
         """Return the estimated velocity of the object."""
 
         return self._velocity
+
+    def update(
+        self,
+        time: float,
+        source: InformationSource,
+        pos: Vector3D,
+        orientation: Rotation3D = R3D_IDENTITY,
+        lin_vel: Vector3D = V3D_ZERO,
+    ) -> None:
+        """Update the state of the visible object from a visual detection.
+
+        Parameter
+        ---------
+        time: float
+            The current time.
+
+        source: InformationSource
+            The source of the pose information.
+
+        pos: Vector3D
+            The new position of the object.
+
+        orientation: Rotation3D, default=R3D_IDENTITY
+            The new orientation of the object.
+
+        lin_vel: Vector3D, default=V3D_ZERO
+            The linear velocity of the object.
+        """
+
+        super().update(time, source, pos, orientation)
+
+        self._velocity = lin_vel
 
 
 class Landmark(VisibleObject):

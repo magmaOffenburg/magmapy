@@ -1,7 +1,7 @@
 from collections.abc import Sequence
 from typing import Protocol
 
-from magma.agent.communication.perception import Perception
+from magma.agent.communication.perception import Loc3DPerceptor, Perception, Pos3DPerceptor, Rot3DPerceptor
 from magma.agent.model.base import PMutableModel
 from magma.agent.model.world.objects import LineLandmark, PointLandmark
 from magma.soccer_agent.model.world.soccer_field_description import PSoccerFieldDescription
@@ -143,5 +143,19 @@ class SoccerWorld:
         """Update the state of the world model from the given perceptions."""
 
         self._time = perception.get_time()
+
+        # try updating robot location
+        loc_perceptor = perception.get_perceptor('torso_loc', Loc3DPerceptor)
+        pos_perceptor = perception.get_perceptor('torso_pos', Pos3DPerceptor)
+        rot_perceptor = perception.get_perceptor('torso_quat', Rot3DPerceptor)
+
+        if loc_perceptor is not None:
+            self._this_player.update_location(self._time, loc_perceptor.loc.pos, loc_perceptor.loc.rot)
+        elif pos_perceptor is not None and rot_perceptor is not None:
+            self._this_player.update_location(self._time, pos_perceptor.pos, rot_perceptor.rot)
+        elif pos_perceptor is not None:
+            self._this_player.update_location(self._time, pos_perceptor.pos, self._this_player.get_orientation())
+        elif rot_perceptor is not None:
+            self._this_player.update_location(self._time, self._this_player.get_position(), rot_perceptor.rot)
 
         # TODO: update objects

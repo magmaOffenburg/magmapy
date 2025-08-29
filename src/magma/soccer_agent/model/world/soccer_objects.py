@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Final, Protocol
 
-from magma.agent.model.world.objects import MovableObject, PMovableObject
+from magma.agent.model.world.objects import InformationSource, MovableObject, PMovableObject
 
 if TYPE_CHECKING:
     from magma.common.math.geometry.rotation import Rotation3D
@@ -130,3 +130,25 @@ class ThisSoccerPlayer(SoccerPlayer):
         """
 
         super().__init__(team_name, player_no, own_team=True)
+
+    def update_location(
+        self,
+        time: float,
+        pos: Vector3D,
+        orientation: Rotation3D,
+    ) -> None:
+        """Update the state of the visible object.
+
+        Parameter
+        ---------
+        time: float
+            The current time.
+
+        pos: Vector3D
+            The estimated global position.
+
+        orientation: Rotation3D, default=R3D_IDENTITY
+            The estimated global orientation.
+        """
+
+        super().update(time, InformationSource.NONE, pos, orientation)
