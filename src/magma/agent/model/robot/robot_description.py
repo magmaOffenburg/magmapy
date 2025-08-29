@@ -22,7 +22,10 @@ class SensorType(Enum):
     """An IMU sensor, receiving rotational velocity as well as linear acceleration information together with an orientation prediction."""
 
     CAMERA = 'camera'
-    """A camera sensor, receiving various state information about visible objects in the environment."""
+    """A camera sensor, receiving images of the environment."""
+
+    VISION = 'vision'
+    """A virtual vision pipeline sensor, receiving various state information about visible objects in the environment."""
 
     LOC2D = 'loc2d'
     """A virtual sensor, receiving 2D position and orientation (location) information."""
@@ -210,7 +213,7 @@ class VisionDescription(SensorDescription):
         horizontal_fov: float,
         vertical_fov: float,
     ):
-        super().__init__(name, frame_id, perceptor_name, SensorType.CAMERA.value)
+        super().__init__(name, frame_id, perceptor_name, SensorType.VISION.value)
 
         object.__setattr__(self, 'horizontal_fov', horizontal_fov)
         object.__setattr__(self, 'vertical_fov', vertical_fov)

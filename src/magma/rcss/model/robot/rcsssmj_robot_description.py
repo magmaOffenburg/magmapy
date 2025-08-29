@@ -12,11 +12,10 @@ from magma.agent.model.robot.robot_description import (
     Loc3DDescription,
     MotorDescription,
     RobotDescription,
-    VisionDescription,
     VisualDescription,
 )
 from magma.common.math.geometry.vector import V3D_UNIT_X, V3D_UNIT_Y, V3D_UNIT_Z
-from magma.rcss.model.robot.rcss_robot_description import BeamDescription, InitDescription, SyncDescription
+from magma.rcss.model.robot.rcss_robot_description import BeamDescription, InitDescription, RCSSVisionDescription, SyncDescription
 
 
 class RCSSSMJRobots(Enum):
@@ -153,7 +152,7 @@ class T1Description(RobotDescription):
         self._add_sensor(AccelerometerDescription('torso_acc', 'torso', 'torso_acc'))
 
         # camera / vision system
-        self._add_sensor(VisionDescription('vision', 'camera', 'See', 120, 120))
+        self._add_sensor(RCSSVisionDescription('vision', 'camera', 'See', 120, 120))
 
         # gps
         self._add_sensor(Loc3DDescription('torso_loc', 'torso', 'torso'))

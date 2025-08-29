@@ -6,7 +6,6 @@ from math import pi, sin
 from magma.agent.model.robot.robot_description import (
     AccelerometerDescription,
     BodyDescription,
-    CameraDescription,
     FixedJointDescription,
     GyroDescription,
     HingeJointDescription,
@@ -16,7 +15,7 @@ from magma.agent.model.robot.robot_description import (
     VisualDescription,
 )
 from magma.common.math.geometry.vector import V3D_UNIT_NEG_Y, V3D_UNIT_X, V3D_UNIT_Y, V3D_UNIT_Z
-from magma.rcss.model.robot.rcss_robot_description import BeamDescription, ForceResistanceDescription, InitDescription, PassModeDescription, SceneDescription, SyncDescription
+from magma.rcss.model.robot.rcss_robot_description import BeamDescription, ForceResistanceDescription, InitDescription, PassModeDescription, RCSSVisionDescription, SceneDescription, SyncDescription
 
 
 class SimSparkRobots(Enum):
@@ -182,8 +181,8 @@ class NaoHeteroDescription(RobotDescription):
         # accelerometer
         self._add_sensor(AccelerometerDescription('torso_acc', 'torso', 'torso_acc'))
 
-        # camera
-        self._add_sensor(CameraDescription('camera', 'camera', 'See', 120, 120))
+        # camera / vision system
+        self._add_sensor(RCSSVisionDescription('camera', 'camera', 'See', 120, 120))
 
         # force
         self._add_sensor(ForceResistanceDescription('RFootForce', 'rfoot', 'rf'))

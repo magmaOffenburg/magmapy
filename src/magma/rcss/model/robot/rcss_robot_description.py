@@ -12,6 +12,9 @@ class RCSSSensorType(Enum):
     FORCE_RESISTANCE = 'force_resistance'
     """A force sensor, receiving force information."""
 
+    VISION = 'soccer_vision'
+    """A virtual vision pipeline sensor, receiving various state information about visible objects, lines and players in the environment."""
+
 
 class RCSSActuatorType(Enum):
     """Specific actuator types used in RoboCup Soccer Simulation."""
@@ -38,6 +41,30 @@ class ForceResistanceDescription(SensorDescription):
 
     def __init__(self, name: str, frame_id: str, perceptor_name: str):
         super().__init__(name, frame_id, perceptor_name, RCSSSensorType.FORCE_RESISTANCE.value)
+
+
+@dataclass(frozen=True)
+class RCSSVisionDescription(SensorDescription):
+    """Soccer simulation vision pipeline sensor description."""
+
+    horizontal_fov: float
+    """The horizontal field of view angle."""
+
+    vertical_fov: float
+    """The vertical field of view angle."""
+
+    def __init__(
+        self,
+        name: str,
+        frame_id: str,
+        perceptor_name: str,
+        horizontal_fov: float,
+        vertical_fov: float,
+    ):
+        super().__init__(name, frame_id, perceptor_name, RCSSSensorType.VISION.value)
+
+        object.__setattr__(self, 'horizontal_fov', horizontal_fov)
+        object.__setattr__(self, 'vertical_fov', vertical_fov)
 
 
 @dataclass(frozen=True)

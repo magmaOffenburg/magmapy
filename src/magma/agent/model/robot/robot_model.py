@@ -360,10 +360,10 @@ class RobotModel:
         if desc.sensor_type == SensorType.IMU.value:
             return IMU(desc.name, desc.frame_id, desc.perceptor_name)
 
-        if isinstance(desc, CameraDescription):
+        if desc.sensor_type == SensorType.CAMERA.value and isinstance(desc, CameraDescription):
             return Camera(desc.name, desc.frame_id, desc.perceptor_name, desc.horizontal_fov, desc.vertical_fov)
 
-        if isinstance(desc, VisionDescription):
+        if desc.sensor_type == SensorType.VISION.value and isinstance(desc, VisionDescription):
             return VisionSensor(desc.name, desc.frame_id, desc.perceptor_name, desc.horizontal_fov, desc.vertical_fov)
 
         if desc.sensor_type == SensorType.LOC2D.value:
