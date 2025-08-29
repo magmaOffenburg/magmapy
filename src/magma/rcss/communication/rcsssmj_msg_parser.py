@@ -295,7 +295,7 @@ class RCSSSMJMessageParser:
     def _parse_line_object(self, node: SExpression) -> RCSSLineDetection:
         """Parse a line expression.
 
-        Definition: (L (pol <distance> <angle1> <angle2>) (pol <distance> <angle1> <angle2>))
+        Definition: (L (pol <h-angle> <v-angle> <distance>) (pol <h-angle> <v-angle> <distance>))
         """
 
         p1_node = node[1]
@@ -310,7 +310,7 @@ class RCSSSMJMessageParser:
     def _parse_player_object(self, node: SExpression) -> RCSSPlayerDetection:
         """Parse a player expression.
 
-        Definition: (P (team <teamname>) (id <playerID>) (pol <distance> <angle1> <angle2>)|+(<bodypart> (pol <distance> <angle1> <angle2>)))
+        Definition: (P (team <team-name>) (id <player-no>) [(<marker> (pol <h-angle> <v-angle> <distance>))])
         """
 
         team_name: str = ''
@@ -337,12 +337,12 @@ class RCSSSMJMessageParser:
     def _parse_pol(self, node: SExpression) -> Vector3D:
         """Parse a pol expression into a 3D vector.
 
-        Definition: (pol <distance> <angle1> <angle2>)
+        Definition: (pol <azimuth> <inclination> <distance>)
         """
 
-        distance: float = self._as_float(node[1])
-        alpha: float = radians(self._as_float(node[2]))
-        delta: float = radians(self._as_float(node[3]))
+        alpha: float = radians(self._as_float(node[1]))
+        delta: float = radians(self._as_float(node[2]))
+        distance: float = self._as_float(node[3])
 
         cos_delta = cos(delta)
         x = distance * cos(alpha) * cos_delta
