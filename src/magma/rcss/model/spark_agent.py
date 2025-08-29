@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Protocol, runtime_checkable
 
 from magma.agent.model.agent_model import PAgentModel, PMutableAgentModel
-from magma.rcss.communication.rcss_perception import RCSSGameStatePerceptor
+from magma.rcss.communication.rcss_perception import SimSparkGameStatePerceptor
 from magma.rcss.model.world.rcss_game_state import decode_rcss_play_mode
 from magma.soccer_agent.model.game_state import PlaySide
 from magma.soccer_agent.model.soccer_agent import SoccerAgentModel
@@ -25,8 +25,8 @@ class PMutableRCSSAgentModel(PRCSSAgentModel, PMutableAgentModel, Protocol):
     """Protocol for mutable RoboCup Soccer Simulation League agent models."""
 
 
-class RCSSAgentModel(SoccerAgentModel):
-    """The RoboCup Soccer Simulation League specific agent model."""
+class SimSparkAgentModel(SoccerAgentModel):
+    """The SimSpark specific agent model."""
 
     def __init__(
         self,
@@ -52,7 +52,7 @@ class RCSSAgentModel(SoccerAgentModel):
 
     def _update_game_state(self, perception: Perception) -> None:
         # fetch game state perceptor
-        perceptor = perception.get_perceptor('game_state', RCSSGameStatePerceptor)
+        perceptor = perception.get_perceptor('game_state', SimSparkGameStatePerceptor)
         if perceptor is None:
             return
 

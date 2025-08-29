@@ -6,10 +6,10 @@ from magma.agent.model.robot.robot_model import PMutableRobotModel
 from magma.rcss.communication.spark_msg_encoder import SimSparkMessageEncoder
 from magma.rcss.communication.spark_msg_parser import SimSparkMessageParser
 from magma.rcss.decision.rcss_base_behaviors import InitBehavior
-from magma.rcss.model.rcss_agent import RCSSAgentModel
 from magma.rcss.model.rcss_rules import RCSSRules
 from magma.rcss.model.robot.rcss_robot_model import RCSSRobotModel
 from magma.rcss.model.robot.spark_robot_description import SimSparkRobots
+from magma.rcss.model.spark_agent import SimSparkAgentModel
 from magma.rcss.model.world.spark_field_description import SimSparkFieldVersion
 from magma.soccer_agent.model.soccer_agent import PMutableSoccerAgentModel, PSoccerAgentModel
 from magma.soccer_agent.model.soccer_rules import SoccerRules
@@ -76,7 +76,7 @@ class SimSparkAgentFactory(SoccerAgentFactory):
         return RCSSRules()
 
     def _create_model(self, robot: PMutableRobotModel, world: PMutableSoccerWorld, rules: SoccerRules) -> PMutableSoccerAgentModel:
-        return RCSSAgentModel(robot, world, rules)
+        return SimSparkAgentModel(robot, world, rules)
 
     def _create_behaviors(self, model: PSoccerAgentModel) -> dict[str, PBehavior]:
         behaviors: dict[str, PBehavior] = super()._create_behaviors(model)

@@ -6,15 +6,16 @@ from magma.agent.model.robot.robot_model import PMutableRobotModel
 from magma.rcss.communication.rcsssmj_msg_encoder import RCSSSMJMessageEncoder
 from magma.rcss.communication.rcsssmj_msg_parser import RCSSSMJMessageParser
 from magma.rcss.decision.rcss_base_behaviors import InitBehavior
-from magma.rcss.model.rcss_agent import RCSSAgentModel
 from magma.rcss.model.rcss_rules import RCSSRules
+from magma.rcss.model.rcsssmj_agent import RCSSSMJAgentModel
 from magma.rcss.model.robot.rcss_robot_model import RCSSRobotModel
 from magma.rcss.model.robot.rcsssmj_robot_description import RCSSSMJRobots
 from magma.rcss.model.world.rcsssmj_field_description import RCSSSMJFieldVersion
+from magma.rcss.model.world.rcsssmj_soccer_world import RCSSSMJSoccerWorld
 from magma.soccer_agent.model.soccer_agent import PMutableSoccerAgentModel, PSoccerAgentModel
 from magma.soccer_agent.model.soccer_rules import SoccerRules
 from magma.soccer_agent.model.world.soccer_field_description import PSoccerFieldDescription
-from magma.soccer_agent.model.world.soccer_world import PMutableSoccerWorld, SoccerWorld
+from magma.soccer_agent.model.world.soccer_world import PMutableSoccerWorld
 from magma.soccer_agent.runtime.soccer_factory import SoccerAgentFactory
 
 
@@ -61,13 +62,13 @@ class RCSSSMJAgentFactory(SoccerAgentFactory):
         return RCSSRobotModel.from_description(desc)
 
     def _create_world(self, desc: PSoccerFieldDescription) -> PMutableSoccerWorld:
-        return SoccerWorld(self.team_name, self.player_no, desc, 0.11)
+        return RCSSSMJSoccerWorld(self.team_name, self.player_no, desc, 0.11)
 
     def _create_rule_book(self) -> SoccerRules:
         return RCSSRules()
 
     def _create_model(self, robot: PMutableRobotModel, world: PMutableSoccerWorld, rules: SoccerRules) -> PMutableSoccerAgentModel:
-        return RCSSAgentModel(robot, world, rules)
+        return RCSSSMJAgentModel(robot, world, rules)
 
     def _create_behaviors(self, model: PSoccerAgentModel) -> dict[str, PBehavior]:
         behaviors: dict[str, PBehavior] = super()._create_behaviors(model)

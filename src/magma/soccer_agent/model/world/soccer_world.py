@@ -8,6 +8,7 @@ from magma.agent.model.world.objects import InformationSource, LineLandmark, Poi
 from magma.common.math.geometry.pose import P3D_ZERO
 from magma.common.math.geometry.rotation import R3D_IDENTITY
 from magma.common.math.geometry.vector import V3D_ZERO
+from magma.soccer_agent.model.game_state import PSoccerGameState
 from magma.soccer_agent.model.world.soccer_field_description import PSoccerFieldDescription
 from magma.soccer_agent.model.world.soccer_map import PSoccerMap, SoccerMap
 from magma.soccer_agent.model.world.soccer_objects import (
@@ -51,7 +52,7 @@ class PSoccerWorld(Protocol):
 class PMutableSoccerWorld(PSoccerWorld, Protocol):
     """Soccer domain specific robot model."""
 
-    def update(self, perception: Perception, robot: PRobotModel) -> None:
+    def update(self, perception: Perception, robot: PRobotModel, game_state: PSoccerGameState) -> None:
         """Update the state of the model from the given perceptions.
 
         Parameter
@@ -61,6 +62,9 @@ class PMutableSoccerWorld(PSoccerWorld, Protocol):
 
         robot : PRobotModel
             The robot model.
+
+        game_state : PSoccerGameState
+            The current game state.
         """
 
 
@@ -153,16 +157,16 @@ class SoccerWorld:
 
         return self._map
 
-    def update(self, perception: Perception, robot: PRobotModel) -> None:
+    def update(self, perception: Perception, robot: PRobotModel, game_state: PSoccerGameState) -> None:
         """Update the state of the world model from the given perceptions."""
 
         self._time = perception.get_time()
 
-        self._localize(robot)
+        self._localize(robot, game_state)
 
         self._update_ball(robot)
 
-    def _localize(self, robot: PRobotModel) -> bool:
+    def _localize(self, robot: PRobotModel, game_state: PSoccerGameState) -> bool:
         """Localize robot."""
 
         # try localizing via global positioning system (external localizer)

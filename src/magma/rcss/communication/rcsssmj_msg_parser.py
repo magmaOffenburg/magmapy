@@ -17,9 +17,9 @@ from magma.common.communication.sexpression import SExpParser, SExpression
 from magma.common.math.geometry.rotation import R3D_IDENTITY, Rotation3D
 from magma.common.math.geometry.vector import V3D_ZERO, Vector3D
 from magma.rcss.communication.rcss_perception import (
-    RCSSGameStatePerceptor,
     RCSSLineDetection,
     RCSSPlayerDetection,
+    RCSSSMJGameStatePerceptor,
     RCSSVisionPerceptor,
 )
 
@@ -149,15 +149,15 @@ class RCSSSMJMessageParser:
 
         return TimePerceptor(self._as_str(now_node[0]), self._as_float(now_node[1]))
 
-    def _parse_game_state(self, node: SExpression) -> RCSSGameStatePerceptor:
+    def _parse_game_state(self, node: SExpression) -> RCSSSMJGameStatePerceptor:
         """Parse a game state expression.
 
         Definition: (GS (t <play_time>) (pm <play_mode>) (lt <left_team>) (rt <right_team>) (sl <sl>) (sr <sr>))
         """
 
         play_time: float = 0.0
-        # left_team_name: str = ''
-        # right_team_name: str = ''
+        left_team_name: str = ''
+        right_team_name: str = ''
         play_mode: str = ''
         score_left: int = 0
         score_right: int = 0
@@ -170,10 +170,10 @@ class RCSSSMJMessageParser:
                 play_time = self._as_float(child[1])
             elif child[0] == 'pm':
                 play_mode = self._as_str(child[1])
-            # elif child[0] == 'lt':
-            #     left_team_name = self._as_str(child[1])
-            # elif child[0] == 'rt':
-            #     right_team_name = self._as_str(child[1])
+            elif child[0] == 'tl':
+                left_team_name = self._as_str(child[1])
+            elif child[0] == 'tr':
+                right_team_name = self._as_str(child[1])
             elif child[0] == 'sl':
                 score_left = self._as_int(child[1])
             elif child[0] == 'sr':
@@ -181,7 +181,7 @@ class RCSSSMJMessageParser:
             else:
                 pass
 
-        return RCSSGameStatePerceptor('game_state', play_time, 'left', play_mode, 0, score_left, score_right)
+        return RCSSSMJGameStatePerceptor('game_state', play_time, play_mode, left_team_name, right_team_name, score_left, score_right)
 
     def _parse_hinge_joint(self, node: SExpression) -> JointStatePerceptor:
         """Parse a hinge joint expression.

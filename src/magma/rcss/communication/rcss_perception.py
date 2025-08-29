@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 
 
 @dataclass(frozen=True)
-class RCSSGameStatePerceptor(Perceptor):
+class SimSparkGameStatePerceptor(Perceptor):
     """Perceptor representing game state information used in RoboCup Soccer Simulation."""
 
     play_time: float
@@ -26,6 +26,29 @@ class RCSSGameStatePerceptor(Perceptor):
 
     player_no: int
     """The player number."""
+
+    score_left: int
+    """The left team score."""
+
+    score_right: int
+    """The right team score."""
+
+
+@dataclass(frozen=True)
+class RCSSSMJGameStatePerceptor(Perceptor):
+    """Perceptor representing game state information used in RoboCup Soccer Simulation MuJoCo."""
+
+    play_time: float
+    """The current play time."""
+
+    play_mode: str
+    """The current play mode."""
+
+    left_team: str
+    """The name of the left team."""
+
+    right_team: str
+    """The name of the right team."""
 
     score_left: int
     """The left team score."""
