@@ -31,13 +31,13 @@ class Interval:
 
         return self.min <= value and value <= self.max
 
-    def clamp(self, value: float) -> float:
-        """Clamp the given value within this interval.
+    def clip(self, value: float) -> float:
+        """Clip the given value within this interval.
 
         Parameter
         ---------
         value : float
-            The value to clamp.
+            The value to clip.
         """
 
         if value < self.min:
@@ -47,3 +47,48 @@ class Interval:
             return self.max
 
         return value
+
+
+def clip(value: float, min_val: float, max_val: float) -> float:
+    """Clip the value within the interval given by min and max.
+
+    Parameter
+    ---------
+    value : float
+        The value to clip.
+
+    min_val : float
+        The minimum value (lower bound).
+
+    max_val : float
+        The maximum value (upper bound).
+    """
+
+    if value < min_val:
+        return min_val
+
+    if value > max_val:
+        return max_val
+
+    return value
+
+
+def clip_abs(value: float, threshold: float) -> float:
+    """Clip the value within the absolute interval given by the threshold value.
+
+    Parameter
+    ---------
+    value : float
+        The value to clip.
+
+    threshold : float
+        The minimum / maximum value (absolute bound).
+    """
+
+    if value < -threshold:
+        return -threshold
+
+    if value > threshold:
+        return threshold
+
+    return value

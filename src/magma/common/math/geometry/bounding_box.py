@@ -153,3 +153,21 @@ class AABB2D:
             border_y = border
 
         return AABB2D(self.min_x - border_x, self.max_x + border_x, self.min_y - border_y, self.max_y + border_y)
+
+    def clip(self, pos: Vector2D) -> Vector2D:
+        """Clip the given point within the area."""
+
+        x = pos.x
+        y = pos.y
+
+        if x < self.min_x:
+            x = self.min_x
+        elif x > self.max_x:
+            x = self.max_x
+
+        if y < self.min_y:
+            y = self.min_y
+        elif y > self.max_y:
+            y = self.max_y
+
+        return Vector2D(x, y)
