@@ -148,7 +148,8 @@ def decode_rchl_game_state(game_state: int, secondary_game_state: int, sub_mode:
 
     # check primary game state for INITIAL or FINISHED, which can be directly translated
     if game_state == RCHLGameStates.INITIAL.value:
-        return PlayMode.BEFORE_KICK_OFF, PlayModePhase.FREEZE
+        game_mode = PlayMode.TIMEOUT if secondary_game_state == RCHLSecondaryGameStates.TIMEOUT.value else PlayMode.BEFORE_KICK_OFF
+        return game_mode, PlayModePhase.FREEZE
 
     if game_state == RCHLGameStates.FINISHED.value:
         return PlayMode.GAME_OVER, PlayModePhase.FREEZE
@@ -175,9 +176,15 @@ def decode_rchl_game_state(game_state: int, secondary_game_state: int, sub_mode:
         return game_mode, game_phase
 
     if secondary_game_state == RCHLSecondaryGameStates.PENALTY_SHOOT.value:
-        game_mode = PlayMode.OWN_PENALTY_SHOOT if our_secondary_state else PlayMode.OPPONENT_PENALTY_SHOOT
-        game_phase = PlayModePhase.PREPARATION if sub_mode == RCHLSubModes.READY.value else PlayModePhase.FREEZE
-        return game_mode, game_phase
+        game_mode = PlayMode.OWN_PENALTY_SHOOT if our_kick_off else PlayMode.OPPONENT_PENALTY_SHOOT
+        if game_state == RCHLGameStates.READY.value:
+            return game_mode, PlayModePhase.PREPARATION
+
+        if game_state == RCHLGameStates.SET.value:
+            return game_mode, PlayModePhase.SET
+
+        if game_state == RCHLGameStates.PLAYING.value:
+            return game_mode, PlayModePhase.RUNNING
 
     if secondary_game_state == RCHLSecondaryGameStates.PENALTY_KICK.value:
         game_mode = PlayMode.OWN_PENALTY_KICK if our_secondary_state else PlayMode.OPPONENT_PENALTY_KICK
@@ -194,17 +201,16 @@ def decode_rchl_game_state(game_state: int, secondary_game_state: int, sub_mode:
         game_phase = PlayModePhase.PREPARATION if sub_mode == RCHLSubModes.READY.value else PlayModePhase.FREEZE
         return game_mode, game_phase
 
-    if secondary_game_state == RCHLSecondaryGameStates.TIMEOUT.value:
-        return PlayMode.TIMEOUT, PlayModePhase.FREEZE
-
-    if secondary_game_state in (RCHLSecondaryGameStates.NORMAL.value, RCHLSecondaryGameStates.OVERTIME.value):
-        if game_state == RCHLGameStates.READY:
+    if secondary_game_state in {RCHLSecondaryGameStates.NORMAL.value, RCHLSecondaryGameStates.OVERTIME.value}:
+        if game_state == RCHLGameStates.READY.value:
+            # TODO: if the kick-off-team-id is 128 the current play-mode of the game is in drop-ball, otherwise own- / opponent-kick-off
             return PlayMode.OWN_KICK_OFF if our_kick_off else PlayMode.OPPONENT_KICK_OFF, PlayModePhase.PREPARATION
 
-        if game_state == RCHLGameStates.SET:
+        if game_state == RCHLGameStates.SET.value:
+            # TODO: if the kick-off-team-id is 128 the current play-mode of the game is in drop-ball, otherwise own- / opponent-kick-off
             return PlayMode.OWN_KICK_OFF if our_kick_off else PlayMode.OPPONENT_KICK_OFF, PlayModePhase.SET
 
-        if game_state == RCHLGameStates.PLAYING:
+        if game_state == RCHLGameStates.PLAYING.value:
             return PlayMode.PLAY_ON, PlayModePhase.RUNNING
 
     return PlayMode.NONE, PlayModePhase.FREEZE
