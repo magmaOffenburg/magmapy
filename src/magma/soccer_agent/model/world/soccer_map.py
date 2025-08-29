@@ -94,6 +94,9 @@ class PSoccerMap(PFeatureMap, Protocol):
     def get_opponent_penalty_area(self) -> AABB2D:
         """Retrieve the opponent penalty area."""
 
+    def get_abs_area(self, rel_area: AABB2D) -> AABB2D:
+        """Calculate the absolute area of the given relative area with respect to this soccer field."""
+
 
 class SoccerMap(FeatureMap):
     """Class representing a soccer field."""
@@ -281,3 +284,13 @@ class SoccerMap(FeatureMap):
         """Retrieve the opponent penalty area."""
 
         return self._opponent_penalty_area
+
+    def get_abs_area(self, rel_area: AABB2D) -> AABB2D:
+        """Calculate the absolute area of the given relative area with respect to this soccer field."""
+
+        return AABB2D(
+            rel_area.min_x * self._field_area.max_x,
+            rel_area.max_x * self._field_area.max_x,
+            rel_area.min_y * self._field_area.max_y,
+            rel_area.max_y * self._field_area.max_y,
+        )
