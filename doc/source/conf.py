@@ -13,7 +13,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]) + '/src')
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-from magma.__about__ import __VERSION__ as MAGMA_VERSION
+from magmapy.__about__ import __VERSION__ as MAGMA_VERSION
 
 project = 'magmapy'
 copyright = f'2025, {project} Developers'

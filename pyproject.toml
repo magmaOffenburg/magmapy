@@ -9,7 +9,7 @@ requires = [
 build-backend = "hatchling.build"
 
 [project]
-name = "magma"
+name = "magmapy"
 description = "Agent Framework"
 keywords = ["Agent System", "AI", "RoboCup", "HSO"]
 readme = "README.md"
@@ -41,7 +41,7 @@ Changelog = "https://github.com/magmaOffenburg/magmapy/blob/main/CHANGELOG.md"
 Issues = "https://github.com/magmaOffenburg/magmapy/issues"
 
 [project.scripts]
-magma = "magma.__main__:magma_agent"
+magma = "magmapy.__main__:magma_agent"
 
 [tool.ruff]
 line-length = 240
@@ -76,7 +76,7 @@ extra-dependencies = [
 ]
 
 [tool.hatch.envs.types.scripts]
-check = "mypy --install-types --non-interactive {args:src/magma tests}"
+check = "mypy --install-types --non-interactive {args:src/magmapy tests}"
 
 [tool.hatch.envs.doc]
 extra-dependencies = [
@@ -94,7 +94,7 @@ extra-dependencies = [
 ]
 
 [tool.hatch.version]
-path = "src/magma/__about__.py"
+path = "src/magmapy/__about__.py"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/magma"]
+packages = ["src/magmapy"]

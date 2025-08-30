@@ -70,9 +70,9 @@ For starting, you can use this example behavior for rotating it's head:
 import numpy as np
 import numpy.typing as npt
 
-from magma.agent.decision.behavior import Behavior
-from magma.agent.model.robot.actuators import Motor
-from magma.soccer_agent.model.soccer_agent import PSoccerAgentModel
+from magmapy.agent.decision.behavior import Behavior
+from magmapy.agent.model.robot.actuators import Motor
+from magmapy.soccer_agent.model.soccer_agent import PSoccerAgentModel
 
 class MoveBehavior(Behavior):
     def __init__(self, model: PSoccerAgentModel):
