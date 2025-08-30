@@ -1,10 +1,8 @@
 [build-system]
 requires = [
-  # NOTE: this needs to be kept in sync with build-requirements.txt and requirements.txt
+  # NOTE: this needs to be kept in sync with build-requirements.txt
   # build-requirements.txt
-  "hatchling",
-  # requirements.txt
-  "numpy >= 2.0.0"
+  "hatchling"
 ]
 build-backend = "hatchling.build"
 
@@ -28,8 +26,8 @@ classifiers = [
 ]
 requires-python = ">= 3.10"
 dependencies = [
-  # When changing this, also update build-system.requires and requirements.txt
-  "numpy >= 2.0.0"
+  # When changing this, also update requirements.txt
+  "numpy >= 1.0.0"
 ]
 dynamic = ["version"]
 
